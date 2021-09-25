@@ -11,27 +11,37 @@ class RegisterForm(Form):
         validators.Email()
     ]);
 
-    username = StringField('UserName', validators=[
+    username = StringField('Username', validators=[
         validators.DataRequired(),
-        validators.Length(10, 30)
+        validators.Length(1, 31)
     ]);
 
-    password = PasswordField('PassWord', validators=[
+    password = PasswordField('Password', validators=[
         validators.DataRequired(),
-        validators.Length(5, 10),
+        validators.Length(8, 31),
         validators.EqualTo('password2', message='PASSWORD NEED MATCH')
     ]);
 
-    password2 = PasswordField('Confirm PassWord', validators=[
+    password2 = PasswordField('Confirm Password', validators=[
         validators.DataRequired()
     ]);
 
-    submit = SubmitField('Register New Account');
+    first_name = StringField('First Name', validators=[
+        validators.DataRequired(),
+        validators.Length(1, 63)
+    ]);
+
+    last_name = StringField('Last Name', validators=[
+        validators.DataRequired(),
+        validators.Length(1, 63)
+    ]);
+
+    submit = SubmitField('Register');
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already register by somebody')
+        if User.User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already register by somebody');
 
     def validate_username(self, field):
-        if User.query.filter_by(username=field.data).first():
-            raise ValidationError('UserName already register by somebody')
+        if User.User.query.filter_by(username=field.data).first():
+            raise ValidationError('UserName already register by somebody');
