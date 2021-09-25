@@ -8,7 +8,7 @@ class ProductCategory(db.Model):
 
     product_id = db.relationship('product', backref='product_category');
 
-    name        = db.Column(db.String(64),  nullable=False, default='');
+    name        = db.Column(db.String(64),  nullable=False);
     description = db.Column(db.String(255), nullable=True);
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now);
     modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now);
