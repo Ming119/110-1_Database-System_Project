@@ -6,7 +6,10 @@ from flask_sqlalchemy import SQLAlchemy;
 
 db = SQLAlchemy(current_app);
 
-from models import Product, ProductInventory, ProductCategory, Discount;
+from models import (
+    AdminType, Adminuser, User, UserAddress, UserPayment,
+    Discount, Product, ProductCategory, ProductInventory
+);
 
 def init_db():
     db.drop_all();
