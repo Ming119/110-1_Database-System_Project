@@ -25,10 +25,8 @@ def create_app(test_config=None):
         from . import db;
         db.init_app(app);
 
+    from routes import user_bp;
+    app.register_blueprint(user_bp.user_bp);
 
-
-    @app.route('/')
-    def index():
-        return render_template('index.html');
 
     return app;

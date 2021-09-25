@@ -1,16 +1,28 @@
 from app.db import db;
+from datetime import datetime;
 
 class User(db.Model):
-    __tablename__ = 'users'
-    uid           = db.Column(db.Integer, primary_key=True);
-    userName      = db.Column(db.String(64), unique=False);
-    firstName     = db.Column(db.String(64), unique=False);
-    lastName      = db.Column(db.String(64), unique=False);
-    phoneNumber   = db.Column(db.String(64), unique=True);
-    email         = db.Column(db.String(64), unique=True);
-    address       = db.Column(db.String(64), unique=True);
+    __tablename__ = 'user';
 
-    # users         = db.relationship('User', backref='role', lazy='dynamic');
+    user_id       = db.Column(db.Integer, primary_key=True);
+
+    email         = db.Column(db.String(64),   nullable=False, unique=True);
+    username      = db.Column(db.String(31),   nullable=False, unique=True);
+    password      = db.Column(db.String(1023), nullable=False);
+    first_name    = db.Column(db.String(31),   nullable=False);
+    last_name     = db.Column(db.String(31),   nullable=False);
+
+    create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now);
+    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now);
 
     def __repr__(self):
-        return '<Role %r>' %self.userName
+        return '<User %r>' %(
+                    self.user_id,
+                    self.email,
+                    self.username,
+                    self.password,
+                    self.first_name,
+                    self.last_name,
+                    self.create_at,
+                    self.modified_at
+                );
