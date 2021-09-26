@@ -1,11 +1,15 @@
-from util import bcrypt, db;
+from util import bcrypt, db, login;
 from datetime import datetime;
 from itsdangerous import TimedJSONWebSignatureSerializer;
 from itsdangerous import SignatureExpired, BadSignature;
 from flask import current_app;
-# from flask_bcrypt import Bcrypt;
+from flask_login import UserMixin;
 
-class User(db.Model):
+@login.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id));
+
+class User(db.Model, UserMixin):
     __tablename__ = 'user';
 
     user_id       = db.Column(db.Integer, primary_key=True);
@@ -20,6 +24,10 @@ class User(db.Model):
 
     create_at   = db.Column(db.DateTime, default=datetime.now);
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now);
+
+    def get_id(self):
+        return self.user_id;
+
 
     @property
     def password(self):
@@ -51,13 +59,14 @@ class User(db.Model):
 
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY']);
         try:
-            data = s.loads(token)   # validate
-        except SignatureExpired:    # trigger SignatureExpired Error when token expires
-            return False
-        except BadSignature:        # trigger BadSignature Error when token wrong
-            return False
+            user_id = s.loads(token);   # validate
+        except SignatureExpired:        # trigger SignatureExpired Error when token expires
+            User.User.query.filter_by(user_id=user_id).delete();
+            return False;
+        except BadSignature:            # trigger BadSignature Error when token wrong
+            return False;
 
-        return data
+        return user_id;
 
     def __repr__(self):
         return '<User %r>' %(

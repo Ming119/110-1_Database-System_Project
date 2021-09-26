@@ -32,8 +32,8 @@
         </form>
 
         <div class="text-end">
-          {% if g.user %}
-          <span>{{ g.user['username'] }}</span>
+          {% if current_user.is_authenticated %}
+          <span>{{ current_user.username }}</span>
           <a href='{{ url_for('index.logout') }}' type="button" class="btn btn-outline-light me-2">Logout</a>
           {% else %}
           <a href='{{ url_for('index.login') }}' type="button" class="btn btn-outline-light me-2">Login</a>
@@ -42,18 +42,16 @@
 
         </div>
       </div>
-    </div>
   </header>
 
-  <section class="content">
-    <header>
-      {% block header %}{% endblock %}
-    </header>
+  <section class="container">
     {% for message in get_flashed_messages() %}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
     <div class="flash">{{ message }}</div>
     {% endfor %}
     {% block content %}{% endblock %}
   </section>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

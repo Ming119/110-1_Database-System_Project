@@ -1,6 +1,6 @@
 from util import db;
 from flask import flash, redirect, render_template, request, session, url_for;
-
+from flask_login import login_user, current_user, login_required, logout_user;
 from emailHelper import send_mail;
 from forms import RegisterForm, LoginForm;
 from models import User;
@@ -32,7 +32,7 @@ def register():
                   token      = user.create_confirm_token(),
                  );
 
-        # TODO: should be redirect to confirm registration page.
+        flash(f'A confirmation email has been sent to {form.email.data}, please check your email inbox.');
         return redirect(url_for('index.index'));
 
     return render_template('register.html', form=form);
@@ -48,9 +48,12 @@ def confirmRegistration(token):
         user.confirm = True;
         db.session.add(user);
         db.session.commit();
-        return 'Thands For Your Activate';
+
+        flash(f'Your email address has been confirmed, thank you.');
+        return redirect(url_for('index.login'));
     else:
-        return 'wrong token';
+        flash(f'');
+        return redirect(url_for('index.index'));
 
 
 
@@ -59,12 +62,20 @@ def login():
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User.User.query.filter_by(username=form.username.data).first();
-        session.clear();
-        session['user_id'] = user.user_id;
-        return redirect(url_for('index.index'));
+
+        if user:
+            if user.check_password(form.password.data):
+                login_user(user, form.remember_me.data);
+                flash(f'Login successful!');
+                return redirect(url_for('index.index'));
+            else:
+                flash('Wrong Email or Password');
 
     return render_template('login.html', form=form);
 
+
+
 def logout():
-    session.clear();
+    logout_user();
+    flash('Logout successful!');
     return redirect(url_for('index.index'));

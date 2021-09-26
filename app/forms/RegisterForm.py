@@ -1,5 +1,6 @@
 from util import db;
 from models import User;
+from flask import flash;
 from flask_wtf import Form;
 from wtforms import StringField, SubmitField, validators, PasswordField;
 from wtforms.fields.html5 import EmailField;
@@ -39,9 +40,21 @@ class RegisterForm(Form):
     submit = SubmitField('Register');
 
     def validate_email(self, field):
-        if User.User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already register by somebody');
+        user = User.User.query.filter_by(email=field.data).first();
+        if user:
+            if not user.confirm:
+                User.User.query.filter_by(email=field.data).delete();
+            else:
+                flash(f'This email address is already register');
+                return redirect(url_for('index.register'));
+                # raise ValidationError('Email already register by somebody');
 
     def validate_username(self, field):
-        if User.User.query.filter_by(username=field.data).first():
-            raise ValidationError('UserName already register by somebody');
+        user = User.User.query.filter_by(username=field.data).first();
+        if user:
+            if not user.confirm:
+                User.User.query.filter_by(email=field.data).delete();
+            else:
+                flash(f'This username is already register');
+                return redirect(url_for('index.register'));
+                # raise ValidationError('UserName already register by somebody');
