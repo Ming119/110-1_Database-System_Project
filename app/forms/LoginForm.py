@@ -1,4 +1,4 @@
-from app.db import db;
+from util import db;
 from models import User;
 from flask_wtf import Form;
 from wtforms import StringField, SubmitField, validators, PasswordField;
@@ -16,3 +16,7 @@ class LoginForm(Form):
     ]);
 
     submit = SubmitField('Login');
+
+    def validate_password(self, field):
+        if User.User.query.filter_by(username=field.data).first():
+            raise ValidationError('Email already register by somebody');

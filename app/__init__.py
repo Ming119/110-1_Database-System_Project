@@ -2,7 +2,6 @@ import os;
 import pymysql;
 
 from flask import Flask, render_template, url_for;
-from flask_bootstrap import Bootstrap;
 
 def create_app(test_config=None):
     # create and configure the app
@@ -23,18 +22,15 @@ def create_app(test_config=None):
 
     # Register the database with the Application
     with app.app_context():
-        from . import db;
-        db.init_app(app);
-
-    bootstrap = Bootstrap(app);
+        import util;
+        util.init_app(app);
 
     # Register Route Blueprint
     from routes import (
-        index, user, product
+        indexRoute, userRoute, productRoute
     );
-    app.register_blueprint(index.bp);
-    app.register_blueprint(user.bp);
-    # app.register_blueprint(product.bp);
-
+    app.register_blueprint(indexRoute.bp);
+    app.register_blueprint(userRoute.bp);
+    # app.register_blueprint(productRoute.bp);
 
     return app;

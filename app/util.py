@@ -3,8 +3,14 @@ import click;
 from flask import current_app;
 from flask.cli import with_appcontext;
 from flask_sqlalchemy import SQLAlchemy;
+from flask_bootstrap import Bootstrap;
+from flask_bcrypt import Bcrypt;
+from flask_mail import Mail;
 
 db = SQLAlchemy(current_app);
+bootstrap = Bootstrap(current_app);
+bcrypt = Bcrypt(current_app);
+mail = Mail(current_app);
 
 from models import (
     AdminType, Adminuser, User, UserAddress, UserPayment,

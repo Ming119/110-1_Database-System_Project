@@ -1,0 +1,3 @@
+<h1>Hello {{ user.username }}, Welcome to join us!</h1>
+<h2>Please activate your account, by clicking the hyperlink within 15 minutes.</h2>
+confirm your email: {{ url_for('index.register', token=token, _external=True) }}

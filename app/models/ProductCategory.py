@@ -1,4 +1,4 @@
-from app.db import db;
+from util import db;
 from datetime import datetime;
 
 class ProductCategory(db.Model):

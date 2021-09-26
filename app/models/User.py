@@ -1,5 +1,9 @@
-from app.db import db;
+from util import bcrypt, db;
 from datetime import datetime;
+from itsdangerous import TimedJSONWebSignatureSerializer;
+from itsdangerous import SignatureExpired, BadSignature;
+from flask import current_app;
+# from flask_bcrypt import Bcrypt;
 
 class User(db.Model):
     __tablename__ = 'user';
@@ -8,19 +12,59 @@ class User(db.Model):
 
     email         = db.Column(db.String(63),   nullable=False, unique=True);
     username      = db.Column(db.String(31),   nullable=False, unique=True);
-    password      = db.Column(db.String(1023), nullable=False);
+    password_hash = db.Column(db.String(1023), nullable=False);
     first_name    = db.Column(db.String(31),   nullable=False);
     last_name     = db.Column(db.String(31),   nullable=False);
 
-    create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now);
-    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now);
+    confirm = db.Column(db.Boolean, default=False);
+
+    create_at   = db.Column(db.DateTime, default=datetime.now);
+    modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now);
+
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute');
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf8');
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password_hash, password);
+
+    def create_confirm_token(self, expires_in=900):
+        """
+        Generate a token from itsdangerous for confirm user's register
+        :param expires_in: expiration time in seconds
+        :return: token refer to user's id
+        """
+
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in);
+        return s.dumps({'user_id': self.user_id});
+
+    def validate_confirm_token(self, token):
+        """
+        驗證回傳令牌是否正確，若正確則回傳True
+        :param token: token
+        :return: 回傳驗證是否正確，正確為True
+        """
+
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY']);
+        try:
+            data = s.loads(token)   # validate
+        except SignatureExpired:    # trigger SignatureExpired Error when token expires
+            return False
+        except BadSignature:        # trigger BadSignature Error when token wrong
+            return False
+
+        return data
 
     def __repr__(self):
         return '<User %r>' %(
                     self.user_id,
                     self.email,
                     self.username,
-                    self.password,
+                    self.password_hash,
                     self.first_name,
                     self.last_name,
                     self.create_at,

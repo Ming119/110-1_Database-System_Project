@@ -1,6 +1,6 @@
 from flask import Blueprint, session, g;
-from controllers.indexcontroller import (
-    index, register, login, logout
+from controllers.indexController import (
+    index, register, confirmRegistration, login, logout
 );
 from models import User;
 
@@ -9,6 +9,7 @@ bp = Blueprint('index', __name__);
 
 bp.route('/', methods=['GET'])(index)
 bp.route('/register', methods=['GET', 'POST'])(register);
+bp.route('/register/<token>', methods=['GET'])(confirmRegistration);
 bp.route('/login', methods=['GET', 'POST'])(login);
 bp.route('/logout', methods=['GET'])(logout);
 
