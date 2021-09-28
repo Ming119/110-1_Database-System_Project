@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, session, url_for;
 from flask_login import login_user, current_user, login_required, logout_user;
 from emailHelper import send_mail;
 from forms import RegisterForm, LoginForm;
-from models import User;
+from models import User, Adminuser;
 
 def index():
     return render_template('index.html');
@@ -32,7 +32,8 @@ def register():
                   token      = user.create_confirm_token(),
                  );
 
-        flash(f'A confirmation email has been sent to {form.email.data}, please check your email inbox.');
+
+        flash(f'A confirmation email has been sent to {form.email.data}, please check your email inbox.', 'info');
         return redirect(url_for('index.index'));
 
     return render_template('register.html', form=form);
@@ -49,7 +50,7 @@ def confirmRegistration(token):
         db.session.add(user);
         db.session.commit();
 
-        flash(f'Your email address has been confirmed, thank you.');
+        flash(f'Your email address has been confirmed, thank you.', 'success');
         return redirect(url_for('index.login'));
     else:
         flash(f'');
@@ -62,14 +63,16 @@ def login():
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User.User.query.filter_by(username=form.username.data).first();
+        # if not user:
+        #     user = Adminuser.Adminuser.query.filter_by(username=form.username.data).first();
 
         if user:
             if user.check_password(form.password.data):
                 login_user(user, form.remember_me.data);
-                flash(f'Login successful!');
+                flash(f'Login successful!', 'success');
                 return redirect(url_for('index.index'));
-            else:
-                flash('Wrong Email or Password');
+
+        flash(f'Wrong username or password', 'warning');
 
     return render_template('login.html', form=form);
 
@@ -77,5 +80,5 @@ def login():
 
 def logout():
     logout_user();
-    flash('Logout successful!');
+    flash('Logout successful!', 'success');
     return redirect(url_for('index.index'));
