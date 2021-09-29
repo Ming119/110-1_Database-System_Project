@@ -32,7 +32,6 @@ def register():
                   token      = user.create_confirm_token(),
                  );
 
-
         flash(f'A confirmation email has been sent to {form.email.data}, please check your email inbox.', 'info');
         return redirect(url_for('index.index'));
 
@@ -44,19 +43,37 @@ def confirmRegistration(token):
     user = User.User();
     data = user.validate_confirm_token(token);
 
-    if data:
+    if data > 0:
         user = User.User.query.filter_by(user_id=data.get('user_id')).first();
         user.confirm = True;
         db.session.add(user);
         db.session.commit();
 
+        send_mail(recipients = [user.email],
+                  subject    = 'Welcome to ...',
+                  template   = 'mail/registrationConfirmed',
+                  user       = user
+                 );
+
         flash(f'Your email address has been confirmed, thank you.', 'success');
         return redirect(url_for('index.login'));
-    else:
-        flash(f'');
+
+    elif data == -1:
+        user = User.User.query.filter_by(user_id=data.get('user_id')).first();
+
+        send_mail(recipients = [user.email],
+                  subject    = 'Welcome to ...',
+                  template   = 'mail/confirmRegistration',
+                  user       = user,
+                  token      = user.create_confirm_token(),
+                 );
+
+        flash(f'Your confirmation link has been expired. A new confirmation link has been sent to your email address, please try again.', 'warning');
         return redirect(url_for('index.index'));
 
-
+    elif data == -2:
+        flash(f'Your confirmation link is incorrect.', 'danger');
+        return redirect(url_for('index.index'));
 
 def login():
     form = LoginForm.LoginForm();
