@@ -78,6 +78,10 @@ def confirmRegistration(token):
 def login():
     form = LoginForm.LoginForm();
 
+    if request.method == 'GET' and current_user.is_authenticated:
+        flash(f'Login successful!', 'success');
+        return redirect(url_for('index.index'));
+
     if request.method == 'POST' and form.validate_on_submit():
         user = User.User.query.filter_by(username=form.username.data).first();
         # if not user:
