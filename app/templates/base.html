@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+  <header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
+
+          {% if current_user.is_authenticated %}
+            {% if current_user.admin_type == 'admin' %}
+            <!-- Admin Nav bar -->
+              <li><a href='#' class=""></a>Manage Users</li>
+            {% elif current_user.admin_type == 'staff' %}
+            <!-- Staff Nav bar -->
+              <li><a href='#' class="">Products</a></li>
+              <li><a href='#' class="">Orders</a></li>
+              <li><a href='#' class="">Promotions</a></li>
+            {% else %}
+            <!-- customer Nav bar -->
+              <li><a href='#' class="">Shopping Cart</a></li>
+            {% endif %}
+            <li><a href='{{ url_for('user.profile', user_id=current_user.user_id) }}' class="">{{ current_user.username }}</a></li>
+            <li><a href='{{ url_for('index.logout') }}' class="">Logout</a></li>
+          {% else %}
+          <li><a href='{{ url_for('index.login') }}' class="">Login</a></li>
+          <li><a href='{{ url_for('index.register') }}' class="">Sign-up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+  </header>
+
+  <div class="container">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="icon-success" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+      </symbol>
+      <symbol id="icon-info" fill="currentColor" viewBox="0 0 16 16">
+        <path
+          d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+      </symbol>
+      <symbol id="icon-warning" fill="currentColor" viewBox="0 0 16 16">
+        <path
+          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+      </symbol>
+      <symbol id="icon-danger" fill="currentColor" viewBox="0 0 16 16">
+        <path
+          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+      </symbol>
+    </svg>
+
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class='pt-3'>
+      <div class='alert alert-{{ category }} d-flex align-items-center alert-dismissible fade show' role='alert'>
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="{{ category }}:">
+          <use xlink:href="#icon-{{ category }}" />
+        </svg>
+        <div class="flash">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <p>DEBUG info:</p>
+    <p>Login: {{ current_user.is_authenticated }}</p>
+    <p>Login as: {{ current_user.admin_type }}</p>
+
+    {% block content %}{% endblock %}
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
