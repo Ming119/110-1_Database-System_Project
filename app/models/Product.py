@@ -6,9 +6,9 @@ class Product(db.Model):
 
     product_id  = db.Column(db.Integer, primary_key=True);
 
-    inventory_id = db.Column(db.Integer, db.ForeignKey('product_inventory.inventory_id'), nullable=False, unique=True);
-    category_id  = db.Column(db.Integer, db.ForeignKey('product_category.category_id'),   nullable=False);
-    discount_id  = db.Column(db.Integer, db.ForeignKey('discount.discount_id'),           nullable=False);
+    inventory_id = db.relationship('ProductInventory', backref='product', uselist=False);
+    category_id  = db.relationship('ProductCategory',  backref='product');
+    discount_id  = db.relationship('Discount',         backref='product');
 
     name        = db.Column(db.String(64),  nullable=False);
     description = db.Column(db.String(255), nullable=True);

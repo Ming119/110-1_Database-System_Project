@@ -18,7 +18,7 @@ login.login_view = 'login'
 from models import (
     # AdminType, Adminuser,
     User, UserAddress, UserPayment,
-    Discount, Product, ProductCategory, ProductInventory
+    ProductInventory, ProductCategory, Discount, Product
 );
 
 def init_db():
@@ -31,39 +31,61 @@ def init_db_command():
     init_db();
 
     user = User.User(
-        email      = 'user@domain.com',
-        username   = 'user',
-        password   = 'user',
-        first_name = 'user',
-        last_name  = 'user',
-        admin_type = 'user',
-        confirm    = True
-    );
+            email      = 'user@domain.com',
+            username   = 'user',
+            password   = 'user',
+            first_name = 'user',
+            last_name  = 'user',
+            admin_type = 'user',
+            confirm    = True
+        );
 
     admin = User.User(
-                email      = 'admin@domain.com',
-                username   = 'admin',
-                password   = 'admin',
-                first_name = 'admin',
-                last_name  = 'admin',
-                admin_type = 'admin',
-                confirm    = True
-            );
+            email      = 'admin@domain.com',
+            username   = 'admin',
+            password   = 'admin',
+            first_name = 'admin',
+            last_name  = 'admin',
+            admin_type = 'admin',
+            confirm    = True
+        );
 
     staff = User.User(
-                email      = 'staff@domain.com',
-                username   = 'staff',
-                password   = 'staff',
-                first_name = 'staff',
-                last_name  = 'staff',
-                admin_type = 'staff',
-                confirm    = True
-            );
+            email      = 'staff@domain.com',
+            username   = 'staff',
+            password   = 'staff',
+            first_name = 'staff',
+            last_name  = 'staff',
+            admin_type = 'staff',
+            confirm    = True
+        );
 
-    db.session.add(user);
-    db.session.add(admin);
-    db.session.add(staff);
+    category = ProductCategory.ProductCategory(
+            name = 'category1',
+            description = 'category1 description'
+        );
+
+    inventory = ProductInventory.ProductInventory(
+            quantity = 100
+        );
+
+    product = Product.Product(
+            inventory_id = inventory,
+            category_id  = [category],
+            name        = 'product',
+            description = 'Product description',
+            price       = 100
+        );
+
+    db.session.add_all([user, admin, staff]);
     db.session.commit();
+
+    db.session.add(category);
+    db.session.add(inventory);
+    db.session.commit();
+    db.session.add(product);
+    db.session.commit();
+
 
     click.echo('Initialized the database.');
 

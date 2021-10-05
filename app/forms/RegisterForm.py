@@ -17,6 +17,16 @@ class RegisterForm(Form):
         validators.Length(1, 31)
     ]);
 
+    first_name = StringField('First Name', validators=[
+        validators.DataRequired(),
+        validators.Length(1, 63)
+    ]);
+
+    last_name = StringField('Last Name', validators=[
+        validators.DataRequired(),
+        validators.Length(1, 63)
+    ]);
+    
     password = PasswordField('Password', validators=[
         validators.DataRequired(),
         validators.Length(8, 31),
@@ -27,15 +37,7 @@ class RegisterForm(Form):
         validators.DataRequired()
     ]);
 
-    first_name = StringField('First Name', validators=[
-        validators.DataRequired(),
-        validators.Length(1, 63)
-    ]);
 
-    last_name = StringField('Last Name', validators=[
-        validators.DataRequired(),
-        validators.Length(1, 63)
-    ]);
 
     submit = SubmitField('Register');
 
@@ -47,7 +49,6 @@ class RegisterForm(Form):
             else:
                 flash(f'This email address is already register');
                 return redirect(url_for('index.register'));
-                # raise ValidationError('Email already register by somebody');
 
     def validate_username(self, field):
         user = User.User.query.filter_by(username=field.data).first();
@@ -57,4 +58,3 @@ class RegisterForm(Form):
             else:
                 flash(f'This username is already register');
                 return redirect(url_for('index.register'));
-                # raise ValidationError('UserName already register by somebody');
