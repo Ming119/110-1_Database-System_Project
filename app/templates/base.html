@@ -21,10 +21,10 @@
           <li class="nav-item"><a href='{{ url_for('index.index') }}' class="nav-link">Home</a></li>
 
           {% if current_user.is_authenticated %}
-          {% if current_user.admin_type == 'admin' %}
+          {% if current_user.role == 'admin' %}
           <!-- Admin Nav bar -->
           <li class="nav-item"><a href='#' class="nav-link">Manage Users</a></li>
-          {% elif current_user.admin_type == 'staff' %}
+          {% elif current_user.role == 'staff' %}
           <!-- Staff Nav bar -->
           <li class="nav-item"><a href='{{ url_for('product.index') }}' class="nav-link">Products</a></li>
           <li class="nav-item"><a href='#' class="nav-link">Orders</a></li>
@@ -78,7 +78,7 @@
 
     <p>DEBUG info:</p>
     <p>Login: {{ current_user.is_authenticated }}</p>
-    <p>Login as: {{ current_user.admin_type }}</p>
+    <p>Login as: {{ current_user.role }} - {{ current_user.username}}</p>
 
     {% block content %}{% endblock %}
   </div>

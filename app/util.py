@@ -8,15 +8,14 @@ from flask_bcrypt import Bcrypt;
 from flask_mail import Mail;
 from flask_login import LoginManager;
 
-db = SQLAlchemy(current_app);
+db        = SQLAlchemy(current_app);
 bootstrap = Bootstrap(current_app);
-bcrypt = Bcrypt(current_app);
-mail = Mail(current_app);
-login = LoginManager(current_app);
+bcrypt    = Bcrypt(current_app);
+mail      = Mail(current_app);
+login     = LoginManager(current_app);
 login.login_view = 'login'
 
 from models import (
-    # AdminType, Adminuser,
     User, UserAddress, UserPayment,
     ProductInventory, ProductCategory, Discount, Product
 );
@@ -36,7 +35,7 @@ def init_db_command():
             password   = 'user',
             first_name = 'user',
             last_name  = 'user',
-            admin_type = 'user',
+            role       = 'user',
             confirm    = True
         );
 
@@ -46,7 +45,7 @@ def init_db_command():
             password   = 'admin',
             first_name = 'admin',
             last_name  = 'admin',
-            admin_type = 'admin',
+            role       = 'admin',
             confirm    = True
         );
 
@@ -56,7 +55,7 @@ def init_db_command():
             password   = 'staff',
             first_name = 'staff',
             last_name  = 'staff',
-            admin_type = 'staff',
+            role       = 'staff',
             confirm    = True
         );
 
@@ -85,7 +84,6 @@ def init_db_command():
     db.session.commit();
     db.session.add(product);
     db.session.commit();
-
 
     click.echo('Initialized the database.');
 

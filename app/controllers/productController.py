@@ -2,12 +2,16 @@ from util import db;
 from flask import flash, redirect, render_template, request, session, url_for;
 from flask_login import login_user, current_user, login_required, logout_user;
 from models import Product, ProductCategory;
-from forms import Search;
+from forms import Search, NewCategory;
 
 def index():
-    form = Search.Search();
+    form_search      = Search.Search();
+    form_newCategory = NewCategory.NewCategory();
 
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST' and form_newCategory.validate_on_submit():
+        return createCatedory(form_newCategory);
+
+    if request.method == 'POST' and form_search.validate_on_submit():
         words = form.search.data.split(' ');
 
         products_list = list();
@@ -22,11 +26,12 @@ def index():
 
     categories = ProductCategory.ProductCategory.query.all();
 
-    return render_template('product.html', form=form, categories=categories, products=products);
-
-def search(str):
-
-    return render_template('product.html', category=category, products=products);
+    return render_template('product.html',
+                            form_search      = form_search,
+                            form_newCategory = form_newCategory,
+                            categories       = categories,
+                            products         = products
+                        );
 
 def details(product_id):
     pass;
@@ -34,8 +39,19 @@ def details(product_id):
 def edit(product_id):
     pass;
 
-def create():
+def createProduct(form_newProduct):
     pass;
+
+def createCatedory(form):
+    category = ProductCategory.ProductCategory(
+                name = form.name.data,
+                description = form.description.data
+            );
+
+    db.session.add(category);
+    db.session.commit();
+
+    return redirect(url_for('product.index'));
 
 def delete(product_id):
     pass;
