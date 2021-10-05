@@ -6,7 +6,7 @@ class ProductCategory(db.Model):
 
     category_id = db.Column(db.Integer, primary_key=True);
 
-    product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=False);
+    product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=True);
 
     name        = db.Column(db.String(64),  nullable=False);
     description = db.Column(db.String(255), nullable=True);
