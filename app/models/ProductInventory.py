@@ -6,7 +6,7 @@ class ProductInventory(db.Model):
 
     inventory_id = db.Column(db.Integer, primary_key=True);
 
-    product_id = db.relationship('Product', backref='product_inventory', uselist=False);
+    product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=False, unique=True);
 
     quantity    = db.Column(db.Integer,  nullable=False, default=0);
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now);

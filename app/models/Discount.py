@@ -6,7 +6,7 @@ class Discount(db.Model):
 
     discount_id      = db.Column(db.Integer, primary_key=True);
 
-    product_id = db.relationship('Product', backref='discount');
+    product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=False);
 
     name             = db.Column(db.String(64),  nullable=False);
     code             = db.Column(db.String(8),   nullable=False, unique=True);

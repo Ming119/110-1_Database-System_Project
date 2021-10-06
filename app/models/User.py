@@ -19,15 +19,18 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(1023), nullable=False);
     first_name    = db.Column(db.String(31),   nullable=False);
     last_name     = db.Column(db.String(31),   nullable=False);
+    admin_type    = db.Column(db.String(15),   nullable=False);
 
     confirm = db.Column(db.Boolean, default=False);
 
+    last_login  = db.Column(db.DateTime,   nullable=True);
     create_at   = db.Column(db.DateTime, default=datetime.now);
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now);
 
+
+
     def get_id(self):
         return self.user_id;
-
 
     @property
     def password(self):
@@ -59,12 +62,12 @@ class User(db.Model, UserMixin):
 
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY']);
         try:
-            user_id = s.loads(token);   # validate
+            data = s.loads(token);   # validate
         except SignatureExpired:        # trigger SignatureExpired Error when token expires
-            User.User.query.filter_by(user_id=user_id).delete();
-            return False;
+            User.User.query.filter_by(user_id=data.get('user_id')).delete();
+            return -1;
         except BadSignature:            # trigger BadSignature Error when token wrong
-            return False;
+            return -2;
 
         return user_id;
 
@@ -76,6 +79,7 @@ class User(db.Model, UserMixin):
                     self.password_hash,
                     self.first_name,
                     self.last_name,
+                    self.confirm,
                     self.create_at,
                     self.modified_at
                 );
