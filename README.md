@@ -22,10 +22,10 @@ Scrum developing procedure:
 7. Fix conflict if necessary  
 *Pay attention to the compatibility of each function during fixing conflict*
 
-Sprint Review #1: 13 Oct (Wed) 1800 @Google Meet
-Sprint Review #2: TBD
-Sprint Review #3: TBD
-Sprint Review #4: TBD
+Sprint Review #1: 13 Oct (Wed) 1800 @Google Meet  
+Sprint Review #2: TBD  
+Sprint Review #3: TBD  
+Sprint Review #4: TBD  
 
 
 ## Project Objective:
