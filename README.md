@@ -25,7 +25,7 @@ Scrum developing procedure:
 Sprint Review #1: 13 Oct (Wed) 1800 @Google Meet
 Sprint Review #2: TBD
 Sprint Review #3: TBD
-
+Sprint Review #4: TBD
 
 
 ## Project Objective:
