@@ -19,7 +19,7 @@ class Discount(db.Model):
     deleted_at  = db.Column(db.DateTime, nullable=True);
 
     def __repr__(self):
-        return '<Discount %r>' %(
+        return '<Discount {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.category_id,
                     self.product_id,
                     self.name,

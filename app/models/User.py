@@ -73,7 +73,7 @@ class User(db.Model, UserMixin):
         return user_id;
 
     def __repr__(self):
-        return '<User %r>' %(
+        return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.user_id,
                     self.email,
                     self.username,
@@ -81,6 +81,7 @@ class User(db.Model, UserMixin):
                     self.first_name,
                     self.last_name,
                     self.confirm,
+                    self.last_login,
                     self.create_at,
                     self.modified_at
                 );

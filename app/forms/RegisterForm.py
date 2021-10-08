@@ -1,6 +1,6 @@
 from util import db;
 from models import User;
-from flask import flash;
+from flask import flash, current_app;
 from flask_wtf import Form;
 from wtforms import StringField, SubmitField, validators, PasswordField;
 from wtforms.fields.html5 import EmailField;
@@ -26,18 +26,16 @@ class RegisterForm(Form):
         validators.DataRequired(),
         validators.Length(1, 63)
     ]);
-    
+
     password = PasswordField('Password', validators=[
         validators.DataRequired(),
         validators.Length(8, 31),
-        validators.EqualTo('password2', message='PASSWORD NEED MATCH')
     ]);
 
     password2 = PasswordField('Confirm Password', validators=[
-        validators.DataRequired()
+        validators.DataRequired(),
+        validators.EqualTo('password', message='PASSWORD NEED MATCH')
     ]);
-
-
 
     submit = SubmitField('Register');
 
@@ -48,7 +46,6 @@ class RegisterForm(Form):
                 User.User.query.filter_by(email=field.data).delete();
             else:
                 flash(f'This email address is already register');
-                return redirect(url_for('index.register'));
 
     def validate_username(self, field):
         user = User.User.query.filter_by(username=field.data).first();
@@ -57,4 +54,3 @@ class RegisterForm(Form):
                 User.User.query.filter_by(email=field.data).delete();
             else:
                 flash(f'This username is already register');
-                return redirect(url_for('index.register'));

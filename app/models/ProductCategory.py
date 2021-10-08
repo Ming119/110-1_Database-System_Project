@@ -6,17 +6,18 @@ class ProductCategory(db.Model):
 
     category_id = db.Column(db.Integer, primary_key=True);
 
-    product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=True);
+    product_id = db.relationship('Product', backref='product_category');
 
-    name        = db.Column(db.String(64),  nullable=False);
+    name        = db.Column(db.String(63),  nullable=False, unique=True);
     description = db.Column(db.String(255), nullable=True);
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now);
     modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now);
     deleted_at  = db.Column(db.DateTime, nullable=True);
 
     def __repr__(self):
-        return '<Category %r>' %(
+        return '<Category {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.category_id,
+                    self.product_id,
                     self.name,
                     self.description,
                     self.create_at,

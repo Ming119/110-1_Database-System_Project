@@ -15,7 +15,7 @@ class UserAddress(db.Model):
     telephone   = db.Column(db.String(15),  nullable=False);
 
     def __repr__(self):
-        return '<UserAddress %r>' %(
+        return '<UserAddress {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.address_id,
                     self.user_id,
                     self.country,

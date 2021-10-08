@@ -70,7 +70,7 @@ def init_db_command():
 
     product = Product.Product(
             inventory_id = inventory,
-            category_id  = [category],
+            category_id  = 1,
             name        = 'product',
             description = 'Product description',
             price       = 100

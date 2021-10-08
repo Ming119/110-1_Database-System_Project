@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, session, url_for;
 from flask_login import login_user, current_user, login_required, logout_user;
 from emailHelper import send_mail;
 from forms import RegisterForm, LoginForm;
-from models import User, Adminuser;
+from models import User;
 
 def index():
     return render_template('index.html');
