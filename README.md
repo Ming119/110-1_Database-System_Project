@@ -1,5 +1,33 @@
 # 110-1 Database System Final Project
 
+## Team members
+- 108590050 李浩銘
+- 108590004 謝宗麟
+- 108590029 朱欣雨
+- 108590049 符芷琪
+- 108590056 鄭琳玲
+- 108590061 黃聖耀
+- 110AEM001 盧佩怡
+- 110AEM002 譚永駿
+
+### Note for Team Members
+Scrum developing procedure:
+1. Take a task you are interested in from Miro[https://miro.com/welcomeonboard/MkF1UFZBb2tJeHM4Nmxtc0lueTZ3b3lJZXQ0TWFWc1lOb25FemFacVB3WVJ3NVlrSWZqTFRuT0xvQ2d6OGYyTHwzMDc0NDU3MzYyMDA0NjQyMjM2?invite_link_id=149965833091]
+2. Only develop on your branch
+3. Create a Pull Request(PR) after you finish the task
+4. Your PR will be reviewed in the Sprint Review
+5. Fix your PR if necessary
+5. Your PR will be merged into master branch after reviewed
+6. Pull and merge master branch into your branch
+7. Fix conflict if necessary
+*Pay attention to the compatibility of each function during fixing conflict*
+
+Sprint Review #1: 13 Oct (Wed) 1800 @Google Meet
+Sprint Review #2: TBD
+Sprint Review #3: TBD
+
+
+
 ## Project Objective:
 This project requires students to work on a database project in order to exercise the relational DBMS software, SQL, and database design techniques learned and to gain the project experiences. The major focus of the project will be Entity-Relationship modeling, relational database design, SQL, normalization, and Web-based database system development.
 
