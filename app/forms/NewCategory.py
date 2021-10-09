@@ -1,18 +1,15 @@
 from util import db;
 from models.ProductCategory import ProductCategory;
-from flask import flash, redirect, url_for;
+from flask import flash;
 from flask_wtf import Form;
 from wtforms import StringField, TextAreaField, SubmitField, validators, ValidationError;
 
 class NewCategory(Form):
     categoryName = StringField('Category Name', validators=[
         validators.DataRequired(),
-        validators.Length(1, 63)
     ]);
 
-    categoryDescription = TextAreaField('Category Description', validators=[
-        validators.Length(0, 255)
-    ]);
+    categoryDescription = TextAreaField('Category Description');
 
     categorySubmit = SubmitField('Submit');
 

@@ -87,15 +87,15 @@
         <div class="modal-body">
           <div class="form my-3">
             {{ form_newCategory.categoryName.label() }}
-            {{ form_newCategory.categoryName(class="form-control", placeholder='Category Name') }}
+            {{ form_newCategory.categoryName(class="form-control") }}
           </div>
           <div class="form my-3">
             {{ form_newCategory.categoryDescription.label() }}
-            {{ form_newCategory.categoryDescription(class="form-control", placeholder='Category Description') }}
+            {{ form_newCategory.categoryDescription(class="form-control") }}
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
           {{ form_newCategory.categorySubmit(class='btn btn-primary px-3') }}
         </div>
       </form>
@@ -123,8 +123,12 @@
             {{ form_newProduct.productDescription(class="form-control", placeholder='Product Description') }}
           </div>
           <div class="form my-3">
-            {{ form_newProduct.price() }}
+            {{ form_newProduct.price.label() }}
             {{ form_newProduct.price(class="form-control") }}
+          </div>
+          <div class="form my-3">
+            {{ form_newProduct.quantity.label() }}
+            {{ form_newProduct.quantity(class="form-control") }}
           </div>
           <div class="form my-3">
             {{ form_newProduct.category.label() }}

@@ -55,7 +55,7 @@ class User(db.Model, UserMixin):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in);
         return s.dumps({'user_id': self.user_id});
 
-    # FIXME: confirm register not working 
+
     def validate_confirm_token(self, token):
         """
         驗證回傳令牌是否正確，若正確則回傳True
@@ -64,21 +64,23 @@ class User(db.Model, UserMixin):
         """
 
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY']);
-        try:
-            data = s.loads(token);   # validate
-        except SignatureExpired:        # trigger SignatureExpired Error when token expires
-            User.User.query.filter_by(user_id=data.get('user_id')).delete();
-
-            flash(f'Your confirmation link has been expired. A new confirmation link has been sent to your email address, please try again.', 'warning');
-            send_mail(recipients = [user.email],
-                      subject    = 'Welcome to ...',
-                      template   = 'mail/confirmRegistration',
-                      user       = user,
-                      token      = user.create_confirm_token(),
-                     );
-
-        except BadSignature:            # trigger BadSignature Error when token wrong
-            flash(f'Your confirmation link is incorrect.', 'danger');
+        data = s.loads(token);
+        # FIXME: confirm register not working
+        # try:
+        #     data = s.loads(token);   # validate
+        # except SignatureExpired:        # trigger SignatureExpired Error when token expires
+        #     User.User.query.filter_by(user_id=data.get('user_id')).delete();
+        #
+        #     flash(f'Your confirmation link has been expired. A new confirmation link has been sent to your email address, please try again.', 'warning');
+        #     send_mail(recipients = [user.email],
+        #               subject    = 'Welcome to ...',
+        #               template   = 'mail/confirmRegistration',
+        #               user       = user,
+        #               token      = user.create_confirm_token(),
+        #              );
+        #
+        # except BadSignature:            # trigger BadSignature Error when token wrong
+        #     flash(f'Your confirmation link is incorrect.', 'danger');
 
         return data;
 

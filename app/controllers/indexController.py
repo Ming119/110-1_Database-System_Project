@@ -98,7 +98,7 @@ def login():
 
         if user and user.check_password(form.password.data):
             user.last_login = datetime.now;
-            session.commit();
+            db.session.commit();
             login_user(user, form.remember_me.data);
             flash(f'Login successful!', 'success');
             return redirect(url_for('index.index'));

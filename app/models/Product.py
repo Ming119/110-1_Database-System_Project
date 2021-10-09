@@ -6,13 +6,13 @@ class Product(db.Model):
 
     product_id  = db.Column(db.Integer, primary_key=True);
 
-    inventory_id = db.relationship('ProductInventory', backref='product', uselist=False);
     category_id  = db.Column(db.Integer, db.ForeignKey('product_category.category_id'), nullable=False);
     discount_id  = db.relationship('Discount',         backref='product');
 
     name        = db.Column(db.String(63),  nullable=False);
     description = db.Column(db.String(255), nullable=True);
-    price       = db.Column(db.Integer,     nullable=False);
+    price       = db.Column(db.Float(),     nullable=False);
+    quantity    = db.Column(db.Integer(),   nullable=False);
 
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now);
     modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now);

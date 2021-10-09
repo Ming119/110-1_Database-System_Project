@@ -44,19 +44,13 @@ def index():
                             products         = products
                         );
 
-def details(product_id):
-    pass;
-
-def edit(product_id):
-    pass;
-
 def createProduct(form):
     product = Product.Product(
-                inventory_id = 1,
-                category_id  = form.category.data,
-                name         = form.productName.data,
-                description  = form.productDescription.data,
-                price        = form.price.data
+                category_id = form.category.data,
+                name        = form.productName.data,
+                description = form.productDescription.data,
+                price       = form.price.data,
+                quantity    = form.quantity.data
             );
 
     db.session.add(product);
@@ -66,7 +60,7 @@ def createProduct(form):
 
 def createCategory(form):
     category = ProductCategory.ProductCategory(
-                name        = form.categoryDame.data,
+                name        = form.categoryName.data,
                 description = form.categoryDescription.data
             );
 
@@ -75,6 +69,12 @@ def createCategory(form):
 
     flash(f'Category added successfully.', 'success');
     return redirect(url_for('product.index'));
+
+def details(product_id):
+    pass;
+
+def edit(product_id):
+    pass;
 
 def delete(product_id):
     pass;
