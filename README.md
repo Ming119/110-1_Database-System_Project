@@ -13,8 +13,8 @@
 ### Note for Team Members
 Scrum developing procedure:
 1. Take a task you are interested in from [Miro](https://miro.com/welcomeonboard/MkF1UFZBb2tJeHM4Nmxtc0lueTZ3b3lJZXQ0TWFWc1lOb25FemFacVB3WVJ3NVlrSWZqTFRuT0xvQ2d6OGYyTHwzMDc0NDU3MzYyMDA0NjQyMjM2?invite_link_id=149965833091)
-2. Only develop on your branch
-3. Create a Pull Request(PR) after you finish the task
+2. Develop your part on your branch
+3. Create a Pull Request(PR) after you finish developing your part
 4. Your PR will be reviewed in the Sprint Review
 5. Fix your PR if necessary
 5. Your PR will be merged into master branch after reviewed
@@ -22,7 +22,7 @@ Scrum developing procedure:
 7. Fix conflict if necessary  
 *Pay attention to the compatibility of each function during fixing conflict*
 
-Sprint Review #1: 13 Oct (Wed) 1800 @Google Meet  
+Sprint Review #1: 13 Oct (Wed) at 18:10 @Google Meet  
 Sprint Review #2: TBD  
 Sprint Review #3: TBD  
 Sprint Review #4: TBD  
