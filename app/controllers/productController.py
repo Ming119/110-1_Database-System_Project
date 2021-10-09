@@ -18,7 +18,6 @@ def index():
 
     # Create a new category
     if request.method == 'POST' and form_newCategory.validate_on_submit():
-        # if form_newCategory.validate_name(form_newCategory.name):
         return createCategory(form_newCategory);
 
     # Search
