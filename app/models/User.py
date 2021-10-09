@@ -19,11 +19,12 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(1023), nullable=False);
     first_name    = db.Column(db.String(31),   nullable=False);
     last_name     = db.Column(db.String(31),   nullable=False);
-    admin_type    = db.Column(db.String(15),   nullable=False);
+    role          = db.Column(db.String(15),   nullable=False);
+    # icon          = db.Column(db.BLOB,         nullable=False)
 
     confirm = db.Column(db.Boolean, default=False);
 
-    last_login  = db.Column(db.DateTime,   nullable=True);
+    last_login  = db.Column(db.DateTime, nullable=True);
     create_at   = db.Column(db.DateTime, default=datetime.now);
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now);
 
