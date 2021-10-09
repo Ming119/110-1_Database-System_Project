@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(1023), nullable=False);
     first_name    = db.Column(db.String(31),   nullable=False);
     last_name     = db.Column(db.String(31),   nullable=False);
+    DOB           = db.Column(db.DateTime,     nullable=True);
     role          = db.Column(db.String(15),   nullable=False);
     # icon          = db.Column(db.BLOB,         nullable=False)
 
@@ -54,6 +55,7 @@ class User(db.Model, UserMixin):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in);
         return s.dumps({'user_id': self.user_id});
 
+    # FIXME: confirm register not working 
     def validate_confirm_token(self, token):
         """
         驗證回傳令牌是否正確，若正確則回傳True
@@ -66,11 +68,19 @@ class User(db.Model, UserMixin):
             data = s.loads(token);   # validate
         except SignatureExpired:        # trigger SignatureExpired Error when token expires
             User.User.query.filter_by(user_id=data.get('user_id')).delete();
-            return -1;
-        except BadSignature:            # trigger BadSignature Error when token wrong
-            return -2;
 
-        return user_id;
+            flash(f'Your confirmation link has been expired. A new confirmation link has been sent to your email address, please try again.', 'warning');
+            send_mail(recipients = [user.email],
+                      subject    = 'Welcome to ...',
+                      template   = 'mail/confirmRegistration',
+                      user       = user,
+                      token      = user.create_confirm_token(),
+                     );
+
+        except BadSignature:            # trigger BadSignature Error when token wrong
+            flash(f'Your confirmation link is incorrect.', 'danger');
+
+        return data;
 
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(

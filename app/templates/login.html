@@ -5,8 +5,7 @@
 {% block title %}Login Page{% endblock title %}
 
 {% block content %}
-
-<div class="card text-dark bg-light mx-auto" style="width: 36rem;">
+<div class="card text-dark bg-light mx-auto mt-5" style="width: 36rem;">
   <div class="card-header">
     <h2>Login</h2>
   </div>
@@ -32,13 +31,15 @@
 
       {{ form.submit(class='btn btn-primary px-5') }}
     </form>
-
-    <!-- {{ wtf.quick_form(form) }} -->
   </div>
 
   <div class="card-footer text-mute text-center">
-    <a class='mb-3 mt-3' href="#">Forgot Your Password?</a>
-    <p class='mb-3 mt-3'>&copy; 2021 CSIE, NTUT</p>
+    <div class="btn-group mt-3">
+      <a type="button" class="btn btn-sm btn-outline-secondary px-3" href='{{ url_for('index.register') }}'>Do not have an account?</a>
+      <a type="button" class="btn btn-sm btn-outline-secondary px-3" href='#'>Forgot Your Password?</a>
+    </div>
+    <p class='my-2'>&copy; 2021 CSIE, NTUT</p>
   </div>
 </div>
+
 {% endblock %}
