@@ -27,10 +27,11 @@ def create_app(test_config=None):
 
     # Register Route Blueprint
     from routes import (
-        indexRoute, userRoute, productRoute
+        indexRoute, userRoute, productRoute, manageUserRoute
     );
     app.register_blueprint(indexRoute.bp);
     app.register_blueprint(userRoute.bp);
     app.register_blueprint(productRoute.bp);
+    app.register_blueprint(manageUserRoute.bp);
 
     return app;
