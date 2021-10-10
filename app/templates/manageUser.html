@@ -3,23 +3,14 @@
 {% block title %}Manage User Page{% endblock title %}
 
 {% block content %}
-<div>
-    <h1 class='text-center'>The admin will manage user in this page</h1>
-</div>
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-    </style>
-<table style="width:100%">
-    <tr>
-        <th>User</th>
-        <th>Status</th>
-    </tr>
-    <tr>
-        <td>User1</td>
-        <td>User1 Register Time</td>
-    </tr>
-</table>
-
+            <div class="row">
+                <h1>Admin Area</h1>
+                {% for eachuser in userlist %}
+                    <div class="row" style="margin-bottom: 1ex">
+                        <div>
+                            {{ eachuser.username }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
 {% endblock %}
