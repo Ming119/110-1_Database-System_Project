@@ -1,0 +1,4 @@
+div.card a.link:link { text-decoration: none; color: #212529; }
+div.card a.link:visited { text-decoration: none; color: #212529; }
+div.card a.link:hover { text-decoration: none; color: #212529; }
+div.card a.link:active { text-decoration: none; color: #212529; }

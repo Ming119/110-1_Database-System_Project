@@ -42,38 +42,87 @@ def index():
                             products         = products
                         )
 
+@login_required
 def createProduct(form):
-    product = Product.Product(
-                category_id = form.category.data,
-                name        = form.productName.data,
-                description = form.productDescription.data,
-                price       = form.price.data,
-                quantity    = form.quantity.data
-            )
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger');
 
-    db.session.add(product)
-    db.session.commit()
+    elif Product.Product.query.filter_by(name=form_newProduct.productName.data).first() is not None:
+        flash(f'Product already exists.', 'warning');
+
+    else:
+        product = Product.Product(
+                    category_id = form.category.data,
+                    name        = form.productName.data,
+                    description = form.productDescription.data,
+                    price       = form.price.data,
+                    quantity    = form.quantity.data
+                );
+
+        db.session.add(product);
+        db.session.commit();
+
+        flash(f'Product created successfully', 'success');
 
     flash(f'Product added successfully.', 'success')
     return redirect(url_for('product.index'))
 
+@login_required
 def createCategory(form):
-    category = ProductCategory.ProductCategory(
-                name        = form.categoryName.data,
-                description = form.categoryDescription.data
-            )
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger');
 
-    db.session.add(category)
-    db.session.commit()
+    else:
+        category = ProductCategory.ProductCategory(
+                    name        = form.categoryName.data,
+                    description = form.categoryDescription.data
+                );
 
-    flash(f'Category added successfully.', 'success')
-    return redirect(url_for('product.index'))
+        db.session.add(category);
+        db.session.commit();
+
+        flash(f'Category added successfully.', 'success');
+    return redirect(url_for('product.index'));
 
 def details(product_id):
-    pass
+    product = Product.Product.query.filter_by(product_id=product_id).first();
+    categories = ProductCategory.ProductCategory.query.all();
+    form = NewProduct.NewProduct(
+                productName        = product.name,
+                productDescription = product.description,
+                price              = product.price,
+                quantity           = product.quantity,
+                category           = product.category_id
+            );
+    form.category.choices = [(category.category_id, category.name) for category in categories];
 
-def edit(product_id):
-    pass
+    # Edit
+    if request.method == 'POST' and form.validate_on_submit():
+        return edit(product, form);
 
+    return render_template('productDetails.html', form=form, product=product);
+
+@login_required
+def edit(product, form):
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger');
+
+    elif form.productName.data != product.name and Product.Product.query.filter_by(name=form.productName.data).first() is not None:
+        flash(f'Product already exists.', 'warning');
+
+    else:
+        product.name        = form.productName.data;
+        product.description = form.productDescription.data;
+        product.category_id = form.category.data;
+        product.price       = form.price.data;
+        product.quantity    = form.quantity.data;
+
+        db.session.commit();
+
+        flash(f'Product updated successfully.', 'success');
+
+    return redirect(url_for('product.details', product_id=product.product_id));
+
+@login_required
 def delete(product_id):
     pass

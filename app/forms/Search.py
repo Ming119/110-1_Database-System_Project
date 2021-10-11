@@ -4,6 +4,4 @@ from wtforms.fields.html5 import SearchField
 
 
 class Search(Form):
-    search = SearchField('Search', validators=[
-        validators.DataRequired()
-    ])
+    search = SearchField('Search');
