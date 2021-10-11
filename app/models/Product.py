@@ -21,12 +21,12 @@ class Product(db.Model):
     def __repr__(self):
         return '<Product {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.product_id,
-                    self.inventory_id,
                     self.category_id,
                     self.discount_id,
                     self.name,
                     self.description,
                     self.price,
+                    self.quantity,
                     self.create_at,
                     self.modified_at,
                     self.deleted_at
