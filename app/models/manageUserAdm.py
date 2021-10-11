@@ -9,6 +9,9 @@ from flask_login import UserMixin;
 def load_user(user_id):
     return User.query.get(int(user_id));
 
+def load_user_date(create_at):
+    return User.query.get(create_at);
+
 def load_all_users():
     return User.query.all()
 

@@ -3,14 +3,22 @@
 {% block title %}Manage User Page{% endblock title %}
 
 {% block content %}
-            <div class="row">
-                <h1>Admin Area</h1>
+
+            <table id="data" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
                 {% for eachuser in userlist %}
-                    <div class="row" style="margin-bottom: 1ex">
-                        <div>
-                            {{ eachuser.username }}
-                        </div>
-                    </div>
+                  <tr>
+                    <td> {{ eachuser.username }} </td>
+                    <td> {{ eachuser.create_at }} </td>
+                  </tr>
                 {% endfor %}
-            </div>
+              </tbody>
+            </table>
+
 {% endblock %}
