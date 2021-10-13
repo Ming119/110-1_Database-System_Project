@@ -4,7 +4,7 @@ from datetime import datetime
 class Discount(db.Model):
     __tablename__ = 'discount'
 
-    discount_id      = db.Column(db.Integer, primary_key=True)
+    discount_id = db.Column(db.Integer, primary_key=True)
 
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=False)
 
@@ -19,15 +19,15 @@ class Discount(db.Model):
     deleted_at  = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
-        return '<Discount {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
-                    self.category_id,
-                    self.product_id,
-                    self.name,
-                    self.code,
-                    self.description,
-                    self.discount_percent,
-                    self.active,
-                    self.create_at,
-                    self.modified_at,
-                    self.deleted_at
-                )
+        return '<Discount %r>' % (
+            self.category_id,
+            self.product_id,
+            self.name,
+            self.code,
+            self.description,
+            self.discount_percent,
+            self.active,
+            self.create_at,
+            self.modified_at,
+            self.deleted_at
+        )

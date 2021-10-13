@@ -30,6 +30,9 @@ class User(db.Model, UserMixin):
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
 
+    last_login  = db.Column(db.DateTime, nullable=True)
+    create_at   = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
     def get_id(self):
         return self.user_id
@@ -54,7 +57,6 @@ class User(db.Model, UserMixin):
 
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in)
         return s.dumps({'user_id': self.user_id})
-
 
     def validate_confirm_token(self, token):
         """

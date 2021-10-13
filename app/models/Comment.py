@@ -11,4 +11,11 @@ class Comment(db.Model):
     rate          = db.Column(db.Ineeger, unique=False, nullable=False)
 
     def __repr__(self):
-        return '<comment: %r>' %(self.cid, self.pid, self.uid, self.date, self.comment, self.rate)
+        return '<comment: %r>' % (
+            self.cid,
+            self.pid,
+            self.uid,
+            self.date,
+            self.comment,
+            self.rate
+        )

@@ -65,10 +65,6 @@ def init_db_command():
             description = 'category1 description'
         )
 
-    # inventory = ProductInventory.ProductInventory(
-    #         quantity = 100
-    #     )
-
     product = Product.Product(
             category_id = 1,
             quantity    = 0,
@@ -81,7 +77,6 @@ def init_db_command():
     db.session.commit()
 
     db.session.add(category)
-    # db.session.add(inventory)
     db.session.commit()
     db.session.add(product)
     db.session.commit()

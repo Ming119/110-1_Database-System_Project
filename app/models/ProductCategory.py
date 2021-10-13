@@ -6,7 +6,7 @@ class ProductCategory(db.Model):
 
     category_id = db.Column(db.Integer, primary_key=True)
 
-    product_id = db.relationship('Product', backref='product_category')
+    product_id  = db.relationship('Product', backref='product_category')
 
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)
@@ -15,12 +15,11 @@ class ProductCategory(db.Model):
     deleted_at  = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
-        return '<Category {}, {}, {}, {}, {}, {}, {}>'.format(
-                    self.category_id,
-                    self.product_id,
-                    self.name,
-                    self.description,
-                    self.create_at,
-                    self.modified_at,
-                    self.deleted_at
-                )
+        return '<Category %r>' % (
+            self.category_id,
+            self.name,
+            self.description,
+            self.create_at,
+            self.modified_at,
+            self.deleted_at
+        )

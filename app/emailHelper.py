@@ -6,7 +6,8 @@ from threading import Thread
 def send_mail(recipients, subject, template, sender=None, mailtype='html', **kwargs):
     app = current_app._get_current_object()
 
-    if not sender:
+    # if not sender:
+    if sender is None:
         sender = app.config.get('MAIL_USERNAME')
 
     msg = Message(subject, sender=sender, recipients=recipients)

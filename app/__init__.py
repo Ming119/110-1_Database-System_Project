@@ -26,9 +26,8 @@ def create_app(test_config=None):
         util.init_app(app)
 
     # Register Route Blueprint
-    from routes import (
-        indexRoute, userRoute, productRoute
-    )
+    from routes import indexRoute, userRoute, productRoute
+
     app.register_blueprint(indexRoute.bp)
     app.register_blueprint(userRoute.bp)
     app.register_blueprint(productRoute.bp)
