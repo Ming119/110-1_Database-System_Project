@@ -7,7 +7,7 @@ from wtforms import StringField, TextAreaField, SubmitField, validators, Validat
 class NewCategory(Form):
     categoryName = StringField('Category Name', validators=[
         validators.DataRequired(),
-    ]);
+    ])
 
     categoryDescription = TextAreaField('Category Description');
 

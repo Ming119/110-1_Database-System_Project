@@ -9,7 +9,7 @@ class RegisterForm(Form):
     email = EmailField('Email', validators=[
         validators.DataRequired(),
         validators.Email()
-    ]);
+    ])
 
     username = StringField('Username', validators=[
         validators.DataRequired(),
@@ -37,7 +37,7 @@ class RegisterForm(Form):
         validators.DataRequired()
     ]);
 
-    submit = SubmitField('Register');
+    submit = SubmitField('Register')
 
     # TODO: error message
     def validate_password(self, field):

@@ -18,7 +18,7 @@ def index():
 
     # Create a new category
     if request.method == 'POST' and form_newCategory.validate_on_submit():
-        return createCategory(form_newCategory);
+        return createCatedory(form_newCategory)
 
     # Search
     if request.method == 'POST' and form_search.validate_on_submit():
@@ -26,14 +26,13 @@ def index():
 
         products_list = list();
 
-        for word in worlds:
+        for word in words:
             products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all());
             products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all());
 
-        products = set(products_list);
-
+        products = set(products_list)
     else:
-        products = Product.Product.query.all();
+        products = Product.Product.query.all()
 
     return render_template('product.html',
                             form_search      = form_search,
@@ -62,9 +61,9 @@ def createCategory(form):
                 name        = form.categoryName.data,
                 description = form.categoryDescription.data
             );
-
-    db.session.add(category);
-    db.session.commit();
+            
+    db.session.add(category)
+    db.session.commit()
 
     flash(f'Category added successfully.', 'success');
     return redirect(url_for('product.index'));
@@ -76,4 +75,4 @@ def edit(product_id):
     pass;
 
 def delete(product_id):
-    pass;
+    pass

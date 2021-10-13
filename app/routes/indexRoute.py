@@ -1,9 +1,9 @@
-from flask import Blueprint;
+from flask import Blueprint
 from controllers.indexController import (
     index, register, confirmRegistration, login, logout
-);
+)
 
-bp = Blueprint('index', __name__);
+bp = Blueprint('index', __name__)
 
 bp.route('/', methods=['GET'])(index)
 bp.route('/register', methods=['GET', 'POST'])(register);
