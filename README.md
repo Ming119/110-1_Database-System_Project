@@ -11,6 +11,8 @@
 - 110AEM002 譚永駿
 
 ### Note for Team Members
+> PLEASE DO NOT ADD ';' TO PYTHON CODE AT THE END OF SENTENCE
+
 Scrum developing procedure:
 1. Take a task you are interested in from [Miro](https://miro.com/welcomeonboard/MkF1UFZBb2tJeHM4Nmxtc0lueTZ3b3lJZXQ0TWFWc1lOb25FemFacVB3WVJ3NVlrSWZqTFRuT0xvQ2d6OGYyTHwzMDc0NDU3MzYyMDA0NjQyMjM2?invite_link_id=149965833091)
 2. Develop your part on your branch
