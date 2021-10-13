@@ -18,7 +18,7 @@ login.login_view = 'login'
 from models import (
     User, UserAddress, UserPayment,
     ProductCategory, Discount, Product
-);
+)
 
 def init_db():
     db.drop_all()
@@ -71,7 +71,7 @@ def init_db_command():
             name        = 'product',
             description = 'Product description',
             price       = 100
-        );
+        )
 
     db.session.add(category)
     db.session.add(inventory)

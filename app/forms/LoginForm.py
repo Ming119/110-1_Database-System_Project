@@ -1,6 +1,6 @@
-from flask import current_app;
-from flask_wtf import Form;
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, validators;
+from flask import current_app
+from flask_wtf import Form
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, validators
 
 class LoginForm(Form):
     username = StringField('Username', validators=[
