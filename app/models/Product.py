@@ -1,7 +1,6 @@
 from util import db
 from datetime import datetime
 
-
 class Product(db.Model):
     __tablename__ = 'product'
 
@@ -31,4 +30,4 @@ class Product(db.Model):
                     self.create_at,
                     self.modified_at,
                     self.deleted_at
-                );
+                )

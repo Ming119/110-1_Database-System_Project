@@ -1,7 +1,6 @@
 from util import db
 from datetime import datetime
 
-
 class Comment(db.Model):
     __tablename__ = 'comments'
     cid           = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -13,10 +12,10 @@ class Comment(db.Model):
 
     def __repr__(self):
         return '<comment: %r>' % (
-            self.cid, 
-            self.pid, 
-            self.uid, 
-            self.date, 
-            self.comment, 
+            self.cid,
+            self.pid,
+            self.uid,
+            self.date,
+            self.comment,
             self.rate
         )

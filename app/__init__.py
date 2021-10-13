@@ -3,7 +3,6 @@ import pymysql
 
 from flask import Flask, render_template, url_for
 
-
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -28,7 +27,7 @@ def create_app(test_config=None):
 
     # Register Route Blueprint
     from routes import indexRoute, userRoute, productRoute
-    
+
     app.register_blueprint(indexRoute.bp)
     app.register_blueprint(userRoute.bp)
     app.register_blueprint(productRoute.bp)

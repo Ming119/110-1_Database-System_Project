@@ -1,7 +1,6 @@
 from util import db
 from datetime import datetime
 
-
 class UserPayment(db.Model):
     __tablename__ = 'user_payment'
 

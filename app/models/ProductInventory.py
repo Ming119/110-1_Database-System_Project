@@ -1,7 +1,6 @@
 from util import db
 from datetime import datetime
 
-
 class ProductInventory(db.Model):
     __tablename__ = 'product_inventory'
 

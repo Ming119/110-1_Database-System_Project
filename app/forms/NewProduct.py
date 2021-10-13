@@ -30,15 +30,15 @@ class NewProduct(Form):
 
     def validate_price(self, field):
         if field.data < 0:
-            flash(f'Price should not be negative.', 'warning');
-            raise ValidationError("Price should not be negative.");
+            flash(f'Price should not be negative.', 'warning')
+            raise ValidationError("Price should not be negative.")
 
     def validate_quantity(self, field):
         if field.data < 0:
-            flash(f'Quantity should not be negative.', 'warning');
-            raise ValidationError("Quantity should not be negative.");
+            flash(f'Quantity should not be negative.', 'warning')
+            raise ValidationError("Quantity should not be negative.")
 
     def validate_discount(self, field):
         if field.data != '' and Discount.query.filter_by(code=field.data).first() is None:
-            flash(f'Discount Code not found.', 'warning');
-            raise ValidationError("Discount Code not found.");
+            flash(f'Discount Code not found.', 'warning')
+            raise ValidationError("Discount Code not found.")
