@@ -124,5 +124,29 @@ def edit(product, form):
     return redirect(url_for('product.details', product_id=product.product_id));
 
 @login_required
-def delete(product_id):
-    pass;
+def deleteCategory(category_id):
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger');
+
+    else:
+        try:
+            ProductCategory.ProductCategory.query.filter_by(category_id=category_id).delete();
+        except:
+            flash(f'This Category is still in use.', 'warning');
+        else:
+            db.session.commit();
+            flash(f'Category deleted successfully.', 'success');
+
+    return redirect(url_for('product.index'));
+
+@login_required
+def deleteProduct(product_id):
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger');
+    else:
+        Product.Product.query.filter_by(product_id=product_id).delete();
+        db.session.commit();
+
+        flash(f'Product deleted successfully.', 'success');
+
+    return redirect(url_for('product.index'));

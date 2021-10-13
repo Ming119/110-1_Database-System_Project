@@ -9,10 +9,17 @@
   <div class="col-3">
     <div class="list-group">
       {% if current_user.role == 'staff' %}
-      <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">+ Add a new category</a>
+      <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">
+        <span>+ Add a new category<span>
+      </a>
       {% endif %}
       {% for category in categories %}
-      <a href="#" class="list-group-item list-group-item-action">{{ category.name }}</a>
+      <li class="list-group-item list-group-item-action d-flex justify-content-between">
+        <a href="#" class="mute-link flex-fill"><span>{{ category.name }}</span></a>
+        {% if current_user.role == 'staff' %}
+        <a href="{{ url_for('product.deleteCategory', category_id=category.category_id) }}" class=" btn-close" aria-label="Close"></a>
+        {% endif %}
+      </li>
       {% endfor %}
       {% if current_user.is_authenticated %}
       {% endif %}
@@ -51,7 +58,7 @@
       {% for product in products %}
       <div class="col">
         <div class="card shadow-sm">
-          <a class='link' href='{{ url_for('product.details', product_id=product.product_id) }}'>
+          <a class='mute-link' href='{{ url_for('product.details', product_id=product.product_id) }}'>
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
               <title>Placeholder</title>
               <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ product.name }}</text>

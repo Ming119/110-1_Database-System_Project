@@ -1,12 +1,12 @@
 import click;
 
-from flask import current_app, session, request, redirect, url_for;
+from flask import current_app, session, request, redirect, url_for, flash;
 from flask.cli import with_appcontext;
 from flask_sqlalchemy import SQLAlchemy;
 from flask_bootstrap import Bootstrap;
 from flask_bcrypt import Bcrypt;
 from flask_mail import Mail;
-from flask_login import LoginManager;
+from flask_login import LoginManager, current_user;
 from functools import wraps
 
 db        = SQLAlchemy(current_app);
@@ -15,6 +15,7 @@ bcrypt    = Bcrypt(current_app);
 mail      = Mail(current_app);
 login     = LoginManager(current_app);
 login.login_view = 'index.login';
+login.login_message_category = "warning"
 
 from models import (
     User, UserAddress, UserPayment,
