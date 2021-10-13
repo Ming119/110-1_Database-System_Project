@@ -105,6 +105,8 @@ def login():
 
         flash(f'Wrong username or password', 'warning');
 
+    return render_template('login.html', form=form)
+
 # logout function
 # GET method to redirect to index page immediately
 # POST method is not supported

@@ -13,12 +13,12 @@ class NewProduct(Form):
     productDescription = StringField('Description');
 
     price = FloatField('Price', validators=[
-        validators.DataRequired(),
+        validators.InputRequired(),
         validators.NumberRange(min=0)
     ]);
 
     quantity = IntegerField('Quantity', validators=[
-        validators.DataRequired(),
+        validators.InputRequired(),
         validators.NumberRange(min=0)
     ]);
 
