@@ -25,10 +25,10 @@ Scrum developing procedure:
 *Pay attention to the compatibility of each function during fixing conflict*
 
 Sprint Review #1: 13 Oct (Wed) at 18:10 @Google Meet  
-Sprint Review #2: TBD  
-Sprint Review #3: TBD  
-Sprint Review #4: TBD  
-
+Sprint Review #2: 29 Oct (Fri) at 13:10 @TB6-327  
+Sprint Review #3: 5 Nov (Fri) at 13:10 @TB6-327  
+Sprint Review #4: 26 Nov (Fri) at 13:10 @TB6-327  
+Sprint Review #4: 3 Dec (Fri) at 13:10 @TB6-327  
 
 ## Project Objective:
 This project requires students to work on a database project in order to exercise the relational DBMS software, SQL, and database design techniques learned and to gain the project experiences. The major focus of the project will be Entity-Relationship modeling, relational database design, SQL, normalization, and Web-based database system development.
