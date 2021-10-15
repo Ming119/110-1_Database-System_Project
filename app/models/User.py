@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    def create_confirm_token(self, expires_in=900):
+    def create_confirm_token(self, expires_in=300):
         """
         Generate a token from itsdangerous for confirm user's register
         :param expires_in: expiration time in seconds
@@ -58,27 +58,14 @@ class User(db.Model, UserMixin):
         """
         驗證回傳令牌是否正確，若正確則回傳True
         :param token: token
-        :return: 回傳驗證是否正確，正確為True
+        :return: 回傳驗證是否正確
         """
 
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
-        data = s.loads(token)
-        # FIXME: confirm register not working
-        # try:
-        #     data = s.loads(token)   # validate
-        # except SignatureExpired:        # trigger SignatureExpired Error when token expires
-        #     User.User.query.filter_by(user_id=data.get('user_id')).delete()
-        #
-        #     flash(f'Your confirmation link has been expired. A new confirmation link has been sent to your email address, please try again.', 'warning')
-        #     send_mail(recipients = [user.email],
-        #               subject    = 'Welcome to ...',
-        #               template   = 'mail/confirmRegistration',
-        #               user       = user,
-        #               token      = user.create_confirm_token(),
-        #              )
-        #
-        # except BadSignature:            # trigger BadSignature Error when token wrong
-        #     flash(f'Your confirmation link is incorrect.', 'danger')
+        try:
+            data = s.loads(token)   # validate
+        except (SignatureExpired, BadSignature):        # trigger SignatureExpired Error when token expires
+            return None
 
         return data
 

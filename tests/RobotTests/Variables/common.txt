@@ -1,0 +1,11 @@
+*** Variables ***
+${browser} =    firefox
+${webSiteURL} =    http://192.168.0.158:5000
+
+${shortPeriodOfTime} =    1s
+${normalPeriodOfTime} =    3s
+${longPeriodOfTime} =    5s
+
+&{customer} =    username=user    password=user
+&{staff} =    username=staff    password=staff
+&{admin} =    username=admin    password=admin
