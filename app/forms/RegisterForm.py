@@ -30,7 +30,7 @@ class RegisterForm(Form):
 
     password2 = PasswordField('Confirm Password', validators=[
         validators.DataRequired(),
-        validators.EqualTo('password', message='PASSWORD NEED MATCH')
+        validators.EqualTo('password', message='PASSWORD NEED MATCH')   # TODO: message
     ])
 
     BOD = DateField('Date of Birth', validators=[

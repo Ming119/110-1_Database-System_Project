@@ -2,13 +2,13 @@ from util import db
 from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from emailHelper import send_mail
-from forms import RegisterForm, LoginForm
+from forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
 from models import User
 from datetime import datetime
 
 # index page of the website
 # GET method to render index page
-# POST method is not supported
+# POST method is not allowed
 def index():
     return render_template('index.html')
 
@@ -59,13 +59,18 @@ def register():
 
     return render_template('register.html', form=form)
 
-
-# FIXME: confirm register not working
+# confirm registration function
+# GET method to validate confirmation token
+#   :param: token
+# POST method is not allowed
 def confirmRegistration(token):
     user = User.User()
     data = user.validate_confirm_token(token)
 
-    if data > 0:
+    if data is None:
+        flash(f'You confirmation link is invalid or expired, please try again.', 'danger')
+
+    else:
         user = User.User.query.filter_by(user_id=data.get('user_id')).first()
         user.confirm = True
         db.session.add(user)
@@ -78,7 +83,7 @@ def confirmRegistration(token):
                  )
 
         flash(f'Your email address has been confirmed, thank you.', 'success')
-        return redirect(url_for('index.login'))
+    return redirect(url_for('index.login'))
 
 # login page of the website
 # GET method to render the login form
@@ -109,8 +114,58 @@ def login():
 
 # logout function
 # GET method to redirect to index page immediately
-# POST method is not supported
+# POST method to send a reset password email
 def logout():
     logout_user()
     flash('Logout successful!', 'success')
     return redirect(url_for('index.index'))
+
+# logout page of the website
+# GET method to render the forgot password form
+# POST method to submit the forgot password form and send a reset password email
+def forgotPassword():
+    form = ForgotPasswordForm.ForgotPasswordForm();
+
+    if request.method == 'POST' and form.validate_on_submit():
+        user = User.User.query.filter_by(email=form.email.data).first()
+        if user is not None and user.confirm == True:
+            send_mail(recipients = [user.email],
+                      subject    = 'Reset your password',
+                      template   = 'mail/resetPassword',
+                      user       = user,
+                      token      = user.create_confirm_token()
+                     )
+
+        flash(f'A reset password email has been sent to your email if your email is registered.', 'success')
+        return redirect(url_for('index.index'));
+
+    return render_template('forgotPassword.html', form=form)
+
+# reset password function
+# GET method to render reset password form
+# :param: token
+# POST method to submit the reset password form
+def resetPassword(token):
+    form = ResetPasswordForm.ResetPasswordForm();
+
+    if request.method == 'POST' and form.validate_on_submit():
+        user = User.User()
+        data = user.validate_confirm_token(token)
+
+        if data is None:
+            flash(f'You link is invalid or expired, please try again.', 'danger')
+            return redirect(url_for('index.index'));
+
+        user = User.User.query.filter_by(user_id=data.get('user_id')).first()
+        user.password = form.password.data
+
+        send_mail(recipients = [user.email],
+                  subject    = 'Password Updated Successfully',
+                  template   = 'mail/passwordUpdated',
+                  user       = user
+                 )
+
+        flash(f'Your password has been updated.', 'success')
+        return redirect(url_for('index.login'));
+
+    return render_template('resetPassword.html', form=form)
