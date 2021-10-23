@@ -1,5 +1,6 @@
 venv/
 
+*.log
 *.pyc
 __pycache__/
 
@@ -12,3 +13,10 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+tests/RobotTests/*.html
+tests/RobotTests/*.xml
+tests/RobotTests/*.png
+
+.github/
+.vscode/

@@ -1,4 +1,4 @@
-import click;
+import click
 
 from flask import current_app, session, request, redirect, url_for, flash;
 from flask.cli import with_appcontext;
@@ -20,16 +20,16 @@ login.login_message_category = "warning"
 from models import (
     User, UserAddress, UserPayment,
     ProductCategory, Discount, Product
-);
+)
 
 def init_db():
-    db.drop_all();
-    db.create_all();
+    db.drop_all()
+    db.create_all()
 
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
-    init_db();
+    init_db()
 
     user = User.User(
             email      = 'user@domain.com',
@@ -39,7 +39,7 @@ def init_db_command():
             last_name  = 'user',
             role       = 'user',
             confirm    = True
-        );
+        )
 
     admin = User.User(
             email      = 'admin@domain.com',
@@ -49,7 +49,7 @@ def init_db_command():
             last_name  = 'admin',
             role       = 'admin',
             confirm    = True
-        );
+        )
 
     staff = User.User(
             email      = 'staff@domain.com',
@@ -59,16 +59,12 @@ def init_db_command():
             last_name  = 'staff',
             role       = 'staff',
             confirm    = True
-        );
+        )
 
     category = ProductCategory.ProductCategory(
             name = 'category1',
             description = 'category1 description'
-        );
-
-    # inventory = ProductInventory.ProductInventory(
-    #         quantity = 100
-    #     );
+        )
 
     product = Product.Product(
             category_id = 1,
@@ -76,18 +72,17 @@ def init_db_command():
             name        = 'product',
             description = 'Product description',
             price       = 100
-        );
+        )
 
-    db.session.add_all([user, admin, staff]);
-    db.session.commit();
+    db.session.add_all([user, admin, staff])
+    db.session.commit()
 
-    db.session.add(category);
-    # db.session.add(inventory);
-    db.session.commit();
-    db.session.add(product);
-    db.session.commit();
+    db.session.add(category)
+    db.session.commit()
+    db.session.add(product)
+    db.session.commit()
 
-    click.echo('Initialized the database.');
+    click.echo('Initialized the database.')
 
 def init_app(app):
-    app.cli.add_command(init_db_command);
+    app.cli.add_command(init_db_command)
