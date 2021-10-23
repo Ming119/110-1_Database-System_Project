@@ -1,6 +1,6 @@
 *** Settings ***
 Library    Selenium2Library
-Resource    ../Variables/common.txt
+Resource    ../variables.txt
 
 **keywords**
 Common::Wait Until Navbar Button Is Visible

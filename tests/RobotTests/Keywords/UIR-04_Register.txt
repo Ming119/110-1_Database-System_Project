@@ -1,6 +1,6 @@
 *** Settings ***
 Library    Selenium2Library
-Resource    ../../Variables/common.txt
+Resource    ../variables.txt
 
 **keywords**
 Register Page::Wait Until Register Form Is Visible
@@ -22,3 +22,8 @@ Have An Account Button Should Be Visible
     ${haveAnAccountButton} =    Set Variable    //*[contains(@class, 'card-footer')]//*[normalize-space()='Already have an account?']
     Wait Until Element Is Visible    ${haveAnAccountButton}    ${shortPeriodOfTime}    'Have An Account Button Should Be Visible'
     [Return]    ${haveAnAccountButton}
+
+Verify Already Have An Account Button
+    Register Page::Wait Until Register Form Is Visible
+    Register Page::Click Have An Account Button
+    Login Page::Wait Until Login Form Is Visible
