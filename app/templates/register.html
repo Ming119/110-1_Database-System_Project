@@ -51,6 +51,15 @@
 
       {{ form.submit(class='btn btn-primary px-5') }}
     </form>
+
+    {% for errors in form.errors.values() %}
+    {% for error in errors %}
+    <small class="form-text text-danger">
+      {{ error }}
+    </small>
+    <br />
+    {% endfor %}
+    {% endfor %}
   </div>
 
   <div class="card-footer text-mute text-center">
