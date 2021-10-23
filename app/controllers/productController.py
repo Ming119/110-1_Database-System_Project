@@ -32,7 +32,6 @@ def index():
 
         products = set(products_list)
 
-        products = set(products_list)
     else:
         products = Product.Product.query.all()
 

@@ -21,5 +21,5 @@ class ProductCategory(db.Model):
             self.description,
             self.create_at,
             self.modified_at,
-            self.deleted_at
+            self.deleted_ats
         )
