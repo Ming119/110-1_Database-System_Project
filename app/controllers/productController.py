@@ -49,7 +49,7 @@ def createProduct(form):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
 
-    elif Product.Product.query.filter_by(name=form_newProduct.productName.data).first() is not None:
+    elif Product.Product.query.filter_by(name=form.productName.data).first() is not None:
         flash(f'Product already exists.', 'warning')
 
     else:
