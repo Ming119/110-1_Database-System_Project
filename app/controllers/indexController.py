@@ -114,7 +114,7 @@ def login():
 
 # logout function
 # GET method to redirect to index page immediately
-# POST method to send a reset password email
+# POST method is not allowed
 def logout():
     logout_user()
     flash('Logout successful!', 'success')

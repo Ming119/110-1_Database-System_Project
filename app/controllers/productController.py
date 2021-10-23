@@ -26,7 +26,7 @@ def index():
 
         products_list = list()
 
-        for word in worlds:
+        for word in words:
             products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
             products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
 
