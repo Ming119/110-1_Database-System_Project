@@ -2,67 +2,78 @@ from util import db
 from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from models import Product, ProductCategory
-from forms import Search, NewCategory
-
+from forms import Search, NewCategory, NewProduct
 
 def index():
-    form_search = Search.Search()
+    categories = ProductCategory.ProductCategory.query.all()
+
+    form_search      = Search.Search()
     form_newCategory = NewCategory.NewCategory()
+    form_newProduct  = NewProduct.NewProduct()
+    form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
 
+    # Create a new product
+    if request.method == 'POST' and form_newProduct.validate_on_submit():
+        return createProduct(form_newProduct)
+
+    # Create a new category
     if request.method == 'POST' and form_newCategory.validate_on_submit():
-        return createCatedory(form_newCategory)
+        return createCategory(form_newCategory)
 
+    # Search
     if request.method == 'POST' and form_search.validate_on_submit():
-        words = form.search.data.split(' ')
+        words = form_search.search.data.split(' ')
 
-        products_list = [
-            Product.Product.query.filter(Product.Product.name.contains(word)).all() 
-            for word in words
-        ]
+        products_list = list()
 
-        # for word in worlds:  # typo
-        #     products_list.append(Product.Product.query.filter(
-        #         Product.Product.name.contains(word)).all()
-        #     )
-
+        for word in words:
+            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
+            products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
         products = set(products_list)
+
     else:
         products = Product.Product.query.all()
 
-    categories = ProductCategory.ProductCategory.query.all()
+    return render_template('product.html',
+                            form_search      = form_search,
+                            form_newCategory = form_newCategory,
+                            form_newProduct  = form_newProduct,
+                            categories       = categories,
+                            products         = products
+                        )
 
-    return render_template(
-        'product.html',
-        form_search      = form_search,
-        form_newCategory = form_newCategory,
-        categories       = categories,
-        products         = products
-    )
+def createProduct(form):
+    product = Product.Product(
+                category_id = form.category.data,
+                name        = form.productName.data,
+                description = form.productDescription.data,
+                price       = form.price.data,
+                quantity    = form.quantity.data
+            )
 
+    db.session.add(product)
+    db.session.commit()
 
-def details(product_id):
-    pass
+    flash(f'Product added successfully.', 'success')
+    return redirect(url_for('product.index'))
 
-
-def edit(product_id):
-    pass
-
-
-def createProduct(form_newProduct):
-    pass
-
-
-def createCatedory(form):
+def createCategory(form):
     category = ProductCategory.ProductCategory(
-        name=form.name.data,
-        description=form.description.data
-    )
+                name        = form.categoryName.data,
+                description = form.categoryDescription.data
+            )
 
     db.session.add(category)
     db.session.commit()
 
+    flash(f'Category added successfully.', 'success')
     return redirect(url_for('product.index'))
 
+def details(product_id):
+    pass
+
+def edit(product_id):
+    pass
 
 def delete(product_id):
     pass

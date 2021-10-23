@@ -17,9 +17,8 @@ login.login_view = 'login'
 
 from models import (
     User, UserAddress, UserPayment,
-    ProductInventory, ProductCategory, Discount, Product
+    ProductCategory, Discount, Product
 )
-
 
 def init_db():
     db.drop_all()
@@ -66,18 +65,13 @@ def init_db_command():
         description='category1 description'
     )
 
-    inventory = ProductInventory.ProductInventory(quantity=100)
-
     product = Product.Product(
-        inventory_id = inventory,
-        category_id  = [category],
-        name         = 'product',
-        description  = 'Product description',
-        price        = 100
-    )
-
-    db.session.add_all([user, admin, staff])
-    db.session.commit()
+            category_id = 1,
+            quantity    = 0,
+            name        = 'product',
+            description = 'Product description',
+            price       = 100
+        )
 
     db.session.add(category)
     db.session.add(inventory)

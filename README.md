@@ -43,7 +43,7 @@ This project requires students to work on a database project in order to exercis
     - [ ] The staffs can manage the data of products, such as querying and updating products, processing product ordering.
     - [ ] The administrator can create and manage user accounts.
   - [x] The system shall allow users to login and logout system.
-  - [ ] The system shall authenticate users with loginid and password.
+  - [x] The system shall authenticate users with loginid and password.
   - [x] The system should allow a user to register himself/herself as a customer. (optional)
 - Shall allow customers to search products, order products, and view the history of his/her orders.
   - [ ] The system shall allow customers to search products.
