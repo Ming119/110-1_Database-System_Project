@@ -1,6 +1,6 @@
 *** Settings ***
 Library    Selenium2Library
-Resource    ../variables.txt
+Resource    ../allVariables.txt
 
 **keywords**
 Flash::Wait Until Flash Message With Category Is Visible

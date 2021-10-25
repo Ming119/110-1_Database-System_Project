@@ -1,0 +1,5 @@
+*** Settings ***
+Resource    Variables/common.txt
+Resource    Variables/loginPage.txt
+Resource    Variables/registerPage.txt
+Resource    Variables/forgotPasswordPage.txt

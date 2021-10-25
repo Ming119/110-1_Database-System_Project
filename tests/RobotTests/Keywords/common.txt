@@ -1,6 +1,6 @@
 *** Settings ***
 Library    Selenium2Library
-Resource    ../variables.txt
+Resource    ../allVariables.txt
 
 **keywords**
 Common::Wait Until Navbar Button Is Visible
@@ -32,7 +32,7 @@ Go To Register Page
     Common::Click Navbar Button    Sign-up
     Common::Wait Until Navbar Contains    Home    Products    Login    Sign-up
 
-Go To Product Page
+Go To Manage Product Page
     Common::Click Navbar Button    Products
     Common::Wait Until Navbar Contains    Home    Products    Logout
 

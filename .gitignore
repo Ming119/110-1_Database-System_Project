@@ -14,9 +14,7 @@ dist/
 build/
 *.egg-info/
 
-tests/RobotTests/*.html
-tests/RobotTests/*.xml
-tests/RobotTests/*.png
+tests/RobotTests/reports
 
 .github/
 .vscode/

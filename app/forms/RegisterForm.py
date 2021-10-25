@@ -28,12 +28,12 @@ class RegisterForm(Form):
         validators.Length(min=8)
     ])
 
-    password2 = PasswordField('Confirm Password', validators=[
+    confirm_password = PasswordField('Confirm Password', validators=[
         validators.DataRequired(),
         validators.EqualTo('password', message='PASSWORD NEED MATCH')   # TODO: message
     ])
 
-    BOD = DateField('Date of Birth', validators=[
+    DOB = DateField('Date of Birth', validators=[
         validators.DataRequired()
     ])
 

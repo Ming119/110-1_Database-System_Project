@@ -2,5 +2,6 @@
 Library    Selenium2Library
 Resource    Keywords/common.txt
 Resource    Keywords/flash.txt
-Resource    Keywords/UIR-04_Register.txt
-Resource    Keywords/UIR-03_Login.txt
+Resource    Keywords/loginPage.txt
+Resource    Keywords/registerPage.txt
+Resource    Keywords/forgotPasswordPage.txt

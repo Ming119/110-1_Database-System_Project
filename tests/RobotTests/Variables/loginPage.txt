@@ -1,0 +1,11 @@
+*** Settings ***
+Resource    common.txt
+
+*** Variables ***
+${loginTitle} =    ${cardHeader}//*[normalize-space()='Login']
+${usernameField} =    ${cardBody}//form//*[@id='username']
+${passwordField} =    ${cardBody}//form//*[@id='password']
+${rememberMeCheckBox} =    ${cardBody}//form//*[@id='remember_me']
+${loginButton} =    ${cardBody}//form//*[@id='submit']
+${doNotHaveAnAccountButton} =    ${cardFooter}//*[normalize-space()='Do not have an account?']
+${forgotPasswordButton} =    ${cardFooter}//*[normalize-space()='Forgot Your Password?']
