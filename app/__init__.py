@@ -37,12 +37,3 @@ def create_app(test_config=None):
     app.register_blueprint(manageUserRoute.bp);
 
     return app;
-
-    from routes import indexRoute, userRoute, productRoute
-    
-    app.register_blueprint(indexRoute.bp)
-    app.register_blueprint(userRoute.bp)
-    app.register_blueprint(productRoute.bp)
-
-    return app
-
