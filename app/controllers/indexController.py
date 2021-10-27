@@ -2,15 +2,36 @@ from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from datetime import datetime
 from app.emailHelper import send_mail
-from app.models import User
-from app.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
-
+from app.models import User, Product, ProductCategory
+from app.forms import (
+    RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, Search
+)
 
 # index page of the website
 # GET method to render index page
 # POST method is not allowed
 def index():
-    return render_template('index.html')
+    categories = ProductCategory.ProductCategory.query.all()
+    form_search      = Search.Search()
+
+    # Search
+    if request.method == 'POST' and form_search.validate_on_submit():
+        words = form_search.search.data.split(' ')
+
+        products_list = list()
+        for word in words:
+            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
+            products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
+        products = set(products_list)
+
+    else:
+        products = Product.Product.query.all()
+
+    return render_template('index.html',
+                            form_search      = form_search,
+                            categories       = categories,
+                            products         = products
+                        )
 
 # register page of the website
 # GET method to render the register form
