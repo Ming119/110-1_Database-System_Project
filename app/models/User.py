@@ -1,4 +1,4 @@
-from util import bcrypt, db, login
+from app.util import bcrypt, db, login
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer
 from itsdangerous import SignatureExpired, BadSignature
@@ -29,9 +29,11 @@ class User(db.Model, UserMixin):
     create_at   = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
+    # Override for @login.user_loader
     def get_id(self):
         return self.user_id
 
+    # Private attribute
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -68,6 +70,16 @@ class User(db.Model, UserMixin):
             return None
 
         return data
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self, **kwargs):
+        db.session.commit()
+
+    # def delete(self):
+
 
     def __repr__(self):
         return '<User %r>' % (

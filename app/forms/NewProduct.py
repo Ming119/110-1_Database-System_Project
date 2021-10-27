@@ -1,6 +1,4 @@
-from util import db
-from models.Product import Product
-from models.Discount import Discount
+from app.models.Discount import Discount
 from flask import flash
 from flask_wtf import Form
 from wtforms import StringField, IntegerField, FloatField, SelectField, SubmitField, validators, ValidationError

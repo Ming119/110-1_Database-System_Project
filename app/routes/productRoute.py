@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers.productController import (
+from app.controllers.productController import (
     index, details, delete
 )
 

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers.indexController import (
+from app.controllers.indexController import (
     index, register, confirmRegistration, forgotPassword, resetPassword, login, logout
 )
 

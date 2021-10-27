@@ -1,10 +1,10 @@
-from util import db
 from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
-from emailHelper import send_mail
-from forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
-from models import User
 from datetime import datetime
+from app.emailHelper import send_mail
+from app.models import User
+from app.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
+
 
 # index page of the website
 # GET method to render index page
@@ -44,8 +44,7 @@ def register():
             return redirect(url_for('index.register'))
 
         if not user2:
-            db.session.add(user)
-            db.session.commit()
+            user.create();
 
         send_mail(recipients = [user.email],
                   subject    = 'Welcome to ...',
@@ -73,8 +72,7 @@ def confirmRegistration(token):
     else:
         user = User.User.query.filter_by(user_id=data.get('user_id')).first()
         user.confirm = True
-        db.session.add(user)
-        db.session.commit()
+        user.update()
 
         send_mail(
             recipients = [user.email],
@@ -104,7 +102,7 @@ def login():
 
         if user and user.check_password(form.password.data):
             user.last_login = datetime.now
-            db.session.commit()
+            user.update()
             login_user(user, form.remember_me.data)
             flash(f'Login successful!', 'success')
             return redirect(url_for('index.index'))

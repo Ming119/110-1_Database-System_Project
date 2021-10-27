@@ -16,7 +16,7 @@ mail      = Mail(current_app)
 login     = LoginManager(current_app)
 login.login_view = 'index.login'
 
-from models import (
+from app.models import (
     User, UserAddress, UserPayment,
     ProductCategory, Discount, Product
 )
@@ -88,5 +88,5 @@ def init_db_command():
 
     click.echo('Initialized the database.')
 
-def init_app(app):
-    app.cli.add_command(init_db_command)
+def init_app(current_app):
+    current_app.cli.add_command(init_db_command)
