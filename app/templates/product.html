@@ -5,52 +5,165 @@
 {% block title %}Product Page{% endblock title %}
 
 {% block content %}
-<div class="">
-  <!-- <div class="input-group">
-    <div class="form-outline">
-      <input type="search" id="form1" class="form-control" />
-      <label class="form-label" for="form1">Search</label>
-    </div>
-    <button type="button" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-  </div> -->
-  {{ wtf.quick_form(form) }}
-</div>
-
-
-
-<div class="row">
+<div class="row my-5">
   <div class="col-3">
     <div class="list-group">
-    {% for category in categories %}
-    <a href="#" class="list-group-item list-group-item-action">{{ category.name }}</a>
-    {% endfor %}
+      {% for category in categories %}
+      <a href="#" class="list-group-item list-group-item-action">{{ category.name }}</a>
+      {% endfor %}
+      {% if current_user.is_authenticated %}
+      {% if current_user.role == 'staff' %}
+      <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">+ Add a new category</a>
+      {% endif %}
+      {% endif %}
     </div>
   </div>
 
   <div class="col-9">
-    {% for product in products %}
-    <div class="col-3">
-      <div class="card shadow-sm">
-        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
-          <title>Placeholder</title>
-          <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ product.name }}</text>
-        </svg>
+    <div class="mb-3">
+      {{ wtf.quick_form(form_search) }}
+    </div>
+    <div class='row row-cols-3'>
+      {% for product in products %}
+      <div class="col">
+        <div class="card shadow-sm">
+          <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
+            <title>Placeholder</title>
+            <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ product.name }}</text>
+          </svg>
 
-        <div class="card-body">
-          <p class="card-text">{{ product.description }}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">a</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">b</button>
+          <div class="card-body">
+            <p class="card-text">{{ product.description }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">{{ product.category_id }}</button>
+              </div>
+              <small class="text-muted">${{ product.price }}</small>
             </div>
-            <small class="text-muted">${{ product.price }}</small>
           </div>
         </div>
       </div>
+      {% endfor %}
+      {% if current_user.is_authenticated %}
+      {% if current_user.role == 'staff' %}
+
+      <div class="col">
+        <!-- <a href="#" class=""> -->
+        <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#Modal_AddANewProduct">
+          <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
+            <title>Placeholder</title>
+            <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">+</text>
+          </svg>
+
+          <div class="card-body">
+            <p class="card-text">Add a new product</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">category name</button>
+              </div>
+              <small class="text-muted">$---</small>
+            </div>
+          </div>
+        </div>
+        <!-- </a> -->
+      </div>
+
+      {% endif %}
+      {% endif %}
     </div>
-    {% endfor %}
+  </div>
+</div>
+
+<!-- New Category Modal -->
+<div class="modal fade" id="Modal_AddANewCategory" tabindex="-1" aria-labelledby="AddANewCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Modal_AddANewCategory_Label">Add a new category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="post" class="form" role="form">
+        {{ form_newCategory.hidden_tag() }}
+        <div class="modal-body">
+          <div class="form my-3">
+            {{ form_newCategory.categoryName.label() }}
+            {{ form_newCategory.categoryName(class="form-control") }}
+          </div>
+          <div class="form my-3">
+            {{ form_newCategory.categoryDescription.label() }}
+            {{ form_newCategory.categoryDescription(class="form-control") }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+          {{ form_newCategory.categorySubmit(class='btn btn-primary px-3') }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- New Product Modal -->
+<div class="modal fade" id="Modal_AddANewProduct" tabindex="-1" aria-labelledby="AddANewProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Modal_AddANewProduct_Label">Add a new product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="post" class="form" role="form">
+        {{ form_newProduct.hidden_tag() }}
+        <div class="modal-body">
+          <div class="form my-3">
+            {{ form_newProduct.productName.label() }}
+            {{ form_newProduct.productName(class="form-control", placeholder='Product Name') }}
+          </div>
+          <div class="form my-3">
+            {{ form_newProduct.productDescription.label() }}
+            {{ form_newProduct.productDescription(class="form-control", placeholder='Product Description') }}
+          </div>
+          <div class="form my-3">
+            {{ form_newProduct.price.label() }}
+            {{ form_newProduct.price(class="form-control") }}
+          </div>
+          <div class="form my-3">
+            {{ form_newProduct.quantity.label() }}
+            {{ form_newProduct.quantity(class="form-control") }}
+          </div>
+          <div class="form my-3">
+            {{ form_newProduct.category.label() }}
+            {{ form_newProduct.category(class="form-control") }}
+          </div>
+          <div class="form my-3">
+            {{ form_newProduct.discount.label() }}
+            {{ form_newProduct.discount(class="form-control") }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+          {{ form_newProduct.productSubmit(class='btn btn-primary px-3') }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="Modal_AddANewCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Modal_AddANewCategory_Label">Add a new category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{ wtf.quick_form(form_newCategory) }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+        <button type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

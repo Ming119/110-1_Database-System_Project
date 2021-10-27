@@ -1,41 +1,79 @@
-from util import db;
-from flask import flash, redirect, render_template, request, session, url_for;
-from flask_login import login_user, current_user, login_required, logout_user;
-from models import Product, ProductCategory;
-from forms import Search;
+from util import db
+from flask import flash, redirect, render_template, request, session, url_for
+from flask_login import login_user, current_user, login_required, logout_user
+from models import Product, ProductCategory
+from forms import Search, NewCategory, NewProduct
 
 def index():
-    form = Search.Search();
+    categories = ProductCategory.ProductCategory.query.all()
 
-    if request.method == 'POST' and form.validate_on_submit():
-        words = form.search.data.split(' ');
+    form_search      = Search.Search()
+    form_newCategory = NewCategory.NewCategory()
+    form_newProduct  = NewProduct.NewProduct()
+    form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
 
-        products_list = list();
+    # Create a new product
+    if request.method == 'POST' and form_newProduct.validate_on_submit():
+        return createProduct(form_newProduct)
 
-        for word in worlds:
-            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all());
+    # Create a new category
+    if request.method == 'POST' and form_newCategory.validate_on_submit():
+        return createCategory(form_newCategory)
 
-        products = set(products_list);
+    # Search
+    if request.method == 'POST' and form_search.validate_on_submit():
+        words = form_search.search.data.split(' ')
+
+        products_list = list()
+
+        for word in words:
+            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
+            products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
+        products = set(products_list)
 
     else:
-        products = Product.Product.query.all();
+        products = Product.Product.query.all()
 
-    categories = ProductCategory.ProductCategory.query.all();
+    return render_template('product.html',
+                            form_search      = form_search,
+                            form_newCategory = form_newCategory,
+                            form_newProduct  = form_newProduct,
+                            categories       = categories,
+                            products         = products
+                        )
 
-    return render_template('product.html', form=form, categories=categories, products=products);
+def createProduct(form):
+    product = Product.Product(
+                category_id = form.category.data,
+                name        = form.productName.data,
+                description = form.productDescription.data,
+                price       = form.price.data,
+                quantity    = form.quantity.data
+            )
 
-def search(str):
+    db.session.add(product)
+    db.session.commit()
 
-    return render_template('product.html', category=category, products=products);
+    flash(f'Product added successfully.', 'success')
+    return redirect(url_for('product.index'))
+
+def createCategory(form):
+    category = ProductCategory.ProductCategory(
+                name        = form.categoryName.data,
+                description = form.categoryDescription.data
+            )
+
+    db.session.add(category)
+    db.session.commit()
+
+    flash(f'Category added successfully.', 'success')
+    return redirect(url_for('product.index'))
 
 def details(product_id):
-    pass;
+    pass
 
 def edit(product_id):
-    pass;
-
-def create():
-    pass;
+    pass
 
 def delete(product_id):
-    pass;
+    pass

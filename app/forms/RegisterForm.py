@@ -1,60 +1,45 @@
-from util import db;
-from models import User;
-from flask import flash;
-from flask_wtf import Form;
-from wtforms import StringField, SubmitField, validators, PasswordField;
-from wtforms.fields.html5 import EmailField;
+from util import db
+from models import User
+from flask import flash, current_app
+from flask_wtf import Form
+from wtforms import StringField, SubmitField, validators, PasswordField, ValidationError
+from wtforms.fields.html5 import EmailField, DateField
 
 class RegisterForm(Form):
     email = EmailField('Email', validators=[
         validators.DataRequired(),
-        validators.Length(1, 63),
         validators.Email()
-    ]);
+    ])
 
     username = StringField('Username', validators=[
         validators.DataRequired(),
-        validators.Length(1, 31)
-    ]);
+    ])
 
     first_name = StringField('First Name', validators=[
         validators.DataRequired(),
-        validators.Length(1, 63)
-    ]);
+    ])
 
     last_name = StringField('Last Name', validators=[
         validators.DataRequired(),
-        validators.Length(1, 63)
-    ]);
-    
+    ])
+
     password = PasswordField('Password', validators=[
         validators.DataRequired(),
-        validators.Length(8, 31),
-        validators.EqualTo('password2', message='PASSWORD NEED MATCH')
-    ]);
+        validators.Length(min=8)
+    ])
 
     password2 = PasswordField('Confirm Password', validators=[
+        validators.DataRequired(),
+        validators.EqualTo('password', message='PASSWORD NEED MATCH')
+    ])
+
+    BOD = DateField('Date of Birth', validators=[
         validators.DataRequired()
-    ]);
+    ])
 
+    submit = SubmitField('Register')
 
-
-    submit = SubmitField('Register');
-
-    def validate_email(self, field):
-        user = User.User.query.filter_by(email=field.data).first();
-        if user:
-            if not user.confirm:
-                User.User.query.filter_by(email=field.data).delete();
-            else:
-                flash(f'This email address is already register');
-                return redirect(url_for('index.register'));
-
-    def validate_username(self, field):
-        user = User.User.query.filter_by(username=field.data).first();
-        if user:
-            if not user.confirm:
-                User.User.query.filter_by(email=field.data).delete();
-            else:
-                flash(f'This username is already register');
-                return redirect(url_for('index.register'));
+    # TODO: error message
+    def validate_password(self, field):
+        if not(any(not c.isalnum() for c in field.data) and any(c.isupper() for c in field.data) and any(c.islower() for c in field.data) and any(c.isdigit() for c in field.data)):
+            raise ValidationError('Password must contains number, upper case, lower case and special character.')
