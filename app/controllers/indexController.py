@@ -9,7 +9,7 @@ from app.forms import (
 
 # index page of the website
 # GET method to render index page
-# POST method is not allowed
+# POST method for search function
 def index():
     categories = ProductCategory.ProductCategory.query.all()
     form_search      = Search.Search()
@@ -95,12 +95,11 @@ def confirmRegistration(token):
         user.confirm = True
         user.update()
 
-        send_mail(
-            recipients = [user.email],
-            subject    = 'Welcome to ...',
-            template   = 'mail/registrationConfirmed',
-            user       = user
-        )
+        send_mail(recipients = [user.email],
+                  subject    = 'Welcome to ...',
+                  template   = 'mail/registrationConfirmed',
+                  user       = user
+                 )
 
         flash(f'Your email address has been confirmed, thank you.', 'success')
     return redirect(url_for('index.login'))
@@ -139,6 +138,7 @@ def logout():
     logout_user()
     flash('Logout successful!', 'success')
     return redirect(url_for('index.index'))
+
 
 # forgot password page of the website
 # GET method to render the forgot password form

@@ -6,7 +6,7 @@ class ProductCategory(db.Model):
 
     category_id = db.Column(db.Integer, primary_key=True)
 
-    product_id = db.relationship('Product', backref='product_category')
+    product_id  = db.relationship('Product', backref='product_category')
 
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)

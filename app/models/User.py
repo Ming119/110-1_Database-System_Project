@@ -55,7 +55,6 @@ class User(db.Model, UserMixin):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in)
         return s.dumps({'user_id': self.user_id})
 
-
     def validate_confirm_token(self, token):
         """
         驗證回傳令牌是否正確，若正確則回傳True
@@ -82,14 +81,15 @@ class User(db.Model, UserMixin):
 
 
     def __repr__(self):
-        return '<User %r>' % (
-            self.user_id,
-            self.email,
-            self.username,
-            self.password_hash,
-            self.first_name,
-            self.last_name,
-            self.confirm,
-            self.create_at,
-            self.modified_at
-        )
+        return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
+                    self.user_id,
+                    self.email,
+                    self.username,
+                    self.password_hash,
+                    self.first_name,
+                    self.last_name,
+                    self.confirm,
+                    self.last_login,
+                    self.create_at,
+                    self.modified_at
+                )

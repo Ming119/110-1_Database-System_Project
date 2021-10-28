@@ -27,6 +27,7 @@ def index():
         for word in words:
             products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
             products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
+
         products = set(products_list)
 
     else:
