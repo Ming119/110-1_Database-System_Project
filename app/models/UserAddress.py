@@ -1,7 +1,6 @@
 from util import db
 from datetime import datetime
 
-
 class UserAddress(db.Model):
     __tablename__ = 'user_address'
 
@@ -16,12 +15,12 @@ class UserAddress(db.Model):
     telephone   = db.Column(db.String(15),  nullable=False)
 
     def __repr__(self):
-        return '<UserAddress %r>' % (
-            self.address_id,
-            self.user_id,
-            self.country,
-            self.city,
-            self.address,
-            self.postal_code,
-            self.telephone
-        )
+        return '<UserAddress {}, {}, {}, {}, {}, {}, {}>'.format(
+                    self.address_id,
+                    self.user_id,
+                    self.country,
+                    self.city,
+                    self.address,
+                    self.postal_code,
+                    self.telephone
+                )

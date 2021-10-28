@@ -1,7 +1,6 @@
 from util import db
 from datetime import datetime
 
-
 class Discount(db.Model):
     __tablename__ = 'discount'
 

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}Product Details{% endblock title %}
+
+{% block content %}
+{% if current_user.is_authenticated and current_user.role == 'staff' %}
+<form action="" method="post" class="form" role="form">
+  {{ form.hidden_tag() }}
+
+  <div class="form-floating my-3">
+    {{ form.productName(class="form-control disable") }}
+    {{ form.productName.label() }}
+  </div>
+
+  <div class="form-floating my-3">
+    {{ form.productDescription(class="form-control") }}
+    {{ form.productDescription.label() }}
+  </div>
+
+  <div class="form-floating my-3">
+    {{ form.price(class="form-control") }}
+    {{ form.price.label() }}
+  </div>
+
+  <div class="form-floating my-3">
+    {{ form.quantity(class="form-control") }}
+    {{ form.quantity.label() }}
+  </div>
+
+  <div class="form-floating my-3">
+    {{ form.category(class="form-control") }}
+    {{ form.category.label() }}
+  </div>
+
+  <div class="form-floating my-3">
+    {{ form.discount(class="form-control") }}
+    {{ form.discount.label() }}
+  </div>
+
+  {{ form.productSubmit(class='btn btn-primary px-5') }}
+</form>
+{% endif %}
+{% endblock content %}
