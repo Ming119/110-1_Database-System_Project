@@ -1,16 +1,37 @@
-from util import db
 from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
-from emailHelper import send_mail
-from forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
-from models import User
 from datetime import datetime
+from app.emailHelper import send_mail
+from app.models import User, Product, ProductCategory
+from app.forms import (
+    RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, Search
+)
 
 # index page of the website
 # GET method to render index page
-# POST method is not allowed
+# POST method for search function
 def index():
-    return render_template('index.html')
+    categories = ProductCategory.ProductCategory.query.all()
+    form_search      = Search.Search()
+
+    # Search
+    if request.method == 'POST' and form_search.validate_on_submit():
+        words = form_search.search.data.split(' ')
+
+        products_list = list()
+        for word in words:
+            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
+            products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
+        products = set(products_list)
+
+    else:
+        products = Product.Product.query.all()
+
+    return render_template('index.html',
+                            form_search      = form_search,
+                            categories       = categories,
+                            products         = products
+                        )
 
 # register page of the website
 # GET method to render the register form
@@ -44,8 +65,7 @@ def register():
             return redirect(url_for('index.register'))
 
         if not user2:
-            db.session.add(user)
-            db.session.commit()
+            user.create();
 
         send_mail(recipients = [user.email],
                   subject    = 'Welcome to ...',
@@ -73,8 +93,7 @@ def confirmRegistration(token):
     else:
         user = User.User.query.filter_by(user_id=data.get('user_id')).first()
         user.confirm = True
-        db.session.add(user)
-        db.session.commit()
+        user.update()
 
         send_mail(recipients = [user.email],
                   subject    = 'Welcome to ...',
@@ -103,7 +122,7 @@ def login():
 
         if user and user.check_password(form.password.data):
             user.last_login = datetime.now
-            db.session.commit()
+            user.update()
             login_user(user, form.remember_me.data)
             flash(f'Login successful!', 'success')
             return redirect(url_for('index.index'))
@@ -113,14 +132,15 @@ def login():
     return render_template('login.html', form=form)
 
 # logout function
-# GET method to redirect to index page immediately
+# GET method to logout and redirect to index page immediately
 # POST method is not allowed
 def logout():
     logout_user()
     flash('Logout successful!', 'success')
     return redirect(url_for('index.index'))
 
-# logout page of the website
+
+# forgot password page of the website
 # GET method to render the forgot password form
 # POST method to submit the forgot password form and send a reset password email
 def forgotPassword():

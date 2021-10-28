@@ -1,8 +1,7 @@
-from util import db
 from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
-from models import Product, ProductCategory
-from forms import Search, NewCategory, NewProduct
+from app.models import Product, ProductCategory
+from app.forms import Search, NewCategory, NewProduct
 
 def index():
     categories = ProductCategory.ProductCategory.query.all()
@@ -25,7 +24,6 @@ def index():
         words = form_search.search.data.split(' ')
 
         products_list = list()
-
         for word in words:
             products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
             products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())

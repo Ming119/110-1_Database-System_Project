@@ -1,4 +1,4 @@
-from util import db
+from app.util import db
 from datetime import datetime
 
 class Product(db.Model):
@@ -19,14 +19,15 @@ class Product(db.Model):
     deleted_at  = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
-        return '<Product %r>' % (
-            self.product_id,
-            self.category_id,
-            self.discount_id,
-            self.name,
-            self.description,
-            self.price,
-            self.create_at,
-            self.modified_at,
-            self.deleted_at
-        )
+        return '<Product {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
+                    self.product_id,
+                    self.category_id,
+                    self.discount_id,
+                    self.name,
+                    self.description,
+                    self.price,
+                    self.quantity,
+                    self.create_at,
+                    self.modified_at,
+                    self.deleted_at
+                )
