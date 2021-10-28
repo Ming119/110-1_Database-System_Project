@@ -1,7 +1,6 @@
 from util import db
 from datetime import datetime
 
-
 class ProductInventory(db.Model):
     __tablename__ = 'product_inventory'
 
@@ -15,11 +14,11 @@ class ProductInventory(db.Model):
     deleted_at  = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
-        return '<Inventory %r>' % (
-            self.inventory_id,
-            self.product_id,
-            self.quantity,
-            self.create_at,
-            self.modified_at,
-            self.deleted_at
-        )
+        return '<Inventory {}, {}, {}, {}, {}, {}>'.format(
+                    self.inventory_id,
+                    self.product_id,
+                    self.quantity,
+                    self.create_at,
+                    self.modified_at,
+                    self.deleted_at
+                )

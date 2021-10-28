@@ -1,0 +1,13 @@
+*** Settings ***
+Library    Selenium2Library
+Resource    ../Variables/common.txt
+
+**keywords**
+Flash::Wait Until Flash Message With Category Is Visible
+    [Arguments]    ${message}    ${category}
+    ${flaskBox} =    Set Variable    //*[contains(@class, 'alert-${category}')]//*[contains(@class, 'flash')]
+    ${flaskMessage} =    Set Variable    //*[contains(@class, 'alert')]//*[contains(@class, 'flash') and normalize-space()='${message}']
+    ${flaskCloseButton} =    Set Variable    //*[contains(@class, 'alert')]//*[contains(@class, 'flash')]//button[contains(@class, 'btn-close')]
+    Wait Until Element Is Visible    ${flaskBox}    ${shortPeriodOfTime}    'Flash Box Should Be Visible'
+    Wait Until Element Is Visible    ${flaskMessage}    ${shortPeriodOfTime}    'Flash Message Should Be Visible'
+    Wait Until Element Is Visible    ${flaskCloseButton}    ${shortPeriodOfTime}    'Flash Close Button Should Be Visible'
