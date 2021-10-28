@@ -5,7 +5,7 @@ from app.controllers.indexController import (
 
 bp = Blueprint('index', __name__)
 
-bp.route('/', methods=['GET'])(index)
+bp.route('/', methods=['GET', 'POST'])(index)
 bp.route('/register', methods=['GET', 'POST'])(register)
 bp.route('/register/<token>', methods=['GET'])(confirmRegistration)
 bp.route('/forgotPassword', methods=['GET', 'POST'])(forgotPassword)
