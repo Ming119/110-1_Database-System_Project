@@ -73,6 +73,12 @@ class User(db.Model, UserMixin):
 
         return data
 
+    def load_user_date(self, create_at):
+        return User.query.get(create_at)
+
+    def load_all_users(self):
+        return
+
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.user_id,
