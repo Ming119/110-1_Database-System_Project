@@ -2,8 +2,6 @@
 
 {% import 'bootstrap/wtf.html' as wtf %}
 
-{% block title %}Product Details{% endblock title %}
-
 {% block content %}
 {% if current_user.is_authenticated and current_user.role == 'staff' %}
 <form action="" method="post" class="form" role="form">

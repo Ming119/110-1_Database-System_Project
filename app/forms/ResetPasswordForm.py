@@ -1,4 +1,3 @@
-from flask import current_app
 from flask_wtf import Form
 from wtforms import PasswordField, SubmitField, validators
 
@@ -10,7 +9,7 @@ class ResetPasswordForm(Form):
 
     password2 = PasswordField('Confirm Password', validators=[
         validators.DataRequired(),
-        validators.EqualTo('password', message='PASSWORD NEED MATCH')   # TODO: message
+        validators.EqualTo('password', message='PASSWORD NEEDS TO MATCH')
     ])
 
     submit = SubmitField('Submit')

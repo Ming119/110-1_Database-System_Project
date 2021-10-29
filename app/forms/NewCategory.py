@@ -1,5 +1,4 @@
-from util import db
-from models.ProductCategory import ProductCategory
+from app.models.ProductCategory import ProductCategory
 from flask import flash
 from flask_wtf import Form
 from wtforms import StringField, TextAreaField, SubmitField, validators, ValidationError

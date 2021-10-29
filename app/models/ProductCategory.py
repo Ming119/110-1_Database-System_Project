@@ -1,4 +1,4 @@
-from util import db
+from app.util import db
 from datetime import datetime
 
 class ProductCategory(db.Model):
@@ -13,6 +13,17 @@ class ProductCategory(db.Model):
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
     modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
     deleted_at  = db.Column(db.DateTime, nullable=True)
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self, **kwargs):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
     def __repr__(self):
         return '<Category %r>' % (

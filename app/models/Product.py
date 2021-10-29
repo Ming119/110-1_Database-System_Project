@@ -1,4 +1,4 @@
-from util import db
+from app.util import db
 from datetime import datetime
 
 class Product(db.Model):
@@ -18,15 +18,27 @@ class Product(db.Model):
     modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
     deleted_at  = db.Column(db.DateTime, nullable=True)
 
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self, **kwargs):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
     def __repr__(self):
-        return '<Product %r>' % (
-            self.product_id,
-            self.category_id,
-            self.discount_id,
-            self.name,
-            self.description,
-            self.price,
-            self.create_at,
-            self.modified_at,
-            self.deleted_at
-        )
+        return '<Product {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
+                    self.product_id,
+                    self.category_id,
+                    self.discount_id,
+                    self.name,
+                    self.description,
+                    self.price,
+                    self.quantity,
+                    self.create_at,
+                    self.modified_at,
+                    self.deleted_at
+                )

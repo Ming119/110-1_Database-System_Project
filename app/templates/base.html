@@ -6,7 +6,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-  <title>{% block title %}{% endblock %}</title>
+  <title>MoonBird</title>
 </head>
 
 <body>
@@ -18,14 +18,19 @@
 
         <ul class="navbar-nav justify-content-center">
           <li class="nav-item"><a href='{{ url_for('index.index') }}' class="nav-link">Home</a></li>
-          <li class="nav-item"><a href='{{ url_for('product.index') }}' class="nav-link">Products</a></li>
 
           {% if current_user.is_authenticated %}
           {% if current_user.role == 'admin' %}
           <!-- Admin Nav bar -->
+
+          <li class="nav-item"><a href='{{ url_for('manageUser.manageUsers', user_id=current_user.user_id) }}' class="nav-link">Manage Users</a></li>
+          {% elif current_user.admin_type == 'staff' %}
+
           <li class="nav-item"><a href='#' class="nav-link">Manage Users</a></li>
           {% elif current_user.role == 'staff' %}
+
           <!-- Staff Nav bar -->
+          <li class="nav-item"><a href='{{ url_for('product.index') }}' class="nav-link">Products</a></li>
           <li class="nav-item"><a href='#' class="nav-link">Orders</a></li>
           <li class="nav-item"><a href='#' class="nav-link">Promotions</a></li>
           {% else %}
@@ -75,14 +80,8 @@
     </div>
     {% endfor %}
 
-    <!-- <p>DEBUG info:</p>
-    <p>Login: {{ current_user.is_authenticated }}</p>
-    <p>Login as: {{ current_user.role }} - {{ current_user.username}}</p> -->
-
     {% block content %}{% endblock %}
   </div>
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

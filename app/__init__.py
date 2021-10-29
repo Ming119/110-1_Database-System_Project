@@ -22,14 +22,16 @@ def create_app(test_config=None):
 
     # Register the database with the Application
     with app.app_context():
-        import util
-        util.init_app(app)
+        from app.util import init_app
+        init_app(app)
 
     # Register Route Blueprint
-    from routes import indexRoute, userRoute, productRoute
-
+    from app.routes import (
+        indexRoute, userRoute, productRoute, manageUserRoute
+    )
     app.register_blueprint(indexRoute.bp)
     app.register_blueprint(userRoute.bp)
     app.register_blueprint(productRoute.bp)
+    app.register_blueprint(manageUserRoute.bp)
 
     return app

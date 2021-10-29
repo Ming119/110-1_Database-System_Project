@@ -1,9 +1,52 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <h1>{% block title %}index{% endblock %}</h1>
-{% endblock %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
+<div class="row my-5">
+  <div class="col-3">
+    <div class="list-group">
+      {% block category %}{% endblock %}
 
+      {% for category in categories %}
+      <a href="#" class="list-group-item list-group-item-action">{{ category.name }}</a>
+      {% block categoryCross %}{% endblock %}
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-9">
+    <div class="mb-3">
+      {{ wtf.quick_form(form_search) }}
+    </div>
+    <div class='row row-cols-3'>
+      {% block product %}{% endblock %}
+      {% for product in products %}
+      <div class="col">
+        <div class="card shadow-sm">
+          <a class='mute-link' href='{{ url_for('product.details', product_id=product.product_id) }}'>
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
+              <title>Placeholder</title>
+              <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ product.name }}</text>
+            </svg>
+
+            <div class="card-body">
+              <p class="card-text">{{ product.description }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">{{ product.category_id }}</button>
+                </div>
+                <small class="text-muted">${{ product.price }}</small>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% block modal %}{% endblock %}
 {% endblock %}

@@ -1,4 +1,3 @@
-from flask import current_app
 from flask_wtf import Form
 from wtforms import SubmitField, validators
 from wtforms.fields.html5 import EmailField

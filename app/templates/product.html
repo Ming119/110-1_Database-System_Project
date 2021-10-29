@@ -1,86 +1,41 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
-{% import 'bootstrap/wtf.html' as wtf %}
+{% block category %}
+{% if current_user.is_authenticated and current_user.role == 'staff' %}
+<a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">+ Add a new category</a>
+{% endif %}
+{% endblock %}
 
-{% block title %}Product Page{% endblock title %}
+{% block categoryCross %}
+{% if current_user.is_authenticated and current_user.role == 'staff' %}
 
-{% block content %}
-<div class="row my-5">
-  <div class="col-3">
-    <div class="list-group">
-      {% if current_user.role == 'staff' %}
-      <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">
-        <span>+ Add a new category<span>
-      </a>
-      {% endif %}
-      {% for category in categories %}
-      <li class="list-group-item list-group-item-action d-flex justify-content-between">
-        <a href="#" class="mute-link flex-fill"><span>{{ category.name }}</span></a>
-        {% if current_user.role == 'staff' %}
-        <a href="{{ url_for('product.deleteCategory', category_id=category.category_id) }}" class=" btn-close" aria-label="Close"></a>
-        {% endif %}
-      </li>
-      {% endfor %}
-      {% if current_user.is_authenticated %}
-      {% endif %}
-    </div>
-  </div>
+{% endif %}
+{% endblock %}
 
-  <div class="col-9">
-    <div class="mb-3">
-      {{ wtf.quick_form(form_search) }}
-    </div>
-    <div class='row row-cols-3'>
-      {% if current_user.is_authenticated %}
-      {% if current_user.role == 'staff' %}
-      <div class="col">
-        <!-- <a href="#" class=""> -->
-        <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#Modal_AddANewProduct">
-          <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
-            <title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">+</text>
-          </svg>
-
-          <div class="card-body">
-            <p class="card-text">Add a new product</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-secondary">category name</button>
-              </div>
-              <small class="text-muted">$---</small>
-            </div>
-          </div>
+{% block product %}
+{% if current_user.is_authenticated and current_user.role == 'staff' %}
+<div class="col">
+  <!-- <a href="#" class=""> -->
+  <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#Modal_AddANewProduct">
+    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
+      <title>Placeholder</title>
+      <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">+</text>
+    </svg>
+    <div class="card-body">
+      <p class="card-text">Add a new product</p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-outline-secondary">category name</button>
         </div>
-        <!-- </a> -->
+        <small class="text-muted">$---</small>
       </div>
-      {% endif %}
-      {% endif %}
-      {% for product in products %}
-      <div class="col">
-        <div class="card shadow-sm">
-          <a class='mute-link' href='{{ url_for('product.details', product_id=product.product_id) }}'>
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
-              <title>Placeholder</title>
-              <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ product.name }}</text>
-            </svg>
-
-            <div class="card-body">
-              <p class="card-text">{{ product.description }}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">{{ product.category_id }}</button>
-                </div>
-                <small class="text-muted">${{ product.price }}</small>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-      {% endfor %}
     </div>
   </div>
 </div>
+{% endif %}
+{% endblock %}
 
+{% block modal %}
 <!-- New Category Modal -->
 <div class="modal fade" id="Modal_AddANewCategory" tabindex="-1" aria-labelledby="AddANewCategoryModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -151,25 +106,6 @@
           {{ form_newProduct.productSubmit(class='btn btn-primary px-3') }}
         </div>
       </form>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="Modal_AddANewCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="Modal_AddANewCategory_Label">Add a new category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {{ wtf.quick_form(form_newCategory) }}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
-        <button type="button" class="btn btn-primary">Submit</button>
-      </div>
     </div>
   </div>
 </div>

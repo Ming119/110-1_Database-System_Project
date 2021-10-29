@@ -17,7 +17,7 @@ login     = LoginManager(current_app);
 login.login_view = 'index.login';
 login.login_message_category = "warning"
 
-from models import (
+from app.models import (
     User, UserAddress, UserPayment,
     ProductCategory, Discount, Product
 )
@@ -68,21 +68,19 @@ def init_db_command():
 
     product = Product.Product(
             category_id = 1,
-            quantity    = 0,
+            quantity    = 1,
             name        = 'product',
             description = 'Product description',
             price       = 100
         )
 
-    db.session.add_all([user, admin, staff])
-    db.session.commit()
-
-    db.session.add(category)
-    db.session.commit()
-    db.session.add(product)
-    db.session.commit()
+    user.create()
+    admin.create()
+    staff.create()
+    category.create()
+    product.create()
 
     click.echo('Initialized the database.')
 
-def init_app(app):
-    app.cli.add_command(init_db_command)
+def init_app(current_app):
+    current_app.cli.add_command(init_db_command)

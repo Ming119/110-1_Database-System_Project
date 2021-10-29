@@ -1,8 +1,7 @@
-from util import db
 from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
-from models import Product, ProductCategory
-from forms import Search, NewCategory, NewProduct
+from app.models import Product, ProductCategory
+from app.forms import Search, NewCategory, NewProduct
 
 def index():
     categories = ProductCategory.ProductCategory.query.all()
@@ -12,23 +11,22 @@ def index():
     form_newProduct  = NewProduct.NewProduct()
     form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
 
-    # Create a new product
-    if request.method == 'POST' and form_newProduct.validate_on_submit():
-        return createProduct(form_newProduct)
-
     # Create a new category
     if request.method == 'POST' and form_newCategory.validate_on_submit():
         return createCategory(form_newCategory)
+
+    # Create a new product
+    if request.method == 'POST' and form_newProduct.validate_on_submit():
+        return createProduct(form_newProduct)
 
     # Search
     if request.method == 'POST' and form_search.validate_on_submit():
         words = form_search.search.data.split(' ')
 
         products_list = list()
-
         for word in words:
-            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
-            products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
+            products_list.append(p for p in Product.Product.query.filter(Product.Product.name.contains(word)).all())
+            products_list.append(p for p in Product.Product.query.filter(Product.Product.description.contains(word)).all())
 
         products = set(products_list)
 
@@ -59,10 +57,7 @@ def createProduct(form):
                     price       = form.price.data,
                     quantity    = form.quantity.data
                 )
-
-        db.session.add(product)
-        db.session.commit()
-
+        product.create()
         flash(f'Product created successfully', 'success')
 
     return redirect(url_for('product.index'))
@@ -77,9 +72,7 @@ def createCategory(form):
                     name        = form.categoryName.data,
                     description = form.categoryDescription.data
                 )
-
-        db.session.add(category)
-        db.session.commit()
+        category.create()
 
         flash(f'Category added successfully.', 'success')
     return redirect(url_for('product.index'))
@@ -117,7 +110,7 @@ def edit(product, form):
         product.price       = form.price.data
         product.quantity    = form.quantity.data
 
-        db.session.commit()
+        product.update()
 
         flash(f'Product updated successfully.', 'success')
 
