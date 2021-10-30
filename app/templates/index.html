@@ -6,13 +6,13 @@
 <div class="row my-5">
   <div class="col-3">
     <div class="list-group">
-      {% block category %}{% endblock %}
-
+      {% block category %}
       {% for category in categories %}
-      <a href="#" class="list-group-item list-group-item-action">{{ category.name }}</a>
+      <li href="#" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
+        {% block category_detele %}{% endblock %}
+      </li>
       {% endfor %}
-      {% if current_user.is_authenticated %}
-      {% endif %}
+      {% endblock %}
     </div>
   </div>
 
