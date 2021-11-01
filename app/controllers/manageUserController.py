@@ -4,11 +4,7 @@ from app.models import User
 
 
 @login_required
-# def manageUser():
-#     manageUsers()
-
 def manageUsers(user_id):
-
     users = User.User.query.all()
 
     if current_user.role != 'admin':
