@@ -15,6 +15,7 @@ bcrypt    = Bcrypt(current_app)
 mail      = Mail(current_app)
 login     = LoginManager(current_app)
 login.login_view = 'index.login'
+login.login_message_category = 'danger'
 
 from app.models import (
     User, UserAddress, UserPayment,
