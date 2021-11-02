@@ -53,7 +53,10 @@ def createCategory(form):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
-
+    
+    elif ProductCategory.ProductCategory.query.filter_by(name=form.categoryName.data).first() is not None:
+        flash(f'Category already exists.', 'warning')
+    
     else:
         ProductCategory.create(name        = form.categoryName.data,
                                description = form.categoryDescription.data
