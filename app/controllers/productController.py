@@ -50,16 +50,12 @@ def createProduct(form):
         flash(f'Product already exists.', 'warning')
 
     else:
-        product = Product.Product(
-                    category_id = form.category.data,
-                    name        = form.productName.data,
-                    description = form.productDescription.data,
-                    price       = form.price.data,
-                    quantity    = form.quantity.data
-                )
-
-        db.session.add(product)
-        db.session.commit()
+        Product.create(category_id = form.category.data,
+                       name        = form.productName.data,
+                       description = form.productDescription.data,
+                       price       = form.price.data,
+                       quantity    = form.quantity.data
+                      )
 
         flash(f'Product created successfully', 'success')
 
@@ -70,14 +66,13 @@ def createCategory(form):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
 
-    else:
-        category = ProductCategory.ProductCategory(
-                    name        = form.categoryName.data,
-                    description = form.categoryDescription.data
-                )
+    elif ProductCategory.ProductCategory.query.filter_by(name=form.categoryName.data).first() is not None:
+        flash(f'Category already exists.', 'warning')
 
-        db.session.add(category)
-        db.session.commit()
+    else:
+        ProductCategory.create(name        = form.categoryName.data,
+                               description = form.categoryDescription.data
+                              )
 
         flash(f'Category added successfully.', 'success')
     return redirect(url_for('product.index'))

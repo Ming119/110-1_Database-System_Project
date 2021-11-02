@@ -31,3 +31,14 @@ class Product(db.Model):
                     self.modified_at,
                     self.deleted_at
                 )
+
+def create(name, price, quantity, category_id, discount_id=list(), description=None):
+    product = Product(name        = name,
+                      description = description,
+                      price       = price,
+                      quantity    = quantity,
+                      category_id = category_id,
+                      discount_id = discount_id
+                     )
+    db.session.add(product)
+    db.session.commit()

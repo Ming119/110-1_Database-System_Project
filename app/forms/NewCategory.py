@@ -11,8 +11,3 @@ class NewCategory(Form):
     categoryDescription = TextAreaField('Category Description')
 
     categorySubmit = SubmitField('Submit')
-
-    def validate_categoryName(self, field):
-        if ProductCategory.query.filter_by(name=field.data).first() is not None:
-            flash(f'Category already exists.', 'warning')
-            raise ValidationError("Category already exists.")
