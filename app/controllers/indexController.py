@@ -11,8 +11,8 @@ from app.forms import (
 # GET method to render index page
 # POST method for search function
 def index():
-    categories = ProductCategory.ProductCategory.query.all()
-    form_search      = Search.Search()
+    categories  = ProductCategory.ProductCategory.query.all()
+    form_search = Search.Search()
 
     # Search
     if request.method == 'POST' and form_search.validate_on_submit():

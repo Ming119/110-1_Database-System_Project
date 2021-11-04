@@ -34,3 +34,14 @@ class ProductCategory(db.Model):
             self.modified_at,
             self.deleted_ats
         )
+
+def create(name, description=None):
+    category = ProductCategory(name=name, description=description)
+    db.session.add(category)
+    db.session.commit()
+
+def update():
+    db.session.commit()
+
+def delete():
+    db.session.commit()
