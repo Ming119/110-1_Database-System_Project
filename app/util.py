@@ -9,13 +9,13 @@ from flask_mail import Mail;
 from flask_login import LoginManager, current_user;
 from functools import wraps
 
-db        = SQLAlchemy(current_app);
-bootstrap = Bootstrap(current_app);
-bcrypt    = Bcrypt(current_app);
-mail      = Mail(current_app);
-login     = LoginManager(current_app);
-login.login_view = 'index.login';
-login.login_message_category = "warning"
+db        = SQLAlchemy(current_app)
+bootstrap = Bootstrap(current_app)
+bcrypt    = Bcrypt(current_app)
+mail      = Mail(current_app)
+login     = LoginManager(current_app)
+login.login_view = 'index.login'
+login.login_message_category = 'danger'
 
 from app.models import (
     User, UserAddress, UserPayment,
