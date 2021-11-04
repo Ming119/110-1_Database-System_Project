@@ -49,7 +49,7 @@ def register():
             first_name = form.first_name.data,
             last_name  = form.last_name.data,
             role       = 'user',
-            DOB        = form.BOD.data
+            DOB        = form.DOB.data
         )
 
         # check that the username is used and confirmed

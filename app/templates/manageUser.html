@@ -34,8 +34,8 @@
       <td>{{ user.modified_at }}</td>
       <td>
         <div class="btn-group-vertical">
-          <a class="btn btn-warning btn-block" type="button" href="{{ url_for(user.editProfile, user_id=user.user_id) }}">Edit</a>
-          <a class="btn btn-danger btn-block" type="button" href="{{ url_for(user.deleteProfile, user_id=user.user_id) }}">Delete</a>
+          <a class="btn btn-warning btn-block" type="button" href="{{ url_for('user.profile', user_id=user.user_id) }}">Edit</a>
+          <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.deleteProfile', user_id=user.user_id) }}">Delete</a>
         </div>
       </td>
     </tr>

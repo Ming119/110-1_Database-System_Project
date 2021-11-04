@@ -36,7 +36,7 @@ def index():
     else:
         products = Product.Product.query.all()
 
-    return render_template('product.html',
+    return render_template('manageProduct.html',
                             form_search      = form_search,
                             form_newCategory = form_newCategory,
                             form_newProduct  = form_newProduct,

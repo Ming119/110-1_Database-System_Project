@@ -77,15 +77,29 @@ class User(db.Model, UserMixin):
     def update(self, **kwargs):
         db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+    @staticmethod
+    def getAllUsers():
+        return User.query.all()
 
-    def load_user_date(self, create_at):
-        return User.query.get(create_at)
+    @staticmethod
+    def getUserByUserID(user_id):
+        return User.query.filter_by(user_id=user_id).first()
 
-    def load_all_users(self):
-        return
+    @staticmethod
+    def getUserByEmail(email):
+        return User.query.filter_by(email=email).first()
+
+    @staticmethod
+    def getUserByUsername(username):
+        return User.query.filter_by(username=username).first()
+
+    @staticmethod
+    def deleteUserByUserID(user_id):
+        try:
+            User.query.filter_by(user_id=user_id).delete()
+            db.session.commit()
+            return True
+        except: return False
 
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(

@@ -21,7 +21,7 @@
 
           {% if current_user.is_authenticated %}
           {% if current_user.role == 'admin' %} <!-- Admin Nav bar -->
-          <li class="nav-item"><a href='{{ url_for('manageUser.manageUsers', user_id=current_user.user_id) }}' class="nav-link">Manage Users</a></li>
+          <li class="nav-item"><a href='{{ url_for('user.manageUsers') }}' class="nav-link">Manage Users</a></li>
 
           {% elif current_user.role == 'staff' %} <!-- Staff Nav bar -->
           <li class="nav-item"><a href='{{ url_for('product.index') }}' class="nav-link">Manage Products</a></li>
@@ -40,6 +40,7 @@
           {% endif %}
         </ul>
       </div>
+    </div>
   </nav>
 
   <div class="container">

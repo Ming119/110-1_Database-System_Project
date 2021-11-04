@@ -9,7 +9,7 @@
       {% block category %}
       {% for category in categories %}
       <li href="#" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
-        {% block category_detele %}{% endblock %}
+        <span class="badge bg-secondary rounded-pill">0</span>
       </li>
       {% endfor %}
       {% endblock %}
