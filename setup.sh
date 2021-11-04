@@ -1,8 +1,6 @@
 #!/bin/bash
 
-function setup_db() {
-
-}
+function setup_db() {}
 
 function install() {
   apt-get update && apt-get upgrade -y
