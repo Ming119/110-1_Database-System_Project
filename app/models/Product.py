@@ -42,3 +42,9 @@ def create(name, price, quantity, category_id, discount_id=list(), description=N
                      )
     db.session.add(product)
     db.session.commit()
+
+def update():
+    db.session.commit()
+
+def delete():
+    db.session.commit()
