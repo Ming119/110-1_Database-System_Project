@@ -65,7 +65,7 @@ def register():
             return redirect(url_for('index.register'))
 
         if not user2:
-            user.create();
+            user.create()
 
         send_mail(recipients = [user.email],
                   subject    = 'Welcome to ...',
@@ -121,7 +121,7 @@ def login():
         user = User.User.query.filter_by(username=form.username.data).first()
 
         if user and user.check_password(form.password.data):
-            user.last_login = datetime.now
+            user.last_login = datetime.now()
             user.update()
             login_user(user, form.remember_me.data)
             flash(f'Login successful!', 'success')
@@ -144,7 +144,7 @@ def logout():
 # GET method to render the forgot password form
 # POST method to submit the forgot password form and send a reset password email
 def forgotPassword():
-    form = ForgotPasswordForm.ForgotPasswordForm();
+    form = ForgotPasswordForm.ForgotPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User.User.query.filter_by(email=form.email.data).first()
@@ -157,7 +157,7 @@ def forgotPassword():
                      )
 
         flash(f'A reset password email has been sent to your email if your email is registered.', 'success')
-        return redirect(url_for('index.index'));
+        return redirect(url_for('index.index'))
 
     return render_template('forgotPassword.html', form=form)
 
@@ -166,7 +166,7 @@ def forgotPassword():
 # :param: token
 # POST method to submit the reset password form
 def resetPassword(token):
-    form = ResetPasswordForm.ResetPasswordForm();
+    form = ResetPasswordForm.ResetPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User.User()
@@ -174,7 +174,7 @@ def resetPassword(token):
 
         if data is None:
             flash(f'You link is invalid or expired, please try again.', 'danger')
-            return redirect(url_for('index.index'));
+            return redirect(url_for('index.index'))
 
         user = User.User.query.filter_by(user_id=data.get('user_id')).first()
         user.password = form.password.data
@@ -186,6 +186,6 @@ def resetPassword(token):
                  )
 
         flash(f'Your password has been updated.', 'success')
-        return redirect(url_for('index.login'));
+        return redirect(url_for('index.login'))
 
     return render_template('resetPassword.html', form=form)

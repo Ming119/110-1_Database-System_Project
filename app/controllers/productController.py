@@ -161,27 +161,27 @@ def deleteCategory(category_id):
 def deleteCategory(category_id):
     # access control
     if current_user.role != 'staff':
-        flash(f'You are not allowed to access.', 'danger');
+        flash(f'You are not allowed to access.', 'danger')
 
     else:
         try:
-            ProductCategory.ProductCategory.query.filter_by(category_id=category_id).delete();
+            ProductCategory.ProductCategory.query.filter_by(category_id=category_id).delete()
         except:
-            flash(f'This Category is still in use.', 'warning');
+            flash(f'This Category is still in use.', 'warning')
         else:
-            db.session.commit();
-            flash(f'Category deleted successfully.', 'success');
+            db.session.commit()
+            flash(f'Category deleted successfully.', 'success')
 
-    return redirect(url_for('product.index'));
+    return redirect(url_for('product.index'))
 
 @login_required
 def deleteProduct(product_id):
     if current_user.role != 'staff':
-        flash(f'You are not allowed to access.', 'danger');
+        flash(f'You are not allowed to access.', 'danger')
     else:
-        Product.Product.query.filter_by(product_id=product_id).delete();
+        Product.Product.query.filter_by(product_id=product_id).delete()
         Product.delete()
 
-        flash(f'Product deleted successfully.', 'success');
+        flash(f'Product deleted successfully.', 'success')
 
-    return redirect(url_for('product.index'));
+    return redirect(url_for('product.index'))
