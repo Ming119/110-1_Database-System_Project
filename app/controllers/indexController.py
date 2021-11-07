@@ -2,7 +2,9 @@ from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from datetime import datetime
 from app.emailHelper import send_mail
-from app.models import User, Product, ProductCategory
+from app.models.User import User
+from app.models.Product import Product
+from app.models.ProductCategory import ProductCategory
 from app.forms import (
     RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, Search
 )
@@ -11,7 +13,7 @@ from app.forms import (
 # GET method to render index page
 # POST method for search function
 def index():
-    categories  = ProductCategory.ProductCategory.query.all()
+    categories  = ProductCategory.getAll()
     form_search = Search.Search()
 
     # Search
@@ -20,12 +22,12 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
-            products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
+            products_list.extend(Product.query.filter(Product.name.contains(word)).all())
+            products_list.extend(Product.query.filter(Product.description.contains(word)).all())
         products = set(products_list)
 
     else:
-        products = Product.Product.query.all()
+        products = Product.getAll()
 
     return render_template('index.html',
                             form_search      = form_search,
@@ -42,7 +44,7 @@ def register():
     form = RegisterForm.RegisterForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        user = User.User(
+        user = User(
             username   = form.username.data,
             email      = form.email.data,
             password   = form.password.data,
@@ -53,13 +55,13 @@ def register():
         )
 
         # check that the username is used and confirmed
-        user2 = User.User.query.filter_by(username=user.username).first()
+        user2 = User.query.filter_by(username=user.username).first()
         if user2 and user2.confirm:
             flash(f'This username ({user.username}) is already register', 'warning')
             return redirect(url_for('index.register'))
 
         # check that the email is used and confirmed
-        user2 = User.User.query.filter_by(email=user.email).first()
+        user2 = User.query.filter_by(email=user.email).first()
         if user2 and user2.confirm:
             flash(f'This email ({user.email}) address is already register', 'warning')
             return redirect(url_for('index.register'))
@@ -84,7 +86,7 @@ def register():
 #   :param: token
 # POST method is not allowed
 def confirmRegistration(token):
-    user = User.User()
+    user = User()
     data = user.validate_confirm_token(token)
 
     if data is None:
@@ -118,7 +120,7 @@ def login():
         return redirect(url_for('index.index'))
 
     if request.method == 'POST' and form.validate_on_submit():
-        user = User.User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
 
         if user and user.check_password(form.password.data):
             user.last_login = datetime.now()
@@ -147,7 +149,7 @@ def forgotPassword():
     form = ForgotPasswordForm.ForgotPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        user = User.User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.confirm == True:
             send_mail(recipients = [user.email],
                       subject    = 'Reset your password',
@@ -169,14 +171,14 @@ def resetPassword(token):
     form = ResetPasswordForm.ResetPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        user = User.User()
+        user = User()
         data = user.validate_confirm_token(token)
 
         if data is None:
             flash(f'You link is invalid or expired, please try again.', 'danger')
             return redirect(url_for('index.index'))
 
-        user = User.User.query.filter_by(user_id=data.get('user_id')).first()
+        user = User.query.filter_by(user_id=data.get('user_id')).first()
         user.password = form.password.data
 
         send_mail(recipients = [user.email],

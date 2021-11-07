@@ -11,6 +11,11 @@ Verify "Already Have An Account" Button
     Click Element    ${alreadyHaveAnAccountButton}
     Login Page::Wait Until Login Form Is Visible
 
+Verify Register
+    Register
+
+Verify Register With Invalid Password
+
 Register Page::Wait Until Register Form Is Visible
     Wait Until Element Is Visible    ${registerTitle}    ${normalPeriodOfTime}    'Register Title Should Be Visible'
     Wait Until Element Is Visible    ${emailField}    ${normalPeriodOfTime}    'Email Field Should Be Visible'
@@ -22,3 +27,14 @@ Register Page::Wait Until Register Form Is Visible
     Wait Until Element Is Visible    ${DOBDatePicker}    ${normalPeriodOfTime}    'DOB Field Should Be Visible'
     Wait Until Element Is Visible    ${registerButton}    ${normalPeriodOfTime}    'Register Button Should Be Visible'
     Wait Until Element Is Visible    ${alreadyHaveAnAccountButton}    ${normalPeriodOfTime}    'Already Have An Account Button Should Be Visible'
+
+Register
+    [Arguments]    ${email}    ${username}    ${password}    ${confirmPassword}    ${firstName}    ${lastName}    # ${DOB}
+    Input Text    ${emailField}    ${username}
+    Input Text    ${usernameField}    ${username}
+    Input Text    ${passwordField}    ${password}
+    Input Text    ${confirmPasswordField}    ${confirmPassword}
+    Input Text    ${firstNameField}    ${firstName}
+    Input Text    ${lastNameField}    ${lastName}
+    # Input Text    ${DOBDatePicker}    ${DOB}
+    Click Element    ${RegisterButton}

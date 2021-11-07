@@ -21,8 +21,8 @@ Verify "Forgot Password" Button
 
 Verify Login As Customer
     Login Page::Wait Until Login Form Is Visible
-    Login As    username=user    password=user
-    Flash::Wait Until Flash Message With Category Is Visible    Login successful!    success
+    Login As    username=customer    password=customer
+    Flash::Wait Until Flash Message With Category Is Visible    message=Login successful!    category=success
     # Common::Wait Until Navbar Contains    Home    Products    Shopping Cart    ${customer}[username]    Logout #TODO    Navbar check
     [Teardown]    Run Keywords    Logout
     ...                    AND    Go to Login Page
@@ -30,7 +30,7 @@ Verify Login As Customer
 Verify Login As Staff
     Login Page::Wait Until Login Form Is Visible
     Login As    username=staff    password=staff
-    Flash::Wait Until Flash Message With Category Is Visible    Login successful!    success
+    Flash::Wait Until Flash Message With Category Is Visible    message=Login successful!    category=success
     # Common::Wait Until Navbar Contains    Home    Products    Orders    Promotions    ${staff}[username]    Logout #TODO    Navbar check
     [Teardown]    Run Keywords    Logout
     ...                    AND    Go to Login Page
@@ -38,21 +38,21 @@ Verify Login As Staff
 Verify Login As Admin
     Login Page::Wait Until Login Form Is Visible
     Login As    username=admin    password=admin
-    Flash::Wait Until Flash Message With Category Is Visible    Login successful!    success
-    # Common::Wait Until Navbar Contains    Home    Products    Manage Users    ${admin}[username]    Logout #TODO    Navbar check 
+    Flash::Wait Until Flash Message With Category Is Visible    message=Login successful!    category=success
+    # Common::Wait Until Navbar Contains    Home    Products    Manage Users    ${admin}[username]    Logout #TODO    Navbar check
     [Teardown]    Run Keywords    Logout
     ...                    AND    Go to Login Page
 
 Verify Login With Invalid Username
     Login Page::Wait Until Login Form Is Visible
     Login As    username=userr    password=user
-    Flash::Wait Until Flash Message With Category Is Visible    Wrong username or password    warning
+    Flash::Wait Until Flash Message With Category Is Visible    message=Wrong username or password    category=warning
     [Teardown]    Go to Login Page
 
 Verify Login With Invalid Password
     Login Page::Wait Until Login Form Is Visible
     Login As    username=user    password=userr
-    Flash::Wait Until Flash Message With Category Is Visible    Wrong username or password    warning
+    Flash::Wait Until Flash Message With Category Is Visible    message=Wrong username or password    category=warning
     [Teardown]    Go to Login Page
 
 Login Page::Wait Until Login Form Is Visible

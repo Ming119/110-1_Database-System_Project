@@ -32,8 +32,8 @@ Go To Register Page
     Common::Click Navbar Button    Sign-up
     Common::Wait Until Navbar Contains    Home    Login    Sign-up
 
-Go To Manage Product Page
-    Common::Click Navbar Button    Products
+Go To Manage Products Page
+    Common::Click Navbar Button    Manage Products
     Common::Wait Until Navbar Contains    Home    Logout
 
 Go To ShoppingCart Page

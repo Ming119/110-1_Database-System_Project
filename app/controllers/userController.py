@@ -9,7 +9,7 @@ def manageUsers():
         return redirect(url_for('index.index'))
 
     else:
-        users = User.getAllUsers()
+        users = User.getAll()
         return render_template("manageUser.html", users=users)
 
 @login_required
@@ -18,7 +18,7 @@ def profile(user_id):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    user = User.getUserByUserID(user_id)
+    user = User.getByUserID(user_id)
     return render_template("userProfile.html", user=user)
 
 @login_required
@@ -27,7 +27,7 @@ def deleteProfile(user_id):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if User.deleteUserByUserID(user_id):
+    if Admin.deleteUserByUserID(user_id):
         flash(f'Delete profile was successful.', 'success')
     else:
         flash(f'Delete profile failed.', 'warning')
