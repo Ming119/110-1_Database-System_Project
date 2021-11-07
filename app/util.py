@@ -1,13 +1,12 @@
 import click
 
-from flask import current_app, session, request, redirect, url_for, flash;
-from flask.cli import with_appcontext;
-from flask_sqlalchemy import SQLAlchemy;
-from flask_bootstrap import Bootstrap;
-from flask_bcrypt import Bcrypt;
-from flask_mail import Mail;
-from flask_login import LoginManager, current_user;
-from functools import wraps
+from flask import current_app
+from flask.cli import with_appcontext
+from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
+from flask_bcrypt import Bcrypt
+from flask_mail import Mail
+from flask_login import LoginManager
 from datetime import datetime, date
 
 db        = SQLAlchemy(current_app)

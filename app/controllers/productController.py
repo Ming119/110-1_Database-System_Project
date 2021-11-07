@@ -1,5 +1,5 @@
-from flask import flash, redirect, render_template, request, session, url_for
-from flask_login import login_user, current_user, login_required, logout_user
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from app.models.Product import Product
 from app.models.ProductCategory import ProductCategory
 from app.forms import Search, NewCategory, NewProduct

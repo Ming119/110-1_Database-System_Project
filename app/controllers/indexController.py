@@ -1,5 +1,5 @@
-from flask import flash, redirect, render_template, request, session, url_for
-from flask_login import login_user, current_user, login_required, logout_user
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import login_user, current_user, logout_user
 from datetime import datetime
 from app.emailHelper import send_mail
 from app.models.User import User

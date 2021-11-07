@@ -1,4 +1,4 @@
-from app.util import bcrypt, db, login
+from app.util import db, bcrypt, login
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired, BadSignature
 from flask import current_app
