@@ -1,7 +1,5 @@
-from app.models.ProductCategory import ProductCategory
-from flask import flash
 from flask_wtf import Form
-from wtforms import StringField, TextAreaField, SubmitField, validators, ValidationError
+from wtforms import StringField, TextAreaField, SubmitField, validators
 
 class NewCategory(Form):
     categoryName = StringField('Category Name', validators=[

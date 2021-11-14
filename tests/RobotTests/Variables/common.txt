@@ -6,6 +6,7 @@ ${shortPeriodOfTime} =    1s
 ${normalPeriodOfTime} =    3s
 ${longPeriodOfTime} =    5s
 
-&{customer} =    username=user    password=user
-&{staff} =    username=staff    password=staff
-&{admin} =    username=admin    password=admin
+${card} =    //*[contains(@class, 'card')]
+${cardHeader} =    ${card}//*[contains(@class, 'card-header')]
+${cardBody} =    ${card}//*[contains(@class, 'card-body')]
+${cardFooter} =    ${card}//*[contains(@class, 'card-footer')]

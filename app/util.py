@@ -1,13 +1,13 @@
 import click
 
-from flask import current_app, session, request, redirect, url_for
+from flask import current_app
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_login import LoginManager
-from functools import wraps
+from datetime import datetime, date
 
 db        = SQLAlchemy(current_app)
 bootstrap = Bootstrap(current_app)
@@ -18,8 +18,10 @@ login.login_view = 'index.login'
 login.login_message_category = 'danger'
 
 from app.models import (
-    User, UserAddress, UserPayment,
-    ProductCategory, Discount, Product
+    User, CustomerAddress, CustomerPayment,
+    ProductCategory, Product, #Discount
+    ShoppingCart,
+    Order
 )
 
 def init_db():
@@ -31,56 +33,43 @@ def init_db():
 def init_db_command():
     init_db()
 
-    user = User.User(
-            email      = 'user@domain.com',
-            username   = 'user',
-            password   = 'user',
-            first_name = 'user',
-            last_name  = 'user',
-            role       = 'user',
-            confirm    = True
+    User.Customer.create(
+            email      = 'customer@domain.com',
+            username   = 'customer',
+            password   = 'customer',
+            first_name = 'customer',
+            last_name  = 'customer',
+            DOB        = date.today()
         )
 
-    admin = User.User(
-            email      = 'admin@domain.com',
-            username   = 'admin',
-            password   = 'admin',
-            first_name = 'admin',
-            last_name  = 'admin',
-            role       = 'admin',
-            confirm    = True
-        )
-
-    staff = User.User(
+    User.Staff.create(
             email      = 'staff@domain.com',
             username   = 'staff',
             password   = 'staff',
             first_name = 'staff',
             last_name  = 'staff',
-            role       = 'staff',
-            confirm    = True
         )
 
-    category = ProductCategory.ProductCategory(
+    User.Admin.create(
+            email      = 'admin@domain.com',
+            username   = 'admin',
+            password   = 'admin',
+            first_name = 'admin',
+            last_name  = 'admin',
+        )
+
+    ProductCategory.ProductCategory.create(
             name = 'category1',
             description = 'category1 description'
         )
 
-    product = Product.Product(
+    Product.Product.create(
             category_id = 1,
-            quantity    = 0,
+            quantity    = 1,
             name        = 'product',
             description = 'Product description',
             price       = 100
         )
-
-    db.session.add_all([user, admin, staff])
-    db.session.commit()
-
-    db.session.add(category)
-    db.session.commit()
-    db.session.add(product)
-    db.session.commit()
 
     click.echo('Initialized the database.')
 

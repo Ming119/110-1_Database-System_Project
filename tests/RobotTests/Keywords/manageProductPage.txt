@@ -1,0 +1,14 @@
+*** Settings ***
+Library    Selenium2Library
+Resource    ../allKeywords.txt
+Resource    ../allVariables.txt
+
+**keywords**
+Verify Manage Product Page Is Visible
+    Manage Product Page::Wait Until Manage Product Page Is Visible
+
+Manage Product Page::Wait Until Manage Product Page Is Visible
+    Index Page::Wait Until Index Page Is Visible
+    Wait Until Element Is Visible    ${addNewCategoryButton}
+    Wait Until Element Is Visible    ${deleteCategoryButton}
+    Wait Until Element Is Visible    ${addNewProductCard}

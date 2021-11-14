@@ -5,11 +5,11 @@
 {% block content %}
 <div class="row my-5">
   <div class="col-3">
-    <div class="list-group">
+    <div id="category-list" class="list-group">
       {% block category %}
       {% for category in categories %}
       <li href="#" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
-        {% block category_detele %}{% endblock %}
+        <span class="badge bg-secondary rounded-pill">0</span>
       </li>
       {% endfor %}
       {% endblock %}
@@ -20,12 +20,12 @@
     <div class="mb-3">
       {{ wtf.quick_form(form_search) }}
     </div>
-    <div class='row row-cols-3'>
+    <div id="product-list" class='row row-cols-3'>
       {% block product %}{% endblock %}
       {% for product in products %}
       <div class="col">
         <div class="card shadow-sm">
-          <a class='link' href='{{ url_for('product.details', product_id=product.product_id) }}'>
+          <a class='mute-link' href='{{ url_for('product.details', product_id=product.product_id) }}'>
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
               <title>Placeholder</title>
               <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ product.name }}</text>

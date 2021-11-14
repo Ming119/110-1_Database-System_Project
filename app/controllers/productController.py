@@ -1,13 +1,14 @@
-from flask import flash, redirect, render_template, request, session, url_for
-from flask_login import login_user, current_user, login_required, logout_user
-from app.models import Product, ProductCategory
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
+from app.models.Product import Product
+from app.models.ProductCategory import ProductCategory
 from app.forms import Search, NewCategory, NewProduct
 
 # PMS page of the website
 # GET method to render PMS page
 # POST method for create category, create product or search function
 def index():
-    categories = ProductCategory.ProductCategory.query.all()
+    categories = ProductCategory.getAll()
 
     form_search      = Search.Search()
     form_newCategory = NewCategory.NewCategory()
@@ -28,15 +29,15 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.append(Product.Product.query.filter(Product.Product.name.contains(word)).all())
-            products_list.append(Product.Product.query.filter(Product.Product.description.contains(word)).all())
+            products_list.extend(Product.query.filter(Product.name.contains(word)).all())
+            products_list.extend(Product.query.filter(Product.description.contains(word)).all())
 
         products = set(products_list)
 
     else:
-        products = Product.Product.query.all()
+        products = Product.getAll()
 
-    return render_template('product.html',
+    return render_template('manageProduct.html',
                             form_search      = form_search,
                             form_newCategory = form_newCategory,
                             form_newProduct  = form_newProduct,
@@ -53,15 +54,14 @@ def createCategory(form):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
-    
-    elif ProductCategory.ProductCategory.query.filter_by(name=form.categoryName.data).first() is not None:
-        flash(f'Category already exists.', 'warning')
-    
-    else:
-        ProductCategory.create(name        = form.categoryName.data,
-                               description = form.categoryDescription.data
-                              )
+
+    elif ProductCategory.create(name        = form.categoryName.data,
+                                description = form.categoryDescription.data
+                               ):
         flash(f'Category added successfully.', 'success')
+
+    else:
+        flash(f'Category already exists.', 'warning')
 
     return redirect(url_for('product.index'))
 
@@ -75,24 +75,22 @@ def createProduct(form):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
 
-    elif Product.Product.query.filter_by(name=form.productName.data).first() is not None:
-        flash(f'Product already exists.', 'warning')
+    elif Product.create(category_id = form.category.data,
+                   name        = form.productName.data,
+                   description = form.productDescription.data,
+                   price       = form.price.data,
+                   quantity    = form.quantity.data
+                  ):
+        flash(f'Product created successfully', 'success')
 
     else:
-        Product.create(category_id = form.category.data,
-                       name        = form.productName.data,
-                       description = form.productDescription.data,
-                       price       = form.price.data,
-                       quantity    = form.quantity.data
-                      )
-
-        flash(f'Product created successfully', 'success')
+        flash(f'Product already exists.', 'warning')
 
     return redirect(url_for('product.index'))
 
 def details(product_id):
-    product = Product.Product.query.filter_by(product_id=product_id).first()
-    categories = ProductCategory.ProductCategory.query.all()
+    product = Product.query.filter_by(product_id=product_id).first()
+    categories = ProductCategory.query.all()
     form = NewProduct.NewProduct(
                 productName        = product.name,
                 productDescription = product.description,
@@ -114,17 +112,16 @@ def edit(product, form):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
 
-    elif form.productName.data != product.name and Product.Product.query.filter_by(name=form.productName.data).first() is not None:
+    elif form.productName.data != product.name and Product.getByProductName(form.productName.data) is not None:
         flash(f'Product already exists.', 'warning')
 
     else:
-        product.name        = form.productName.data
-        product.description = form.productDescription.data
-        product.category_id = form.category.data
-        product.price       = form.price.data
-        product.quantity    = form.quantity.data
-
-        db.session.commit()
+        product.update(name        = form.productName.data,
+                       description = form.productDescription.data,
+                       category_id = form.category.data,
+                       price       = form.price.data,
+                       quantity    = form.quantity.data
+                      )
 
         flash(f'Product updated successfully.', 'success')
 
@@ -140,16 +137,11 @@ def deleteCategory(category_id):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
 
+    elif ProductCategory.deleteByID(category_id):
+        flash(f'Category deleted successfully.', 'success')
+
     else:
-        try:
-            ProductCategory.ProductCategory.query.filter_by(category_id=category_id).delete()
-
-        except:
-            flash(f'This Category is still in use.', 'warning')
-
-        else:
-            ProductCategory.delete()
-            flash(f'Category deleted successfully.', 'success')
+        flash(f'Category is still in use.', 'warning')
 
     return redirect(url_for('product.index'))
 
@@ -159,19 +151,13 @@ def deleteCategory(category_id):
 # redirect to PMS page and flash message after product is deleted
 @login_required
 def deleteProduct(product_id):
-    # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
 
+    elif Product.deleteByID(product_id):
+        flash(f'Product deleted successfully.', 'success')
+
     else:
-        try:
-            Product.Product.query.filter_by(product_id=product_id).delete()
-
-        except:
-            flash(f'Something went wrong!', 'warning')  # TODO: Warnign message
-
-        else:
-            Product.delete()
-            flash(f'Product deleted successfully.', 'success')
+        flash(f'Product deleted failed.', 'warning')
 
     return redirect(url_for('product.index'))

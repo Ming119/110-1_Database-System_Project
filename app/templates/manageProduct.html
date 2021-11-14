@@ -6,15 +6,24 @@
 {% endif %}
 {% for category in categories %}
 <li href="#" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
-  {% if current_user.is_authenticated and current_user.role == 'staff' %}
-  <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('product.deleteCategory', category_id=category.category_id) }}"></a>
-  {% endif %}
+  <div class="d-flex justify-content-end">
+    <span class="badge bg-secondary rounded-pill">0</span>
+    {% if current_user.is_authenticated and current_user.role == 'staff' %}
+    <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('product.deleteCategory', category_id=category.category_id) }}"></a>
+    {% endif %}
+  </div>
 </li>
 {% endfor %}
 {% endblock %}
 
+{% block categoryCross %}
+{% if current_user.is_authenticated and current_user.role == 'staff' %}
+
+{% endif %}
+{% endblock %}
+
 {% block product %}
-{% if current_user.is_authenticated and current_user.role == 'staff'%}
+{% if current_user.is_authenticated and current_user.role == 'staff' %}
 <div class="col">
   <!-- <a href="#" class=""> -->
   <div class="card shadow-sm" data-bs-toggle="modal" data-bs-target="#Modal_AddANewProduct">

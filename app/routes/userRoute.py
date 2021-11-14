@@ -1,7 +1,10 @@
 from flask import Blueprint
-from app.controllers.userController import profile, manageUsers
+from app.controllers.userController import (
+    manageUsers, profile, deleteProfile
+)
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
-bp.route('/<int:user_id>', methods=['GET'])(profile)
-bp.route('/manageUsers', methods=['GET'])(manageUsers)
+bp.route('/', methods=['GET'])(manageUsers)
+bp.route('/<int:user_id>', methods=['GET', 'POST'])(profile)
+bp.route('/deleteProfile/<int:user_id>', methods=['GET'])(deleteProfile)

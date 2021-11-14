@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, validators, PasswordField, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, validators, ValidationError
 from wtforms.fields.html5 import EmailField, DateField
 
 class RegisterForm(Form):
@@ -25,12 +25,12 @@ class RegisterForm(Form):
         validators.Length(min=8)
     ])
 
-    password2 = PasswordField('Confirm Password', validators=[
+    confirm_password = PasswordField('Confirm Password', validators=[
         validators.DataRequired(),
         validators.EqualTo('password', message='PASSWORD NEEDS TO MATCH')
     ])
 
-    BOD = DateField('Date of Birth', validators=[
+    DOB = DateField('Date of Birth', validators=[
         validators.DataRequired()
     ])
 

@@ -1,0 +1,14 @@
+*** Settings ***
+Resource    common.txt
+
+*** Variables ***
+${registerTitle} =    ${cardHeader}//*[normalize-space()='Register']
+${emailField} =   ${cardBody}//form//*[@id='email']
+${usernameField} =    ${cardBody}//form//*[@id='username']
+${passwordField} =    ${cardBody}//form//*[@id='password']
+${confirmPasswordField} =    ${cardBody}//form//*[@id='confirm_password']
+${firstNameField} =    ${cardBody}//form//*[@id='first_name']
+${lastNameField} =    ${cardBody}//form//*[@id='last_name']
+${DOBDatePicker} =    ${cardBody}//form//*[@id='DOB']
+${registerButton} =    ${cardBody}//form//*[@id='submit']
+${alreadyHaveAnAccountButton} =    ${cardFooter}//*[normalize-space()='Already have an account?']

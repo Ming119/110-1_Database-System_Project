@@ -1,32 +1,45 @@
 {% extends 'base.html' %}
 
-{% block title %}Manage User Page{% endblock title %}
-
 {% block content %}
-
-            <table id="data" class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Date</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for eachuser in userlist %}
-                  <tr>
-                    <td> {{ eachuser.username }} </td>
-                    <td> {{ eachuser.create_at }} </td>
-                    <td>
-                        <div class="btn-manageUser">
-                            <button class="btn btn-warning" type="button">Edit</button> 
-                            <button class="btn btn-danger" type="button">Delete</button>                       
-                            </form>
-                        </div>
-                    </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-        
+<table id="data" class="table table-hover">
+  <thead>
+    <tr>
+      <th>User ID</th>
+      <th>Email</th>
+      <th>Username</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Date of Birth</th>
+      <th>Role</th>
+      <th>is_confirmed</th>
+      <th>Last login</th>
+      <th>Create at</th>
+      <th>Modified at</th>
+      <th>#</th>      <!-- TODO: column name, action? / operations? -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.user_id }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
+      <td>{{ user.DOB }}</td>
+      <td>{{ user.role }}</td>
+      <td>{{ user.confirm }}</td>
+      <td>{{ user.last_login }}</td>
+      <td>{{ user.create_at }}</td>
+      <td>{{ user.modified_at }}</td>
+      <td>
+        <div class="btn-group-vertical">
+          <a class="btn btn-warning btn-block" type="button" href="{{ url_for('user.profile', user_id=user.user_id) }}">Edit</a>
+          <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.deleteProfile', user_id=user.user_id) }}">Delete</a>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

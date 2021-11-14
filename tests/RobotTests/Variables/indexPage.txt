@@ -1,0 +1,12 @@
+*** Settings ***
+Resource    common.txt
+
+*** Variables ***
+${categoryList} =    //*[contains(@id, 'category-list')]
+${productList} =    //*[contains(@id, 'product-list')]
+
+${categoryItem} =    ${categoryList}//*[contains(@class, 'list-group-item')]
+${categoryBadge} =    ${categoryItem}//*[contains(@class, 'badge')]
+${productCard} =    ${productList}${card}
+${productCardImage} =    ${productCard}//*[contains(@class, 'card-img')]
+${productCardBody} =    ${productList}${cardBody}
