@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
 from app.emailHelper import send_mail
-from app.models.User import User
+from app.models.User import User, Customer
 from app.models.Product import Product
 from app.models.ProductCategory import ProductCategory
 from app.forms import (
@@ -44,39 +44,39 @@ def register():
     form = RegisterForm.RegisterForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        user = User(
-            username   = form.username.data,
-            email      = form.email.data,
-            password   = form.password.data,
-            first_name = form.first_name.data,
-            last_name  = form.last_name.data,
-            role       = 'user',
-            DOB        = form.DOB.data
-        )
-
         # check that the username is used and confirmed
-        user2 = User.query.filter_by(username=user.username).first()
-        if user2 and user2.confirm:
-            flash(f'This username ({user.username}) is already register', 'warning')
+        userCheck = User.getByUsername(form.username.data)
+        if userCheck and userCheck.confirm:
+            flash(f'This username ({form.username.data}) is already register', 'warning')
             return redirect(url_for('index.register'))
 
         # check that the email is used and confirmed
-        user2 = User.query.filter_by(email=user.email).first()
-        if user2 and user2.confirm:
-            flash(f'This email ({user.email}) address is already register', 'warning')
+        userCheck = User.getByEmail(form.email.data)
+        if userCheck and userCheck.confirm:
+            flash(f'This email ({form.email.data}) address is already register', 'warning')
             return redirect(url_for('index.register'))
 
-        if not user2:
-            user.create()
+        if userCheck and userCheck.confirm == False:
+            customer = userCheck
 
-        send_mail(recipients = [user.email],
+        elif not userCheck:
+            customer = Customer.create(
+                            username   = form.username.data,
+                            email      = form.email.data,
+                            password   = form.password.data,
+                            first_name = form.first_name.data,
+                            last_name  = form.last_name.data,
+                            DOB        = form.DOB.data
+                        )
+
+        send_mail(recipients = [customer.email],
                   subject    = 'Welcome to ...',
                   template   = 'mail/confirmRegistration',
-                  user       = user,
-                  token      = user.create_confirm_token(),
+                  user       = customer,
+                  token      = customer.create_confirm_token(),
                  )
 
-        flash(f'A confirmation email has been sent to {user.email}, please check your email inbox.', 'info')
+        flash(f'A confirmation email has been sent to {customer.email}, please check your email inbox.', 'info')
         return redirect(url_for('index.index'))
 
     return render_template('register.html', form=form)
@@ -86,21 +86,20 @@ def register():
 #   :param: token
 # POST method is not allowed
 def confirmRegistration(token):
-    user = User()
-    data = user.validate_confirm_token(token)
+    customer = Customer()
+    data = customer.validate_confirm_token(token)
 
     if data is None:
         flash(f'You confirmation link is invalid or expired, please try again.', 'danger')
 
     else:
-        user = User.User.query.filter_by(user_id=data.get('user_id')).first()
-        user.confirm = True
-        user.update()
+        customer = Customer.getByID(data.get('user_id'))
+        customer.updateConfirm()
 
-        send_mail(recipients = [user.email],
+        send_mail(recipients = [customer.email],
                   subject    = 'Welcome to ...',
                   template   = 'mail/registrationConfirmed',
-                  user       = user
+                  user       = customer
                  )
 
         flash(f'Your email address has been confirmed, thank you.', 'success')
@@ -140,7 +139,6 @@ def logout():
     logout_user()
     flash('Logout successful!', 'success')
     return redirect(url_for('index.index'))
-
 
 # forgot password page of the website
 # GET method to render the forgot password form
