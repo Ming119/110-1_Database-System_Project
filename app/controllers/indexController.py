@@ -38,7 +38,7 @@ def index():
 #   redirect to index page with flash message if successful
 #   redirect to register page with flash message if failed
 def register():
-    form = RegisterForm.RegisterForm()
+    form = RegisterForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         # check that the username is used and confirmed
@@ -108,7 +108,7 @@ def confirmRegistration(token):
 #   redirect to index page with flash message if successful
 #   redirect to login page with flash message if failed
 def login():
-    form = LoginForm.LoginForm()
+    form = LoginForm()
 
     # check if the user is already logged in
     if request.method == 'GET' and current_user.is_authenticated:
@@ -141,7 +141,7 @@ def logout():
 # GET method to render the forgot password form
 # POST method to submit the forgot password form and send a reset password email
 def forgotPassword():
-    form = ForgotPasswordForm.ForgotPasswordForm()
+    form = ForgotPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -163,7 +163,7 @@ def forgotPassword():
 # :param: token
 # POST method to submit the reset password form
 def resetPassword(token):
-    form = ResetPasswordForm.ResetPasswordForm()
+    form = ResetPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User()

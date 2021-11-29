@@ -92,7 +92,7 @@ def details(product_id):
 
     if current_user.is_authenticated and current_user.role == 'staff':
         categories = ProductCategory.getAll()
-        form = NewProductForm.NewProductForm(
+        form = NewProductForm(
                     productName        = product.name,
                     productDescription = product.description,
                     price              = product.price,
@@ -110,7 +110,7 @@ def details(product_id):
     else:
         category = ProductCategory.getByID(product.category_id)
 
-        form = AddToCardForm.AddToCardForm()
+        form = AddToCardForm()
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():
