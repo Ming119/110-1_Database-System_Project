@@ -1,6 +1,5 @@
-import app.models
-import app.forms
-
+from app.models import *
+from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
