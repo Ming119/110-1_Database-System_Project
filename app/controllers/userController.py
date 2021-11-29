@@ -1,6 +1,7 @@
+import app.models
+
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from app.models.User import User, Admin
 
 @login_required
 def manageUsers():

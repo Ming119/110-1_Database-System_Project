@@ -7,10 +7,12 @@ from flask_bootstrap import Bootstrap
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_login import LoginManager
+from flask_fontawesome import FontAwesome
 from datetime import datetime, date
 
 db        = SQLAlchemy(current_app)
 bootstrap = Bootstrap(current_app)
+fa        = FontAwesome(current_app)
 bcrypt    = Bcrypt(current_app)
 mail      = Mail(current_app)
 login     = LoginManager(current_app)

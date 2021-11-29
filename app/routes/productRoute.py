@@ -1,7 +1,5 @@
+from app.controllers import *
 from flask import Blueprint
-from app.controllers.productController import (
-    index, details, deleteCategory, deleteProduct
-)
 
 bp = Blueprint('product', __name__, url_prefix='/product')
 

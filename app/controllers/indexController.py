@@ -1,13 +1,11 @@
+import app.models
+import app.forms
+
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
 from app.emailHelper import send_mail
-from app.models.User import User, Customer
-from app.models.Product import Product
-from app.models.ProductCategory import ProductCategory
-from app.forms import (
-    RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, Search
-)
+
 
 # index page of the website
 # GET method to render index page

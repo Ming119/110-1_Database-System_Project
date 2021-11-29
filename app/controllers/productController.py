@@ -1,8 +1,8 @@
+import app.models
+import app.forms
+
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from app.models.Product import Product
-from app.models.ProductCategory import ProductCategory
-from app.forms import Search, NewCategory, NewProduct
 
 # PMS page of the website
 # GET method to render PMS page
@@ -11,8 +11,8 @@ def index():
     categories = ProductCategory.getAll()
 
     form_search      = Search.Search()
-    form_newCategory = NewCategory.NewCategory()
-    form_newProduct  = NewProduct.NewProduct()
+    form_newCategory = NewCategoryForm.NewCategoryForm()
+    form_newProduct  = NewProductForm.NewProductForm()
     form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
 
     # Create a new category

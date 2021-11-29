@@ -3,7 +3,7 @@ from flask import flash
 from flask_wtf import Form
 from wtforms import StringField, IntegerField, FloatField, SelectField, SubmitField, validators, ValidationError
 
-class NewProduct(Form):
+class NewProductForm(Form):
     productName = StringField('Name', validators=[
         validators.DataRequired(),
     ])
