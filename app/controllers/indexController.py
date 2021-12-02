@@ -11,7 +11,7 @@ from app.emailHelper import send_mail
 # POST method for search function
 def index():
     categories  = ProductCategory.getAll()
-    form_search = Search.Search()
+    searchFrom = SearchForm()
 
     # Search
     if request.method == 'POST' and form_search.validate_on_submit():
@@ -27,9 +27,9 @@ def index():
         products = Product.getAll()
 
     return render_template('index.html',
-                            form_search      = form_search,
-                            categories       = categories,
-                            products         = products
+                            searchFrom = searchFrom,
+                            categories = categories,
+                            products   = products
                         )
 
 # register page of the website
@@ -38,19 +38,19 @@ def index():
 #   redirect to index page with flash message if successful
 #   redirect to register page with flash message if failed
 def register():
-    form = RegisterForm()
+    registerForm = RegisterForm()
 
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST' and registerForm.validate_on_submit():
         # check that the username is used and confirmed
-        userCheck = User.getByUsername(form.username.data)
+        userCheck = User.getByUsername(registerForm.username.data)
         if userCheck and userCheck.confirm:
-            flash(f'This username ({form.username.data}) is already register', 'warning')
+            flash(f'This username ({registerForm.username.data}) is already register', 'warning')
             return redirect(url_for('index.register'))
 
         # check that the email is used and confirmed
-        userCheck = User.getByEmail(form.email.data)
+        userCheck = User.getByEmail(registerForm.email.data)
         if userCheck and userCheck.confirm:
-            flash(f'This email ({form.email.data}) address is already register', 'warning')
+            flash(f'This email ({registerForm.email.data}) address is already register', 'warning')
             return redirect(url_for('index.register'))
 
         if userCheck and userCheck.confirm == False:
@@ -76,7 +76,7 @@ def register():
         flash(f'A confirmation email has been sent to {customer.email}, please check your email inbox.', 'info')
         return redirect(url_for('index.index'))
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', registerForm=registerForm)
 
 # confirm registration function
 # GET method to validate confirmation token

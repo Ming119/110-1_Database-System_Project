@@ -1,4 +1,4 @@
-from app.controllers import *
+from app.controllers.indexController import *
 from flask import Blueprint
 
 bp = Blueprint('index', __name__)

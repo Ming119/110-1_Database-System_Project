@@ -19,12 +19,7 @@ login     = LoginManager(current_app)
 login.login_view = 'index.login'
 login.login_message_category = 'danger'
 
-from app.models import (
-    User, CustomerAddress, CustomerPayment,
-    ProductCategory, Product, #Discount
-    ShoppingCart,
-    Order
-)
+from app.models import *
 
 def init_db():
     db.drop_all()
@@ -35,7 +30,7 @@ def init_db():
 def init_db_command():
     init_db()
 
-    User.Customer.create(
+    Customer.create(
             email      = 'customer@domain.com',
             username   = 'customer',
             password   = 'customer',
@@ -44,7 +39,7 @@ def init_db_command():
             DOB        = date.today()
         )
 
-    User.Staff.create(
+    Staff.create(
             email      = 'staff@domain.com',
             username   = 'staff',
             password   = 'staff',
@@ -52,7 +47,7 @@ def init_db_command():
             last_name  = 'staff',
         )
 
-    User.Admin.create(
+    Admin.create(
             email      = 'admin@domain.com',
             username   = 'admin',
             password   = 'admin',
@@ -60,12 +55,12 @@ def init_db_command():
             last_name  = 'admin',
         )
 
-    ProductCategory.ProductCategory.create(
+    ProductCategory.create(
             name = 'category1',
             description = 'category1 description'
         )
 
-    Product.Product.create(
+    Product.create(
             category_id = 1,
             quantity    = 1,
             name        = 'product',

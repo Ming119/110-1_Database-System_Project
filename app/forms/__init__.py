@@ -7,4 +7,4 @@ from app.forms.NewCategoryForm import NewCategoryForm
 from app.forms.NewProductForm import NewProductForm
 from app.forms.RegisterForm import RegisterForm
 from app.forms.ResetPasswordForm import ResetPasswordForm
-from app.forms.Search import Search
+from app.forms.SearchForm import SearchForm

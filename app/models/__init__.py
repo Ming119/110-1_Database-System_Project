@@ -6,4 +6,4 @@ from app.models.Order import Order
 from app.models.Product import Product
 from app.models.ProductCategory import ProductCategory
 from app.models.ShoppingCart import ShoppingCart
-from app.models.User import User
+from app.models.User import User, Admin, Staff, Customer

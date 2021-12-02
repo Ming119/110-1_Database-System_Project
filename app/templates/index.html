@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 
-{% import 'bootstrap/wtf.html' as wtf %}
-
 {% block content %}
 <div class="row my-5">
   <div class="col-3">
@@ -18,7 +16,7 @@
 
   <div class="col-9">
     <div class="mb-3">
-      {{ wtf.quick_form(form_search) }}
+      {{ wtf.quick_form(searchFrom) }}
     </div>
     <div id="product-list" class='row row-cols-3'>
       {% block product %}{% endblock %}
