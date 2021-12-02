@@ -83,6 +83,8 @@ class User(db.Model, UserMixin):
                     self.modified_at
                 )
 
+
+
 # Inherited from User
 class Customer(User):
     __tablename__   = 'customer'
@@ -136,6 +138,8 @@ class Customer(User):
 
         return User.getByUsername(customer.username)
 
+
+
 # Inherited from User
 class Staff(User):
     __tablename__   = 'staff'
@@ -156,6 +160,8 @@ class Staff(User):
                 )
         db.session.add(staff)
         db.session.commit()
+
+
 
 # Inherited from User
 class Admin(User):

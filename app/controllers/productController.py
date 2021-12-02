@@ -3,6 +3,8 @@ from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
+
+
 # PMS page of the website
 # GET method to render PMS page
 # POST method for create category, create product or search function
@@ -44,6 +46,8 @@ def index():
                             products         = products
                         )
 
+
+
 # create category function
 # :param: form
 #   create category based on a validate form
@@ -63,6 +67,8 @@ def createCategory(form):
         flash(f'Category already exists.', 'warning')
 
     return redirect(url_for('product.index'))
+
+
 
 # create prodcut function
 # :param: form
@@ -86,6 +92,8 @@ def createProduct(form):
         flash(f'Product already exists.', 'warning')
 
     return redirect(url_for('product.index'))
+
+
 
 def details(product_id):
     product = Product.getByID(product_id);
@@ -118,6 +126,8 @@ def details(product_id):
 
         return render_template('productDetails.html', form=form, product=product, category=category)
 
+
+
 @login_required
 def edit(product, form):
     # access control
@@ -138,6 +148,8 @@ def edit(product, form):
         flash(f'Product updated successfully.', 'success')
 
     return redirect(url_for('product.details', product_id=product.product_id))
+
+
 
 # @login_required
 # def addToCard(form):
@@ -161,6 +173,8 @@ def deleteCategory(category_id):
         flash(f'Category is still in use.', 'warning')
 
     return redirect(url_for('product.index'))
+
+
 
 # delete product funciton
 # :param: product_id

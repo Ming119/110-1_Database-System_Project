@@ -6,6 +6,7 @@ from datetime import datetime
 from app.emailHelper import send_mail
 
 
+
 # index page of the website
 # GET method to render index page
 # POST method for search function
@@ -31,6 +32,8 @@ def index():
                             categories = categories,
                             products   = products
                         )
+
+
 
 # register page of the website
 # GET method to render the register form
@@ -58,12 +61,12 @@ def register():
 
         elif not userCheck:
             customer = Customer.create(
-                            username   = form.username.data,
-                            email      = form.email.data,
-                            password   = form.password.data,
-                            first_name = form.first_name.data,
-                            last_name  = form.last_name.data,
-                            DOB        = form.DOB.data
+                            username   = registerForm.username.data,
+                            email      = registerForm.email.data,
+                            password   = registerForm.password.data,
+                            first_name = registerForm.first_name.data,
+                            last_name  = registerForm.last_name.data,
+                            DOB        = registerForm.DOB.data
                         )
 
         send_mail(recipients = [customer.email],
@@ -77,6 +80,8 @@ def register():
         return redirect(url_for('index.index'))
 
     return render_template('register.html', registerForm=registerForm)
+
+
 
 # confirm registration function
 # GET method to validate confirmation token
@@ -101,6 +106,8 @@ def confirmRegistration(token):
 
         flash(f'Your email address has been confirmed, thank you.', 'success')
     return redirect(url_for('index.login'))
+
+
 
 # login page of the website
 # GET method to render the login form
@@ -129,6 +136,8 @@ def login():
 
     return render_template('login.html', form=form)
 
+
+
 # logout function
 # GET method to logout and redirect to index page immediately
 # POST method is not allowed
@@ -136,6 +145,8 @@ def logout():
     logout_user()
     flash('Logout successful!', 'success')
     return redirect(url_for('index.index'))
+
+
 
 # forgot password page of the website
 # GET method to render the forgot password form
@@ -157,6 +168,8 @@ def forgotPassword():
         return redirect(url_for('index.index'))
 
     return render_template('forgotPassword.html', form=form)
+
+
 
 # reset password function
 # GET method to render reset password form
