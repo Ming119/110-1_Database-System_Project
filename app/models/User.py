@@ -92,8 +92,9 @@ class Customer(User):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
 
-    userPayment = db.relationship('CustomerPayment', backref='customer')
-    userAddress = db.relationship('CustomerAddress', backref='customer')
+    userPayment  = db.relationship('CustomerPayment', backref='customer')
+    userAddress  = db.relationship('CustomerAddress', backref='customer')
+    orderHistory = db.relationship('Order',           backref='customer')
 
     confirm = db.Column(db.Boolean,  default=False)
     DOB     = db.Column(db.Date)
@@ -168,6 +169,18 @@ class Admin(User):
     }
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+
+    @staticmethod
+    def create(email, username, password, first_name, last_name):
+        admin = Admin(
+                    email      = email,
+                    username   = username,
+                    password   = password,
+                    first_name = first_name,
+                    last_name  = last_name,
+                    )
+        db.session.add(admin)
+        db.session.commit()
 
     def deleteUserByID(user_id):
         try:
