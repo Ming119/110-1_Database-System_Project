@@ -17,7 +17,7 @@ def index():
 
 
 @login_required
-def newUser(role):
+def createUser(role):
     if current_user.role != 'admin':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
