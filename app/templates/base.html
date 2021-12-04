@@ -17,7 +17,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container d-flex justify-content-between">
             <a class="navbar-brand" href="{{ url_for('index.index') }}">
-                <img src="static/images/moonbird.png" alt="" height="40" class="d-inline-block align-text-top">
+                <img src="{{ url_for('static', filename='images/moonbird.png') }}" alt="" height="40" class="d-inline-block align-text-top">
             </a>
             {% if current_user.is_authenticated %}
             <div class="">
@@ -27,9 +27,9 @@
                     <li class="nav-item"><a href='{{ url_for('user.index') }}' class="nav-link"><i class="fas fa-users me-1"></i>Manage Users</a></li>
                     {% elif current_user.role == 'staff' %}
                     <!-- Staff Nav bar -->
-                    <li class="nav-item"><a href='{{ url_for('product.index') }}' class="nav-link"><i class="fas fa-boxes me-1"></i>Manage Products</a></li>
-                    <li class="nav-item"><a href='#' class="nav-link"><i class="fas fa-file-alt me-1"></i>Orders</a></li>
-                    <li class="nav-item"><a href='#' class="nav-link"><i class="fas fa-ticket-alt me-1"></i>Promotions</a></li>
+                    <li class="nav-item mx-1"><a href='{{ url_for('product.index') }}' class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a></li>
+                    <li class="nav-item mx-1"><a href='#' class="nav-link"><i class="fas fa-file-alt me-2"></i>Orders</a></li>
+                    <li class="nav-item mx-1"><a href='#' class="nav-link"><i class="fas fa-ticket-alt me-2"></i>Promotions</a></li>
                     {% else %}
                     <!-- customer Nav bar -->
                     <li class="nav-item"><a href='#' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Shopping Cart</a></li>
