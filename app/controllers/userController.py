@@ -12,13 +12,8 @@ def index():
         return redirect(url_for('index.index'))
 
     else:
-        form = NewUserForm()
-
-        if request.method == 'POST' and form.validate_on_submit():
-            createNewUser(form)
-
         users = User.getAll()
-        return render_template("manageUser.html", users=users, form=form)
+        return render_template("manageUser.html", users=users)
 
 @login_required
 def createNewUser(form):

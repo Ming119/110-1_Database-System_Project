@@ -11,7 +11,7 @@ from flask_login import current_user, login_required
 def index():
     categories = ProductCategory.getAll()
 
-    form_search      = Search()
+    searchForm      = SearchForm()
     form_newCategory = NewCategoryForm()
     form_newProduct  = NewProductForm()
     form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
@@ -39,7 +39,7 @@ def index():
         products = Product.getAll()
 
     return render_template('manageProduct.html',
-                            form_search      = form_search,
+                            searchForm      = searchForm,
                             form_newCategory = form_newCategory,
                             form_newProduct  = form_newProduct,
                             categories       = categories,
