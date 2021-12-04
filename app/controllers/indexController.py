@@ -12,7 +12,7 @@ from app.emailHelper import send_mail
 # POST method for search function
 def index():
     categories  = ProductCategory.getAll()
-    searchFrom = SearchForm()
+    searchForm = SearchForm()
 
     # Search
     if request.method == 'POST' and form_search.validate_on_submit():
@@ -28,7 +28,7 @@ def index():
         products = Product.getAll()
 
     return render_template('index.html',
-                            searchFrom = searchFrom,
+                            searchForm = searchForm,
                             categories = categories,
                             products   = products
                         )

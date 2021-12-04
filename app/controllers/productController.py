@@ -11,22 +11,21 @@ from flask_login import current_user, login_required
 def index():
     categories = ProductCategory.getAll()
 
-    form_search      = Search()
-    form_newCategory = NewCategoryForm()
-    form_newProduct  = NewProductForm()
-    form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
+    searchForm      = SearchForm()
+    newCategoryForm = NewCategoryForm()
+    newProductForm  = NewProductForm(categories)
 
     # Create a new category
-    if request.method == 'POST' and form_newCategory.validate_on_submit():
-        return createCategory(form_newCategory)
+    if request.method == 'POST' and newCategoryForm.validate_on_submit():
+        return createCategory(newCategoryForm)
 
     # Create a new product
-    if request.method == 'POST' and form_newProduct.validate_on_submit():
-        return createProduct(form_newProduct)
+    if request.method == 'POST' and newProductForm.validate_on_submit():
+        return createProduct(newProductForm)
 
     # Search
-    if request.method == 'POST' and form_search.validate_on_submit():
-        words = form_search.search.data.split(' ')
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
 
         products_list = list()
         for word in words:
@@ -39,11 +38,11 @@ def index():
         products = Product.getAll()
 
     return render_template('manageProduct.html',
-                            form_search      = form_search,
-                            form_newCategory = form_newCategory,
-                            form_newProduct  = form_newProduct,
-                            categories       = categories,
-                            products         = products
+                            searchForm      = searchForm,
+                            newCategoryForm = newCategoryForm,
+                            newProductForm  = newProductForm,
+                            categories      = categories,
+                            products        = products
                         )
 
 
