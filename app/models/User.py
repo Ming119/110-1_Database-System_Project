@@ -57,7 +57,7 @@ class User(db.Model, UserMixin):
         return User.query.filter(User.delete_at==None).all()
 
     @staticmethod
-    def getByUserID(user_id):
+    def getByID(user_id):
         return User.query.filter(User.user_id==user_id, User.delete_at==None).first()
 
     @staticmethod
@@ -107,6 +107,7 @@ class Customer(User):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
+            print(data)
         except (SignatureExpired, BadSignature):
             return None
 
@@ -123,7 +124,7 @@ class Customer(User):
 
     @staticmethod
     def create(email, username, password, first_name, last_name, DOB):
-        custoemr = Customer(
+        customer = Customer(
                         email      = email,
                         username   = username,
                         password   = password,
@@ -131,10 +132,11 @@ class Customer(User):
                         last_name  = last_name,
                         DOB        = DOB
                    )
-        db.session.add(custoemr)
+        db.session.add(customer)
         db.session.commit()
 
         return User.getByUsername(customer.username)
+
 
 
 # Inherited from User
@@ -188,4 +190,5 @@ class Admin(User):
             user.delete_at = datetime.now()
             db.session.commit()
             return True
+
         except: return False
