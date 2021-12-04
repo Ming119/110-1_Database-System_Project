@@ -13,7 +13,7 @@ class CustomerPayment(db.Model):
     expiry       = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-        return '<UserAddress {}, {}, {}, {}, {}, {}>'.format(
+        return '<CustomerPayment {}, {}, {}, {}, {}, {}>'.format(
                     self.payment_id,
                     self.user_id,
                     self.payment_type,
