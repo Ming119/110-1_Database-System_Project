@@ -46,12 +46,10 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    def update(self, email=None, username=None, first_name=None, last_name=None, delete_at=None):
-        self.email      = email or self.email
+    def update(self, username=None, first_name=None, last_name=None):
         self.username   = username or self.username
         self.first_name = first_name or self.first_name
         self.last_name  = last_name or self.last_name
-        self.delete_at  = delete_at
         db.session.commit()
 
     @staticmethod
@@ -94,8 +92,9 @@ class Customer(User):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
 
-    userPayment = db.relationship('CustomerPayment', backref='customer')
-    userAddress = db.relationship('CustomerAddress', backref='customer')
+    userPayment  = db.relationship('CustomerPayment', backref='customer')
+    userAddress  = db.relationship('CustomerAddress', backref='customer')
+    orderHistory = db.relationship('Order',           backref='customer')
 
     confirm = db.Column(db.Boolean,  default=False)
     DOB     = db.Column(db.Date)
@@ -114,8 +113,8 @@ class Customer(User):
 
         return data
 
-    def update(self, email=None, username=None, first_name=None, last_name=None, DOB=None):
-        super().update(email, username, first_name, last_name)
+    def update(self, username=None, first_name=None, last_name=None, DOB=None):
+        super().update(username, first_name, last_name)
         self.DOB = DOB or self.DOB
         db.session.commit()
 
@@ -184,10 +183,10 @@ class Admin(User):
         db.session.add(admin)
         db.session.commit()
 
-    @staticmethod
-    def deleteUserByID(user_id):
+    def deleteUserByUserID(admin):
         try:
-            user = User.getByID(user_id)
+            user = getUserByUserID(user_id)
+            if (user.role == 'admin'): return False
             user.delete_at = datetime.now()
             db.session.commit()
             return True
