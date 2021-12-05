@@ -1,0 +1,72 @@
+*** Settings ***
+Library    Selenium2Library
+Resource    ../allKeywords.txt
+Resource    ../allVariables.txt
+
+**keywords**
+Verify Login Form Is Visible
+    Login Page::Wait Until Login Form Is Visible
+
+Verify "Do not Have An Account" Button
+    Login Page::Wait Until Login Form Is Visible
+    Click Element    ${doNotHaveAnAccountButton}
+    Register Page::Wait Until Register Form Is Visible
+    [Teardown]    Go to Login Page
+
+Verify "Forgot Password" Button
+    Login Page::Wait Until Login Form Is Visible
+    Click Element    ${forgotPasswordButton}
+    Forgot Password Page::Wait Until Forgot Password Form Is Visible
+    [Teardown]    Go to Login Page
+
+Verify Login As Customer
+    Login Page::Wait Until Login Form Is Visible
+    Login As    username=customer    password=customer
+    Flash::Wait Until Flash Message With Category Is Visible    message=Login successful!    category=success
+    # Common::Wait Until Navbar Contains    Home    Products    Shopping Cart    ${customer}[username]    Logout #TODO    Navbar check
+    [Teardown]    Run Keywords    Logout
+    ...                    AND    Go to Login Page
+
+Verify Login As Staff
+    Login Page::Wait Until Login Form Is Visible
+    Login As    username=staff    password=staff
+    Flash::Wait Until Flash Message With Category Is Visible    message=Login successful!    category=success
+    # Common::Wait Until Navbar Contains    Home    Products    Orders    Promotions    ${staff}[username]    Logout #TODO    Navbar check
+    [Teardown]    Run Keywords    Logout
+    ...                    AND    Go to Login Page
+
+Verify Login As Admin
+    Login Page::Wait Until Login Form Is Visible
+    Login As    username=admin    password=admin
+    Flash::Wait Until Flash Message With Category Is Visible    message=Login successful!    category=success
+    # Common::Wait Until Navbar Contains    Home    Products    Manage Users    ${admin}[username]    Logout #TODO    Navbar check
+    [Teardown]    Run Keywords    Logout
+    ...                    AND    Go to Login Page
+
+Verify Login With Invalid Username
+    Login Page::Wait Until Login Form Is Visible
+    Login As    username=userr    password=user
+    Flash::Wait Until Flash Message With Category Is Visible    message=Wrong username or password    category=warning
+    [Teardown]    Go to Login Page
+
+Verify Login With Invalid Password
+    Login Page::Wait Until Login Form Is Visible
+    Login As    username=user    password=userr
+    Flash::Wait Until Flash Message With Category Is Visible    message=Wrong username or password    category=warning
+    [Teardown]    Go to Login Page
+
+Login Page::Wait Until Login Form Is Visible
+    Wait Until Element Is Visible    ${loginTitle}    ${normalPeriodOfTime}    'Login Title Should Be Visible'
+    Wait Until Element Is Visible    ${usernameField}    ${normalPeriodOfTime}    'Username Field Should Be Visible'
+    Wait Until Element Is Visible    ${passwordField}    ${normalPeriodOfTime}    'Password Field Should Be Visible'
+    Wait Until Element Is Visible    ${rememberMeCheckBox}    ${normalPeriodOfTime}    'Remember Me Check Box Should Be Visible'
+    Wait Until Element Is Visible    ${loginButton}    ${normalPeriodOfTime}    'Login Button Should Be Visible'
+    Wait Until Element Is Visible    ${doNotHaveAnAccountButton}    ${normalPeriodOfTime}    'Do Not Have An Account Button Should Be Visible'
+    Wait Until Element Is Visible    ${forgotPasswordButton}    ${normalPeriodOfTime}    'Forgot Password Button Should Be Visible'
+
+Login As
+    [Arguments]    ${username}    ${password}    ${rememberMe}=${False}
+    Input Text    ${usernameField}    ${username}
+    Input Text    ${passwordField}    ${password}
+    Run Keyword If    '${rememberMe}'=='${True}'    Click Element    ${rememberMeCheckBox}
+    Click Element    ${LoginButton}

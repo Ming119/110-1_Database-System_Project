@@ -2,11 +2,67 @@
 
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Register Page{% endblock title %}
-
 {% block content %}
-<div>
-    <h1 class='text-center'>Register Your Account</h1>
-    {{ wtf.quick_form(form) }}
+<div class="card text-dark bg-light mx-auto mt-5" style="width: 36rem;">
+    <div class="card-header">
+        <h2>Register</h2>
+    </div>
+
+    <div class="card-body text-center">
+        <form action="" method="post" class="form" role="form">
+            {{ registerForm.hidden_tag() }}
+
+            <div class="form-floating my-3">
+                {{ registerForm.email(class="form-control", placeholder='Email') }}
+                {{ registerForm.email.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ registerForm.username(class="form-control", placeholder='Username') }}
+                {{ registerForm.username.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ registerForm.password(class="form-control", placeholder='Password') }}
+                {{ registerForm.password.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ registerForm.confirm_password(class="form-control", placeholder='Confirm Password') }}
+                {{ registerForm.confirm_password.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ registerForm.first_name(class="form-control", placeholder='First Name') }}
+                {{ registerForm.first_name.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ registerForm.last_name(class="form-control", placeholder='Last Name') }}
+                {{ registerForm.last_name.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ registerForm.DOB(class="form-control") }}
+                {{ registerForm.DOB.label() }}
+            </div>
+
+            {{ registerForm.submit(class='btn btn-primary px-5') }}
+        </form>
+
+        {% for errors in registerForm.errors.values() %}
+        {% for error in errors %}
+        <small class="form-text text-danger">
+            {{ error }}
+        </small>
+        <br />
+        {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div class="card-footer text-mute text-center">
+        <a type="button" class="btn btn-sm btn-outline-secondary px-3 mt-3" href='{{ url_for('index.login') }}'>Already have an account?</a>
+        <p class='my-2'>&copy; 2021 CSIE, NTUT</p>
+    </div>
 </div>
 {% endblock %}

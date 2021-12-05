@@ -1,0 +1,7 @@
+*** Settings ***
+Resource    indexPage.txt
+
+*** Variables ***
+${addNewCategoryButton} =    ${categoryList}//a[normalize-space()='+ Add a new category']
+${deleteCategoryButton} =    ${categoryItem}//a[contains(@class, 'btn-close')]
+${addNewProductCard} =    ${productCardBody}//*[normalize-space()='Add a new product']

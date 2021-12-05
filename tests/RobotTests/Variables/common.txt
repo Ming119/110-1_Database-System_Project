@@ -1,0 +1,12 @@
+*** Variables ***
+${browser} =    firefox
+${webSiteURL} =    http://192.168.0.158:5000
+
+${shortPeriodOfTime} =    1s
+${normalPeriodOfTime} =    3s
+${longPeriodOfTime} =    5s
+
+${card} =    //*[contains(@class, 'card')]
+${cardHeader} =    ${card}//*[contains(@class, 'card-header')]
+${cardBody} =    ${card}//*[contains(@class, 'card-body')]
+${cardFooter} =    ${card}//*[contains(@class, 'card-footer')]

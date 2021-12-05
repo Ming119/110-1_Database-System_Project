@@ -1,0 +1,58 @@
+*** Settings ***
+Library    Selenium2Library
+Resource    ../allVariables.txt
+
+**keywords**
+Common::Wait Until Navbar Button Is Visible
+    [Arguments]    ${buttonName}
+    ${button} =    Set Variable    //*[contains(@class, 'navbar')]//*[contains(@class, 'nav-link') and normalize-space()='${buttonName}']
+    Wait Until Element Is Visible    ${button}    ${shortPeriodOfTime}    '${buttonName} Button Should Be Visible'
+    [return]    ${button}
+
+Common::Wait Until Navbar Contains
+    [Arguments]    @{buttonNames}
+    FOR    ${buttonName}    IN    @{buttonNames}
+        Common::Wait Until Navbar Button Is Visible    ${buttonName}
+    END
+
+Common::Click Navbar Button
+    [arguments]    ${buttonName}
+    ${button} =    Common::Wait Until Navbar Button Is Visible    ${buttonName}
+    Click Element    ${button}
+
+Go To Home Page
+    Common::Click Navbar Button    Home
+    Common::Wait Until Navbar Contains    Home
+
+Go to Login Page
+    Common::Click Navbar Button    Login
+    Common::Wait Until Navbar Contains    Home    Login    Sign-up
+
+Go To Register Page
+    Common::Click Navbar Button    Sign-up
+    Common::Wait Until Navbar Contains    Home    Login    Sign-up
+
+Go To Manage Products Page
+    Common::Click Navbar Button    Manage Products
+    Common::Wait Until Navbar Contains    Home    Logout
+
+Go To ShoppingCart Page
+    Common::Click Navbar Button    Shopping Cart
+    Common::Wait Until Navbar Contains    Home    Logout
+
+Go To Order Page
+    Common::Click Navbar Button    Orders
+    Common::Wait Until Navbar Contains    Home    Logout
+
+Go To Discount Page
+    Common::Click Navbar Button    Discounts
+    Common::Wait Until Navbar Contains    Home    Products    Logout
+
+Go To ManageUser Page
+    Common::Click Navbar Button    Manage User
+    Common::Wait Until Navbar Contains    Home    Manager Users    Logout
+
+Logout
+    Common::Click Navbar Button    Logout
+    Flash::Wait Until Flash Message With Category Is Visible    Logout successful!    success
+    Common::Wait Until Navbar Contains    Home    Login    Sign-up
