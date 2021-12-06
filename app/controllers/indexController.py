@@ -1,20 +1,18 @@
+from app.models import *
+from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
 from app.emailHelper import send_mail
-from app.models.User import User, Customer
-from app.models.Product import Product
-from app.models.ProductCategory import ProductCategory
-from app.forms import (
-    RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, Search
-)
+
+
 
 # index page of the website
 # GET method to render index page
 # POST method for search function
 def index():
     categories  = ProductCategory.getAll()
-    form_search = Search.Search()
+    searchForm = SearchForm()
 
     # Search
     if request.method == 'POST' and form_search.validate_on_submit():
@@ -30,10 +28,12 @@ def index():
         products = Product.getAll()
 
     return render_template('index.html',
-                            form_search      = form_search,
-                            categories       = categories,
-                            products         = products
+                            searchForm = searchForm,
+                            categories = categories,
+                            products   = products
                         )
+
+
 
 # register page of the website
 # GET method to render the register form
@@ -41,19 +41,19 @@ def index():
 #   redirect to index page with flash message if successful
 #   redirect to register page with flash message if failed
 def register():
-    form = RegisterForm.RegisterForm()
+    registerForm = RegisterForm()
 
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST' and registerForm.validate_on_submit():
         # check that the username is used and confirmed
-        userCheck = User.getByUsername(form.username.data)
+        userCheck = User.getByUsername(registerForm.username.data)
         if userCheck and userCheck.confirm:
-            flash(f'This username ({form.username.data}) is already register', 'warning')
+            flash(f'This username ({registerForm.username.data}) is already register', 'warning')
             return redirect(url_for('index.register'))
 
         # check that the email is used and confirmed
-        userCheck = User.getByEmail(form.email.data)
+        userCheck = User.getByEmail(registerForm.email.data)
         if userCheck and userCheck.confirm:
-            flash(f'This email ({form.email.data}) address is already register', 'warning')
+            flash(f'This email ({registerForm.email.data}) address is already register', 'warning')
             return redirect(url_for('index.register'))
 
         if userCheck and userCheck.confirm == False:
@@ -61,12 +61,12 @@ def register():
 
         elif not userCheck:
             customer = Customer.create(
-                            username   = form.username.data,
-                            email      = form.email.data,
-                            password   = form.password.data,
-                            first_name = form.first_name.data,
-                            last_name  = form.last_name.data,
-                            DOB        = form.DOB.data
+                            username   = registerForm.username.data,
+                            email      = registerForm.email.data,
+                            password   = registerForm.password.data,
+                            first_name = registerForm.first_name.data,
+                            last_name  = registerForm.last_name.data,
+                            DOB        = registerForm.DOB.data
                         )
 
         send_mail(recipients = [customer.email],
@@ -79,7 +79,9 @@ def register():
         flash(f'A confirmation email has been sent to {customer.email}, please check your email inbox.', 'info')
         return redirect(url_for('index.index'))
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', registerForm=registerForm)
+
+
 
 # confirm registration function
 # GET method to validate confirmation token
@@ -105,13 +107,15 @@ def confirmRegistration(token):
         flash(f'Your email address has been confirmed, thank you.', 'success')
     return redirect(url_for('index.login'))
 
+
+
 # login page of the website
 # GET method to render the login form
 # POST method to submit the login form
 #   redirect to index page with flash message if successful
 #   redirect to login page with flash message if failed
 def login():
-    form = LoginForm.LoginForm()
+    form = LoginForm()
 
     # check if the user is already logged in
     if request.method == 'GET' and current_user.is_authenticated:
@@ -132,6 +136,8 @@ def login():
 
     return render_template('login.html', form=form)
 
+
+
 # logout function
 # GET method to logout and redirect to index page immediately
 # POST method is not allowed
@@ -140,11 +146,13 @@ def logout():
     flash('Logout successful!', 'success')
     return redirect(url_for('index.index'))
 
+
+
 # forgot password page of the website
 # GET method to render the forgot password form
 # POST method to submit the forgot password form and send a reset password email
 def forgotPassword():
-    form = ForgotPasswordForm.ForgotPasswordForm()
+    form = ForgotPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -161,12 +169,14 @@ def forgotPassword():
 
     return render_template('forgotPassword.html', form=form)
 
+
+
 # reset password function
 # GET method to render reset password form
 # :param: token
 # POST method to submit the reset password form
 def resetPassword(token):
-    form = ResetPasswordForm.ResetPasswordForm()
+    form = ResetPasswordForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User()

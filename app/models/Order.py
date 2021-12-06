@@ -5,7 +5,16 @@ class Order(db.Model):
     __tablename__ = 'order'
 
     order_id    = db.Column(db.Integer, primary_key=True)
-    customer_id = db.column(db.Integer, db.ForeignKey('customer.user_id'))
-    cart_id     = db.column(db.Integer, db.ForeignKey('shopping_cart.cart_id'))
-    address_id  = db.column(db.Integer, db.ForeignKey('customer_address.address_id'))
-    payment_id  = db.column(db.Integer, db.ForeignKey('customer_payment.payment_id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.user_id'))
+
+    cartItems = db.relationship('OrderItem', backref='order');
+
+    amount = db.Column(db.Integer)
+
+class OrderItem(db.Model):
+    __tablename__ = 'cart_item'
+
+    order_id   = db.Column(db.Integer, db.ForeignKey('order.order_id'), primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), primary_key=True)
+
+    quantity = db.Column(db.Integer)

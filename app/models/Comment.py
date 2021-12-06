@@ -8,7 +8,7 @@ class Comment(db.Model):
     uid           = db.relationship('User', backref='comments')
     date          = db.Column(db.Date, default=datetime.now, unique=False, nullable=False)
     comment       = db.Column(db.String(64), unique=False, nullable=True)
-    rate          = db.Column(db.Ineeger, unique=False, nullable=False)
+    rate          = db.Column(db.Integer, unique=False, nullable=False)
 
     def __repr__(self):
         return '<comment: %r>' % (

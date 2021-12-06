@@ -4,8 +4,9 @@ from datetime import datetime
 class ProductCategory(db.Model):
     __tablename__ = 'product_category'
 
-    category_id = db.Column(db.Integer, primary_key=True)
-    product_id  = db.relationship('Product', backref='product_category')
+    category_id   = db.Column(db.Integer, primary_key=True)
+    product_id    = db.relationship('Product', backref='product_category')
+    discount_code = db.Column(db.String(8), db.ForeignKey('category_discount.discount_code'), nullable=True)
 
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)

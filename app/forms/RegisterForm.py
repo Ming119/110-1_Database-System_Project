@@ -36,7 +36,6 @@ class RegisterForm(Form):
 
     submit = SubmitField('Register')
 
-    # TODO: error message
     def validate_password(self, field):
-        if not(any(not c.isalnum() for c in field.data) and any(c.isupper() for c in field.data) and any(c.islower() for c in field.data) and any(c.isdigit() for c in field.data)):
-            raise ValidationError('Password must contains number, upper case, lower case and special character.')
+        if not(any(c.isalpha() for c in field.data) and any(c.isdigit() for c in field.data)):
+            raise ValidationError('Password must contains number and alphabet')
