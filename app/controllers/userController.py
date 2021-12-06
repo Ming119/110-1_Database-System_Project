@@ -22,15 +22,8 @@ def createUser(role):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-
-
-    if role == 'staff':
-        newUserForm = NewStaffForm()
-
-    elif role == 'customer':
-        newUserForm = NewCustomerForm()
-
-
+    if role == 'staff':      newUserForm = NewStaffForm()
+    elif role == 'customer': newUserForm = NewCustomerForm()
 
     if request.method == 'POST' and newUserForm.validate_on_submit():
         # check that the username is used
@@ -46,28 +39,33 @@ def createUser(role):
             return redirect(url_for('user.index'))
 
         elif newUserForm.role == 'staff':
-            staff = Staff.create(
-                        username   = newUserForm.username.data,
-                        email      = newUserForm.email.data,
-                        password   = newUserForm.password.data,
-                        first_name = newUserForm.first_name.data,
-                        last_name  = newUserForm.last_name.data,
-                    )
-            flash(f'Staff created successfully!', 'success')
+            if (Staff.create(
+                    username   = newUserForm.username.data,
+                    email      = newUserForm.email.data,
+                    password   = newUserForm.password.data,
+                    first_name = newUserForm.first_name.data,
+                    last_name  = newUserForm.last_name.data,
+                )):
+                flash(f'Staff created successfully!', 'success')
+
+            else:
+                flash(f'Error creating staff', 'warning')
 
         elif newUserForm.role == 'customer':
-            customer = Customer.create(
-                            username   = newUserForm.username.data,
-                            email      = newUserForm.email.data,
-                            password   = newUserForm.password.data,
-                            first_name = newUserForm.first_name.data,
-                            last_name  = newUserForm.last_name.data,
-                            DOB        = newUserForm.DOB.data
-                        )
-            flash(f'Customer created successfully!', 'success')
+            if (Customer.create(
+                    username   = newUserForm.username.data,
+                    email      = newUserForm.email.data,
+                    password   = newUserForm.password.data,
+                    first_name = newUserForm.first_name.data,
+                    last_name  = newUserForm.last_name.data,
+                    DOB        = newUserForm.DOB.data
+                )):
+                flash(f'Customer created successfully!', 'success')
 
-        else:
-            flash(f'Error occurred when creating new user', 'danger')
+            else:
+                flash(f'Error creating customer', 'warning')
+
+        else: flash(f'Error occurred when creating new user', 'warning')
 
         return redirect(url_for('user.index'))
 
@@ -93,16 +91,24 @@ def updateProfile(user_id):
         return redirect(url_for('user.profile', user=User.getByID(user_id)))
 
     user = User.getByID(user_id)
-    updateProfileForm = UpdateProfileForm(user);
+    updateProfileForm = UpdateProfileForm();
 
     if request.method == 'POST' and updateProfileForm.validate_on_submit():
-        user.update(
-            username   = updateProfileForm.username.data,
-            first_name = updateProfileForm.first_name.data,
-            last_name  = updateProfileForm.last_name.data
-        )
-        flash(f'Profile updated successfully', 'success');
+        if (user.update(
+                username   = updateProfileForm.username.data,
+                first_name = updateProfileForm.first_name.data,
+                last_name  = updateProfileForm.last_name.data
+        )):
+            flash(f'Profile updated successfully', 'success');
+
+        else:
+            flash(f'Error updating profile', 'warning')
+
         return redirect(url_for('user.profile', user_id=user_id))
+
+    updateProfileForm.username.data = user.username
+    updateProfileForm.first_name.data = user.first_name
+    updateProfileForm.last_name.data = user.last_name
 
     return render_template("updateProfile.html",
                 user              = user,

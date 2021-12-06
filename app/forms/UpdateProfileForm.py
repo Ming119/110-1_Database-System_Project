@@ -15,9 +15,3 @@ class UpdateProfileForm(Form):
     ])
 
     submit = SubmitField('Update')
-
-    def __init__(self, user, *args, **kwargs):
-        super(UpdateProfileForm, self).__init__(*args, **kwargs)
-        self.username.data = user.username
-        self.first_name.data = user.first_name
-        self.last_name.data = user.last_name

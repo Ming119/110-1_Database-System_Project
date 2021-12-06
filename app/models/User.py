@@ -47,10 +47,13 @@ class User(db.Model, UserMixin):
         return bcrypt.check_password_hash(self.password_hash, password)
 
     def update(self, username=None, first_name=None, last_name=None):
-        self.username   = username or self.username
-        self.first_name = first_name or self.first_name
-        self.last_name  = last_name or self.last_name
-        db.session.commit()
+        try:
+            self.username   = username or self.username
+            self.first_name = first_name or self.first_name
+            self.last_name  = last_name or self.last_name
+            db.session.commit()
+            return True
+        except: return False
 
     @staticmethod
     def getAll():
@@ -113,28 +116,36 @@ class Customer(User):
         return data
 
     def update(self, username=None, first_name=None, last_name=None, DOB=None):
-        super().update(username, first_name, last_name)
-        self.DOB = DOB or self.DOB
-        db.session.commit()
+        try:
+            super().update(username, first_name, last_name)
+            self.DOB = DOB or self.DOB
+            db.session.commit()
+            return True
+        except: return False
 
     def updateConfirm(self, flag):
-        self.confirm = flag
-        db.session.commit()
+        try:
+            self.confirm = flag
+            db.session.commit()
+            return True
+        except: return False
 
     @staticmethod
     def create(email, username, password, first_name, last_name, DOB):
-        customer = Customer(
-                        email      = email,
-                        username   = username,
-                        password   = password,
-                        first_name = first_name,
-                        last_name  = last_name,
-                        DOB        = DOB
-                   )
-        db.session.add(customer)
-        db.session.commit()
+        try:
+            customer = Customer(
+                            email      = email,
+                            username   = username,
+                            password   = password,
+                            first_name = first_name,
+                            last_name  = last_name,
+                            DOB        = DOB
+                       )
+            db.session.add(customer)
+            db.session.commit()
 
-        return User.getByUsername(customer.username)
+            return User.getByUsername(customer.username)
+        except: return None
 
 
 
@@ -149,15 +160,20 @@ class Staff(User):
 
     @staticmethod
     def create(email, username, password, first_name, last_name):
-        staff = Staff(
-                    email      = email,
-                    username   = username,
-                    password   = password,
-                    first_name = first_name,
-                    last_name  = last_name,
-                )
-        db.session.add(staff)
-        db.session.commit()
+        try:
+            staff = Staff(
+                        email      = email,
+                        username   = username,
+                        password   = password,
+                        first_name = first_name,
+                        last_name  = last_name,
+                    )
+            db.session.add(staff)
+            db.session.commit()
+
+            return User.getByUsername(staff.username)
+        except:
+            return None
 
 
 
@@ -172,15 +188,19 @@ class Admin(User):
 
     @staticmethod
     def create(email, username, password, first_name, last_name):
-        admin = Admin(
-                    email      = email,
-                    username   = username,
-                    password   = password,
-                    first_name = first_name,
-                    last_name  = last_name,
-                    )
-        db.session.add(admin)
-        db.session.commit()
+        try:
+            admin = Admin(
+                        email      = email,
+                        username   = username,
+                        password   = password,
+                        first_name = first_name,
+                        last_name  = last_name,
+                        )
+            db.session.add(admin)
+            db.session.commit()
+            return User.getByUsername(admin.username)
+        except:
+            return None
 
     def deleteUserByID(user_id):
         try:
