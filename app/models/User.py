@@ -13,18 +13,18 @@ class User(db.Model, UserMixin):
 
     user_id       = db.Column(db.Integer, primary_key=True)
 
-    email         = db.Column(db.String(63),   nullable=False, unique=True)
-    username      = db.Column(db.String(31),   nullable=False, unique=True)
-    password_hash = db.Column(db.String(1023), nullable=False)
-    first_name    = db.Column(db.String(31),   nullable=False)
-    last_name     = db.Column(db.String(31),   nullable=False)
-    role          = db.Column(db.String(15),   nullable=False)
-    # icon          = db.Column(db.BLOB,         nullable=False)
+    email         = db.Column(db.String(64),   nullable=False, unique=True)
+    username      = db.Column(db.String(32),   nullable=False, unique=True)
+    password_hash = db.Column(db.String(1024), nullable=False)
+    first_name    = db.Column(db.String(32),   nullable=False)
+    last_name     = db.Column(db.String(32),   nullable=False)
+    role          = db.Column(db.String(16),   nullable=False)
+
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
 
     last_login  = db.Column(db.DateTime, nullable=True)
     create_at   = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-    delete_at   = db.Column(db.DateTime, nullable=True)
 
     __mapper_args__ = {
         'polymorphic_identity':'user',
@@ -54,19 +54,19 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def getAll():
-        return User.query.filter(User.delete_at==None).all()
+        return User.query.all()
 
     @staticmethod
     def getByID(user_id):
-        return User.query.filter(User.user_id==user_id, User.delete_at==None).first()
+        return User.query.filter(User.user_id==user_id, User.is_active==True).first()
 
     @staticmethod
     def getByEmail(email):
-        return User.query.filter(User.email==email, User.delete_at==None).first()
+        return User.query.filter(User.email==email, User.is_active==True).first()
 
     @staticmethod
     def getByUsername(username):
-        return User.query.filter(User.username==username, User.delete_at==None).first()
+        return User.query.filter(User.username==username, User.is_active==True).first()
 
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
@@ -187,7 +187,7 @@ class Admin(User):
         try:
             user = getUserByUserID(user_id)
             if (user.role == 'admin'): return False
-            user.delete_at = datetime.now()
+            user.is_active = False
             db.session.commit()
             return True
 

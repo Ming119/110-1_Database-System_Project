@@ -25,8 +25,8 @@ def index():
         return createProduct(form_newProduct)
 
     # Search
-    if request.method == 'POST' and form_search.validate_on_submit():
-        words = form_search.search.data.split(' ')
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
 
         products_list = list()
         for word in words:
@@ -84,7 +84,8 @@ def createProduct(form):
                    name        = form.productName.data,
                    description = form.productDescription.data,
                    price       = form.price.data,
-                   quantity    = form.quantity.data
+                   quantity    = form.quantity.data,
+                   image_url   = form.image_url.data
                   ):
         flash(f'Product created successfully', 'success')
 
