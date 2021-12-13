@@ -95,7 +95,8 @@ class Customer(User):
     userPayment  = db.relationship('CustomerPayment', backref='customer')
     userAddress  = db.relationship('CustomerAddress', backref='customer')
     orderHistory = db.relationship('Order',           backref='customer')
-
+    comments     = db.relationship('Comment',         backref='customer')
+    
     confirm = db.Column(db.Boolean,  default=False)
     DOB     = db.Column(db.Date)
 

@@ -9,6 +9,8 @@ class Product(db.Model):
     cart_id        = db.Column(db.Integer, db.ForeignKey('shopping_cart.customer_id'),    nullable=True)
     discount_code  = db.Column(db.String(8), db.ForeignKey('product_discount.discount_code'), nullable=True)
 
+    comments     = db.relationship('Comment', backref='product')
+
     name        = db.Column(db.String(63),  nullable=False)
     description = db.Column(db.String(255), nullable=True)
     image_url   = db.Column(db.String(255), nullable=False)

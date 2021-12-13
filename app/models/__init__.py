@@ -1,4 +1,4 @@
-# from app.models.Comment import Comment
+from app.models.Comment import Comment
 from app.models.CustomerAddress import CustomerAddress
 from app.models.CustomerPayment import CustomerPayment
 from app.models.Product import Product
