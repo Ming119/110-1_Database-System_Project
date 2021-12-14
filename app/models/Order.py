@@ -21,7 +21,7 @@ class Order(db.Model):
 
 
 class OrderItem(db.Model):
-    __tablename__ = 'cart_item'
+    __tablename__ = 'order_item'
 
     order_id   = db.Column(db.Integer, db.ForeignKey('order.order_id'), primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), primary_key=True)
