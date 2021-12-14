@@ -14,7 +14,6 @@ class Discount(db.Model):
     end_at      = db.Column(db.DateTime, nullable=True)
     create_at   = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-    deleted_at  = db.Column(db.DateTime, nullable=True)
 
     __mapper_args__ = {
         'polymorphic_identity':'discount',
@@ -29,7 +28,6 @@ class Discount(db.Model):
             self.is_active,
             self.create_at,
             self.modified_at,
-            self.deleted_at
         )
 
 
@@ -37,7 +35,7 @@ class Discount(db.Model):
 class ShippingDiscount(Discount):
     __tablename__   = 'shipping_discount'
     __mapper_args__ = {
-        'polymorphic_identity':'shipping_discount',
+        'polymorphic_identity':'shipping',
     }
 
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
@@ -49,7 +47,7 @@ class ShippingDiscount(Discount):
 class ProductDiscount(Discount):
     __tablename__   = 'product_discount'
     __mapper_args__ = {
-        'polymorphic_identity':'product_discount',
+        'polymorphic_identity':'product',
     }
 
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
@@ -59,13 +57,13 @@ class ProductDiscount(Discount):
 
 
 
-class CategoryDiscount(Discount):
-    __tablename__   = 'category_discount'
+class OrderDiscount(Discount):
+    __tablename__   = 'order_discount'
     __mapper_args__ = {
-        'polymorphic_identity':'category_discount',
+        'polymorphic_identity':'order',
     }
 
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
-    category_id   = db.relationship('ProductCategory', backref='category_discount')
 
     discountPresentage = db.Column(db.Float(), nullable=False)
+    atLeastAmount      = db.Column(db.Integer, nullable=False)

@@ -7,6 +7,7 @@ class Order(db.Model):
     order_id    = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.user_id'))
     address_id  = db.Column(db.Integer, db.ForeignKey('customer_address.address_id'))
+    order_discount    = db.Column(db.String(8), db.ForeignKey('order_discount.discount_code'))
 
     cartItems = db.relationship('OrderItem', backref='order');
 

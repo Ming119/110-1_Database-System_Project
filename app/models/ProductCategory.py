@@ -6,7 +6,7 @@ class ProductCategory(db.Model):
 
     category_id   = db.Column(db.Integer, primary_key=True)
     product_id    = db.relationship('Product', backref='product_category')
-    discount_code = db.Column(db.String(8), db.ForeignKey('category_discount.discount_code'), nullable=True)
+    # discount_code = db.Column(db.String(8), db.ForeignKey('category_discount.discount_code'), nullable=True)
 
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)
@@ -19,7 +19,7 @@ class ProductCategory(db.Model):
     def update(self, name=None, description=None):
         self.name        = name or self.name
         self.description = description or self.description
-        self.is_active   = True 
+        self.is_active   = True
         db.session.commit()
 
     @staticmethod

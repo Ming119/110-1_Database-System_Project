@@ -92,7 +92,7 @@ class Customer(User):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
 
-    userPayment  = db.relationship('CustomerPayment', backref='customer')
+    # userPayment  = db.relationship('CustomerPayment', backref='customer')
     userAddress  = db.relationship('CustomerAddress', backref='customer')
     orderHistory = db.relationship('Order',           backref='customer')
     comments     = db.relationship('Comment',         backref='customer')
