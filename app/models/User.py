@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     user_id       = db.Column(db.Integer, primary_key=True)
-    
+
     email         = db.Column(db.String(64),   nullable=False, unique=True)
     username      = db.Column(db.String(32),   nullable=False, unique=True)
     password_hash = db.Column(db.String(1024), nullable=False)
@@ -132,7 +132,7 @@ class Customer(User):
         except: return False
 
     @staticmethod
-    def create(email, username, password, first_name, last_name, DOB):
+    def create(email, username, password, first_name, last_name, DOB, confirm=False):
         try:
             customer = Customer(
                             email      = email,
@@ -140,7 +140,8 @@ class Customer(User):
                             password   = password,
                             first_name = first_name,
                             last_name  = last_name,
-                            DOB        = DOB
+                            DOB        = DOB,
+                            confirm    = confirm
                        )
             db.session.add(customer)
             db.session.commit()
@@ -203,7 +204,7 @@ class Admin(User):
         except:
             return None
 
-    def deleteUserByID(user_id):
+    def deleteUserByID(self, user_id):
         try:
             user = User.getByID(user_id)
             if (user.role == 'admin'): return False

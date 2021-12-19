@@ -27,7 +27,7 @@ def createUser(role):
         return redirect(url_for('index.index'))
 
 
-      
+
     if role == 'staff':
         newUserForm = NewStaffForm()
 
@@ -69,7 +69,8 @@ def createUser(role):
                     password   = newUserForm.password.data,
                     first_name = newUserForm.first_name.data,
                     last_name  = newUserForm.last_name.data,
-                    DOB        = newUserForm.DOB.data
+                    DOB        = newUserForm.DOB.data,
+                    confirm    = True
                 )):
                 flash(f'Customer created successfully!', 'success')
 
@@ -79,7 +80,7 @@ def createUser(role):
         else: flash(f'Error occurred when creating new user', 'warning')
 
         return redirect(url_for('user.index'))
- 
+
     return render_template("newUser.html", newUserForm=newUserForm)
 
 
