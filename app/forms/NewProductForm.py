@@ -3,12 +3,16 @@ from flask import flash
 from flask_wtf import Form
 from wtforms import StringField, IntegerField, FloatField, SelectField, SubmitField, validators, ValidationError
 
-class NewProduct(Form):
+class NewProductForm(Form):
     productName = StringField('Name', validators=[
         validators.DataRequired(),
     ])
 
     productDescription = StringField('Description')
+
+    image_url = StringField('Image URL', validators=[
+        validators.DataRequired(),
+    ])
 
     price = FloatField('Price', validators=[
         validators.InputRequired(),
@@ -25,6 +29,10 @@ class NewProduct(Form):
     discount = StringField('Discount Code')
 
     productSubmit = SubmitField('Submit')
+
+    def __init__(self, categories, *arg, **kwargs):
+        super(NewProductForm, self).__init__(*arg, **kwargs)
+        self.category.choices = [(category.category_id, category.name) for category in categories]
 
     def validate_price(self, field):
         if field.data < 0:

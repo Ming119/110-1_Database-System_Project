@@ -2,7 +2,7 @@ from flask_wtf import Form
 from wtforms import StringField, PasswordField, SubmitField, validators, ValidationError
 from wtforms.fields.html5 import EmailField, DateField
 
-class RegisterForm(Form):
+class NewUserForm(Form):
     email = EmailField('Email', validators=[
         validators.DataRequired(),
         validators.Email()
@@ -30,12 +30,26 @@ class RegisterForm(Form):
         validators.EqualTo('password', message='PASSWORD NEEDS TO MATCH')
     ])
 
-    DOB = DateField('Date of Birth', validators=[
-        validators.DataRequired()
-    ])
-
-    submit = SubmitField('Register')
+    submit = SubmitField('Create')
 
     def validate_password(self, field):
         if not(any(c.isalpha() for c in field.data) and any(c.isdigit() for c in field.data)):
             raise ValidationError('Password must contains number and alphabet')
+
+
+
+class NewStaffForm(NewUserForm):
+    def __init__(self, *arg, **kwargs):
+        self.role = 'staff'
+        super(NewStaffForm, self).__init__(*arg, **kwargs)
+
+
+
+class NewCustomerForm(NewUserForm):
+    def __init__(self, *arg, **kwargs):
+        self.role = 'customer'
+        super(NewCustomerForm, self).__init__(*arg, **kwargs)
+
+    DOB = DateField('Date of Birth', validators=[
+        validators.DataRequired()
+    ])

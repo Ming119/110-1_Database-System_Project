@@ -4,19 +4,18 @@ from datetime import datetime
 class ShoppingCart(db.Model):
     __tablename__ = 'shopping_cart'
 
-    cart_id     = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.user_id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.user_id'), primary_key=True)
+    cartItmes   = db.relationship('CartItem', backref='shopping_cart')
 
-    cartItem = db.relationship('CartItem', backref='shopping_cart')
+    amount = db.Column(db.Float(), nullable=False, default=0)
 
-    amount = db.Column(db.Integer)
+
 
 class CartItem(db.Model):
     __tablename__ = 'cart_item'
 
-    cart_id    = db.Column(db.Integer, db.ForeignKey('shopping_cart.cart_id'), primary_key=True)
+    cart_id    = db.Column(db.Integer, db.ForeignKey('shopping_cart.customer_id'), primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), primary_key=True)
-    # prodcut = db.relationship('Product', primaryjoin='foreign(CartItem.product_id)==Product.product_id')
-    # discount_id
 
-    quantity = db.Column(db.Integer)
+    quantity = db.Column(db.Integer, nullable=False, default=0)
+    amount   = db.Column(db.Float(), nullable=False, default=0)

@@ -7,22 +7,19 @@ from flask_bootstrap import Bootstrap
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_login import LoginManager
+from flask_fontawesome import FontAwesome
 from datetime import datetime, date
 
 db        = SQLAlchemy(current_app)
 bootstrap = Bootstrap(current_app)
+fa        = FontAwesome(current_app)
 bcrypt    = Bcrypt(current_app)
 mail      = Mail(current_app)
 login     = LoginManager(current_app)
 login.login_view = 'index.login'
 login.login_message_category = 'danger'
 
-from app.models import (
-    User, CustomerAddress, CustomerPayment,
-    ProductCategory, Product, #Discount
-    ShoppingCart,
-    Order
-)
+from app.models import *
 
 def init_db():
     db.drop_all()
@@ -33,7 +30,7 @@ def init_db():
 def init_db_command():
     init_db()
 
-    User.Customer.create(
+    Customer.create(
             email      = 'customer@domain.com',
             username   = 'customer',
             password   = 'customer',
@@ -42,7 +39,7 @@ def init_db_command():
             DOB        = date.today()
         )
 
-    User.Staff.create(
+    Staff.create(
             email      = 'staff@domain.com',
             username   = 'staff',
             password   = 'staff',
@@ -50,7 +47,7 @@ def init_db_command():
             last_name  = 'staff',
         )
 
-    User.Admin.create(
+    Admin.create(
             email      = 'admin@domain.com',
             username   = 'admin',
             password   = 'admin',
@@ -58,17 +55,32 @@ def init_db_command():
             last_name  = 'admin',
         )
 
-    ProductCategory.ProductCategory.create(
-            name = 'category1',
-            description = 'category1 description'
+    ProductCategory.create(
+            name = 'Shoes',
+            description = 'Shoes'
         )
 
-    Product.Product.create(
+    ProductCategory.create(
+            name = 'Watch',
+            description = 'Watch'
+        )
+
+    Product.create(
             category_id = 1,
             quantity    = 1,
-            name        = 'product',
-            description = 'Product description',
-            price       = 100
+            name        = 'Shoe',
+            description = 'Shoe description',
+            price       = 100,
+            image_url   = 'https://api.lorem.space/image/shoes?w=304&h=225'
+        )
+
+    Product.create(
+            category_id = 2,
+            quantity    = 1,
+            name        = 'Watch',
+            description = 'Watch description',
+            price       = 100,
+            image_url   = 'https://api.lorem.space/image/watch?w=304&h=225'
         )
 
     click.echo('Initialized the database.')

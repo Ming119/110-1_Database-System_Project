@@ -1,8 +1,9 @@
+from app.models import *
+from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from app.models.Product import Product
-from app.models.ProductCategory import ProductCategory
-from app.forms import Search, NewCategory, NewProduct
+
+
 
 # PMS page of the website
 # GET method to render PMS page
@@ -10,22 +11,21 @@ from app.forms import Search, NewCategory, NewProduct
 def index():
     categories = ProductCategory.getAll()
 
-    form_search      = Search.Search()
-    form_newCategory = NewCategory.NewCategory()
-    form_newProduct  = NewProduct.NewProduct()
-    form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
+    searchForm      = SearchForm()
+    newCategoryForm = NewCategoryForm()
+    newProductForm  = NewProductForm(categories)
 
     # Create a new category
-    if request.method == 'POST' and form_newCategory.validate_on_submit():
-        return createCategory(form_newCategory)
+    if request.method == 'POST' and newCategoryForm.validate_on_submit():
+        return createCategory(newCategoryForm)
 
     # Create a new product
-    if request.method == 'POST' and form_newProduct.validate_on_submit():
-        return createProduct(form_newProduct)
+    if request.method == 'POST' and newProductForm.validate_on_submit():
+        return createProduct(newProductForm)
 
     # Search
-    if request.method == 'POST' and form_search.validate_on_submit():
-        words = form_search.search.data.split(' ')
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
 
         products_list = list()
         for word in words:
@@ -38,12 +38,14 @@ def index():
         products = Product.getAll()
 
     return render_template('manageProduct.html',
-                            form_search      = form_search,
-                            form_newCategory = form_newCategory,
-                            form_newProduct  = form_newProduct,
-                            categories       = categories,
-                            products         = products
+                            searchForm      = searchForm,
+                            newCategoryForm = newCategoryForm,
+                            newProductForm  = newProductForm,
+                            categories      = categories,
+                            products        = products
                         )
+
+
 
 # create category function
 # :param: form
@@ -65,6 +67,8 @@ def createCategory(form):
 
     return redirect(url_for('product.index'))
 
+
+
 # create prodcut function
 # :param: form
 #   create product based on a validate form
@@ -79,7 +83,8 @@ def createProduct(form):
                    name        = form.productName.data,
                    description = form.productDescription.data,
                    price       = form.price.data,
-                   quantity    = form.quantity.data
+                   quantity    = form.quantity.data,
+                   image_url   = form.image_url.data
                   ):
         flash(f'Product created successfully', 'success')
 
@@ -88,23 +93,40 @@ def createProduct(form):
 
     return redirect(url_for('product.index'))
 
+
+
 def details(product_id):
-    product = Product.query.filter_by(product_id=product_id).first()
-    categories = ProductCategory.query.all()
-    form = NewProduct.NewProduct(
-                productName        = product.name,
-                productDescription = product.description,
-                price              = product.price,
-                quantity           = product.quantity,
-                category           = product.category_id
-            )
-    form.category.choices = [(category.category_id, category.name) for category in categories]
+    product = Product.getByID(product_id);
 
-    # Edit
-    if request.method == 'POST' and form.validate_on_submit():
-        return edit(product, form)
+    if current_user.is_authenticated and current_user.role == 'staff':
+        categories = ProductCategory.getAll()
+        form = NewProductForm(
+                    productName        = product.name,
+                    productDescription = product.description,
+                    price              = product.price,
+                    quantity           = product.quantity,
+                    category           = product.category_id
+                )
+        form.category.choices = [(category.category_id, category.name) for category in categories]
 
-    return render_template('productDetails.html', form=form, product=product)
+        # Edit
+        if request.method == 'POST' and form.validate_on_submit():
+            return edit(product, form)
+
+        return render_template('productDetails.html', form=form, product=product)
+
+    else:
+        category = ProductCategory.getByID(product.category_id)
+
+        form = AddToCardForm()
+
+        # Add To Card
+        if request.method == 'POST' and form.validate_on_submit():
+            return addToCard(form)
+
+        return render_template('productDetails.html', form=form, product=product, category=category)
+
+
 
 @login_required
 def edit(product, form):
@@ -127,6 +149,13 @@ def edit(product, form):
 
     return redirect(url_for('product.details', product_id=product.product_id))
 
+
+
+# @login_required
+# def addToCard(form):
+
+
+
 # delete category funciton
 # :param: category_id
 #   delete category based on category_id
@@ -144,6 +173,8 @@ def deleteCategory(category_id):
         flash(f'Category is still in use.', 'warning')
 
     return redirect(url_for('product.index'))
+
+
 
 # delete product funciton
 # :param: product_id
