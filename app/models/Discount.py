@@ -40,7 +40,7 @@ class ShippingDiscount(Discount):
 
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
 
-    atLeastAmount = db.Column(db.Integer, nullable=False)
+    atLeastAmount = db.Column(db.Float(), nullable=False)
 
 
 
@@ -53,7 +53,7 @@ class ProductDiscount(Discount):
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
     product_id    = db.relationship('Product', backref='product_discount')
 
-    discountPresentage = db.Column(db.Float(), nullable=False)
+    discountPercentage = db.Column(db.Float(), nullable=False)
 
 
 
@@ -65,5 +65,5 @@ class OrderDiscount(Discount):
 
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
 
-    discountPresentage = db.Column(db.Float(), nullable=False)
-    atLeastAmount      = db.Column(db.Integer, nullable=False)
+    discountPercentage = db.Column(db.Float(), nullable=False)
+    atLeastAmount      = db.Column(db.Float(), nullable=False)

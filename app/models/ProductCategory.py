@@ -11,10 +11,10 @@ class ProductCategory(db.Model):
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)
 
-    is_active   = db.Column(db.Boolean, default=True, nullable=False)
+    is_active   = db.Column(db.Boolean, nullable=False, default=True)
 
-    create_at   = db.Column(db.DateTime, default=datetime.now)
-    modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
     def update(self, name=None, description=None):
         self.name        = name or self.name

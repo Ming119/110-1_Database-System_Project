@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     user_id       = db.Column(db.Integer, primary_key=True)
-
+    
     email         = db.Column(db.String(64),   nullable=False, unique=True)
     username      = db.Column(db.String(32),   nullable=False, unique=True)
     password_hash = db.Column(db.String(1024), nullable=False)
@@ -20,11 +20,11 @@ class User(db.Model, UserMixin):
     last_name     = db.Column(db.String(32),   nullable=False)
     role          = db.Column(db.String(16),   nullable=False)
 
-    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    is_active   = db.Column(db.Boolean, nullable=False, default=True)
 
     last_login  = db.Column(db.DateTime, nullable=True)
-    create_at   = db.Column(db.DateTime, default=datetime.now)
-    modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
     __mapper_args__ = {
         'polymorphic_identity':'user',
@@ -96,9 +96,9 @@ class Customer(User):
     userAddress  = db.relationship('CustomerAddress', backref='customer')
     orderHistory = db.relationship('Order',           backref='customer')
     comments     = db.relationship('Comment',         backref='customer')
-    
-    confirm = db.Column(db.Boolean,  default=False)
-    DOB     = db.Column(db.Date)
+
+    confirm = db.Column(db.Boolean, nullable=False, default=False)
+    DOB     = db.Column(db.Date,    nullable=False)
 
     def create_confirm_token(self, expires_in=300):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in)

@@ -4,12 +4,11 @@ from datetime import datetime
 class Product(db.Model):
     __tablename__ = 'product'
 
-    product_id     = db.Column(db.Integer, primary_key=True)
-    category_id    = db.Column(db.Integer, db.ForeignKey('product_category.category_id'), nullable=False)
-    cart_id        = db.Column(db.Integer, db.ForeignKey('shopping_cart.customer_id'),    nullable=True)
-    discount_code  = db.Column(db.String(8), db.ForeignKey('product_discount.discount_code'), nullable=True)
-
-    comments     = db.relationship('Comment', backref='product')
+    product_id    = db.Column(db.Integer, primary_key=True)
+    category_id   = db.Column(db.Integer,   db.ForeignKey('product_category.category_id'),   nullable=False)
+    # cart_id       = db.Column(db.Integer,   db.ForeignKey('shopping_cart.customer_id'),      nullable=True)
+    discount_code = db.Column(db.String(8), db.ForeignKey('product_discount.discount_code'), nullable=True)
+    comments      = db.relationship('Comment', backref='product')
 
     name        = db.Column(db.String(63),  nullable=False)
     description = db.Column(db.String(255), nullable=True)
