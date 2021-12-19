@@ -6,19 +6,20 @@ class ProductCategory(db.Model):
 
     category_id   = db.Column(db.Integer, primary_key=True)
     product_id    = db.relationship('Product', backref='product_category')
-    discount_code = db.Column(db.String(8), db.ForeignKey('category_discount.discount_code'), nullable=True)
+    # discount_code = db.Column(db.String(8), db.ForeignKey('category_discount.discount_code'), nullable=True)
 
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)
 
+    is_active   = db.Column(db.Boolean, default=True, nullable=False)
+
     create_at   = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-    deleted_at  = db.Column(db.DateTime, nullable=True)
 
-    def update(self, name=None, description=None, deleted_at=None):
+    def update(self, name=None, description=None):
         self.name        = name or self.name
         self.description = description or self.description
-        self.deleted_at  = deleted_at
+        self.is_active   = True
         db.session.commit()
 
     @staticmethod
@@ -32,7 +33,7 @@ class ProductCategory(db.Model):
             db.session.commit()
             return True
 
-        elif productCategory.deleted_at is not None:
+        elif not productCategory.is_active:
             productCategory.update(name, description)
             return True
 
@@ -41,15 +42,15 @@ class ProductCategory(db.Model):
 
     @staticmethod
     def getAll():
-        return ProductCategory.query.filter_by(deleted_at=None).all()
+        return ProductCategory.query.filter_by(is_active=True).all()
 
     @staticmethod
     def getByID(category_id):
-        return ProductCategory.query.filter_by(category_id=category_id, deleted_at=None).first()
+        return ProductCategory.query.filter_by(category_id=category_id, is_active=True).first()
 
     @staticmethod
     def getByName(name):
-        return ProductCategory.query.filter_by(name=name, deleted_at=None).first()
+        return ProductCategory.query.filter_by(name=name, is_active=True).first()
 
     @staticmethod
     def deleteByID(category_id):
@@ -57,7 +58,7 @@ class ProductCategory(db.Model):
         if productCategory.product_id:
             return False
         else:
-            productCategory.deleted_at = datetime.now()
+            productCategory.is_active = False
             db.session.commit()
             return True
 
@@ -68,7 +69,7 @@ class ProductCategory(db.Model):
             return False
 
         else:
-            productCategory.deleted_at = datetime.now()
+            productCategory.is_active = False
             db.session.commit()
             return True
 
@@ -77,7 +78,7 @@ class ProductCategory(db.Model):
             self.category_id,
             self.name,
             self.description,
+            self.is_active,
             self.create_at,
             self.modified_at,
-            self.deleted_at
         )

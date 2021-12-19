@@ -16,14 +16,25 @@ def index():
 
 
 
+    return render_template("newUser.html", newUserForm=newUserForm)
+
+
+
 @login_required
 def createUser(role):
     if current_user.role != 'admin':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if role == 'staff':      newUserForm = NewStaffForm()
-    elif role == 'customer': newUserForm = NewCustomerForm()
+
+      
+    if role == 'staff':
+        newUserForm = NewStaffForm()
+
+    elif role == 'customer':
+        newUserForm = NewCustomerForm()
+
+
 
     if request.method == 'POST' and newUserForm.validate_on_submit():
         # check that the username is used
@@ -38,7 +49,7 @@ def createUser(role):
             flash(f'This email ({newUserForm.email.data}) address is already exist', 'warning')
             return redirect(url_for('user.index'))
 
-        elif newUserForm.role == 'staff':
+        if newUserForm.role == 'staff':
             if (Staff.create(
                     username   = newUserForm.username.data,
                     email      = newUserForm.email.data,
@@ -68,7 +79,7 @@ def createUser(role):
         else: flash(f'Error occurred when creating new user', 'warning')
 
         return redirect(url_for('user.index'))
-
+ 
     return render_template("newUser.html", newUserForm=newUserForm)
 
 

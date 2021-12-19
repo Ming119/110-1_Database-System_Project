@@ -10,6 +10,10 @@ class NewProductForm(Form):
 
     productDescription = StringField('Description')
 
+    image_url = StringField('Image URL', validators=[
+        validators.DataRequired(),
+    ])
+
     price = FloatField('Price', validators=[
         validators.InputRequired(),
         validators.NumberRange(min=0)

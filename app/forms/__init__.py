@@ -10,3 +10,6 @@ from app.forms.RegisterForm import RegisterForm
 from app.forms.ResetPasswordForm import ResetPasswordForm
 from app.forms.SearchForm import SearchForm
 from app.forms.UpdateProfileForm import UpdateProfileForm
+from app.forms.NewUserForm import (
+    NewStaffForm, NewCustomerForm
+)

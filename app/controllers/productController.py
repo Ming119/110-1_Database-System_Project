@@ -83,7 +83,8 @@ def createProduct(form):
                    name        = form.productName.data,
                    description = form.productDescription.data,
                    price       = form.price.data,
-                   quantity    = form.quantity.data
+                   quantity    = form.quantity.data,
+                   image_url   = form.image_url.data
                   ):
         flash(f'Product created successfully', 'success')
 
