@@ -40,5 +40,53 @@
     {{ form.productSubmit(class='btn btn-primary px-5') }}
 </form>
 {% else %}
+<div class="row my-5">
+    <div class="col-md-6 mb-4 mb-md-0">
+        Column
+    </div>
+    <div class="col-md-6">
+        <h5>{{ product.name }}</h5>
+        <p class="mb-2 text-muted text-uppercase small">{{ category.name }}</p>
+        <ul class="rating">
+            <li>
+                <i class="fas fa-star fa-sm text-primary"></i>
+            </li>
+            <li>
+                <i class="fas fa-star fa-sm text-primary"></i>
+            </li>
+            <li>
+                <i class="fas fa-star fa-sm text-primary"></i>
+            </li>
+            <li>
+                <i class="fas fa-star fa-sm text-primary"></i>
+            </li>
+            <li>
+                <i class="far fa-star fa-sm text-primary"></i>
+            </li>
+        </ul>
+        <p><span class="mr-1"><strong>${{ product.price }}</strong></span></p>
+        <p class="pt-1">{{ product.description }}</p>
+        <hr />
+        <form method="post" action='' class="form" role="form">
+        <div class="row justify-content-center">
+            <div class="col-1 my-2">
+                <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepDown()" class="btn btn-danger bi bi-dash"></button>
+            </div>
+            <div class="col-8 form-floating">
+                {{ form.quantity(class="form-control", placeholder="quantity", type="number") }}
+                {{ form.quantity.label() }}
+            </div>
+            <div class="col-1 my-2">
+                <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepUp()" class="btn btn-success bi bi-plus"></button>
+            </div>
+            <div class="col-auto my-3">
+                {{ form.addToCard(class='btn btn-primary px-5') }}
+            </div>
+        </div>
+        </form>
+
+    </div>
+</div>
+
 {% endif %}
 {% endblock content %}
