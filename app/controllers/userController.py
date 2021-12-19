@@ -11,27 +11,78 @@ def index():
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    else:
-        users = User.getAll()
-        return render_template("manageUser.html", users=users)
+    users = User.getAll()
+    return render_template("manageUser.html", users=users)
+
+
+
+    return render_template("newUser.html", newUserForm=newUserForm)
+
+
 
 @login_required
-def createNewUser(form):
-    userCheck = User.getByUsername(form.username.data)
-    if userCheck and userCheck.confirm:
-        flash(f'This username ({form.username.data}) is already exist', 'warning')
-        return redirect(url_for('index.register'))
-
-    # check that the email is used and confirmed
-    userCheck = User.getByEmail(form.email.data)
-    if userCheck and userCheck.confirm:
-        flash(f'This email ({form.email.data}) address is already exist', 'warning')
-        return redirect(url_for('index.register'))
-
-    # TODO: add new user function
+def createUser(role):
+    if current_user.role != 'admin':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
 
-    return render_template("manageUser.html", users=users, form=NewUserForm())
+      
+    if role == 'staff':
+        newUserForm = NewStaffForm()
+
+    elif role == 'customer':
+        newUserForm = NewCustomerForm()
+
+
+
+    if request.method == 'POST' and newUserForm.validate_on_submit():
+        # check that the username is used
+        userCheck = User.getByUsername(newUserForm.username.data)
+        if userCheck:
+            flash(f'This username ({newUserForm.username.data}) is already exist', 'warning')
+            return redirect(url_for('user.index'))
+
+        # check that the email is used
+        userCheck = User.getByEmail(newUserForm.email.data)
+        if userCheck:
+            flash(f'This email ({newUserForm.email.data}) address is already exist', 'warning')
+            return redirect(url_for('user.index'))
+
+        if newUserForm.role == 'staff':
+            if (Staff.create(
+                    username   = newUserForm.username.data,
+                    email      = newUserForm.email.data,
+                    password   = newUserForm.password.data,
+                    first_name = newUserForm.first_name.data,
+                    last_name  = newUserForm.last_name.data,
+                )):
+                flash(f'Staff created successfully!', 'success')
+
+            else:
+                flash(f'Error creating staff', 'warning')
+
+        elif newUserForm.role == 'customer':
+            if (Customer.create(
+                    username   = newUserForm.username.data,
+                    email      = newUserForm.email.data,
+                    password   = newUserForm.password.data,
+                    first_name = newUserForm.first_name.data,
+                    last_name  = newUserForm.last_name.data,
+                    DOB        = newUserForm.DOB.data
+                )):
+                flash(f'Customer created successfully!', 'success')
+
+            else:
+                flash(f'Error creating customer', 'warning')
+
+        else: flash(f'Error occurred when creating new user', 'warning')
+
+        return redirect(url_for('user.index'))
+ 
+    return render_template("newUser.html", newUserForm=newUserForm)
+
+
 
 @login_required
 def profile(user_id):
@@ -45,19 +96,35 @@ def profile(user_id):
 
 
 @login_required
-def editProfile(user_id):
+def updateProfile(user_id):
     if current_user.role != 'admin' and current_user.user_id != user_id:
         flash(f'You are not allowed to access.', 'danger')
-        return redirect(url_for('user.profile', user=user))
-
-    form = EditProfileForm();
-    if request.method == 'POST' and form.validate_on_submit():
-        # TODO: edit profile function
-        raise
+        return redirect(url_for('user.profile', user=User.getByID(user_id)))
 
     user = User.getByID(user_id)
+    updateProfileForm = UpdateProfileForm();
 
-    return render_template("editProfile.html", user=user, form=form);
+    if request.method == 'POST' and updateProfileForm.validate_on_submit():
+        if (user.update(
+                username   = updateProfileForm.username.data,
+                first_name = updateProfileForm.first_name.data,
+                last_name  = updateProfileForm.last_name.data
+        )):
+            flash(f'Profile updated successfully', 'success');
+
+        else:
+            flash(f'Error updating profile', 'warning')
+
+        return redirect(url_for('user.profile', user_id=user_id))
+
+    updateProfileForm.username.data = user.username
+    updateProfileForm.first_name.data = user.first_name
+    updateProfileForm.last_name.data = user.last_name
+
+    return render_template("updateProfile.html",
+                user              = user,
+                updateProfileForm = updateProfileForm
+            );
 
 
 
@@ -67,7 +134,7 @@ def deleteProfile(user_id):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if Admin.deleteUserByID(user_id):
+    if current_user.deleteUserByID(user_id):
         flash(f'Delete profile was successful.', 'success')
 
     else:

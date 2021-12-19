@@ -12,17 +12,16 @@ def index():
     categories = ProductCategory.getAll()
 
     searchForm      = SearchForm()
-    form_newCategory = NewCategoryForm()
-    form_newProduct  = NewProductForm()
-    form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
+    newCategoryForm = NewCategoryForm()
+    newProductForm  = NewProductForm(categories)
 
     # Create a new category
-    if request.method == 'POST' and form_newCategory.validate_on_submit():
-        return createCategory(form_newCategory)
+    if request.method == 'POST' and newCategoryForm.validate_on_submit():
+        return createCategory(newCategoryForm)
 
     # Create a new product
-    if request.method == 'POST' and form_newProduct.validate_on_submit():
-        return createProduct(form_newProduct)
+    if request.method == 'POST' and newProductForm.validate_on_submit():
+        return createProduct(newProductForm)
 
     # Search
     if request.method == 'POST' and searchForm.validate_on_submit():
@@ -40,10 +39,10 @@ def index():
 
     return render_template('manageProduct.html',
                             searchForm      = searchForm,
-                            form_newCategory = form_newCategory,
-                            form_newProduct  = form_newProduct,
-                            categories       = categories,
-                            products         = products
+                            newCategoryForm = newCategoryForm,
+                            newProductForm  = newProductForm,
+                            categories      = categories,
+                            products        = products
                         )
 
 
