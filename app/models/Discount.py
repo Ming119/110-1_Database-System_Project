@@ -174,7 +174,7 @@ class OrderDiscount(Discount):
                 type               = type,
                 start_at           = start_at,
                 end_at             = end_at,
-                discountPercentage = discountPercentage
+                discountPercentage = discountPercentage,
                 atLeastAmount      = atLeastAmount
             ))
             db.session.commit()
