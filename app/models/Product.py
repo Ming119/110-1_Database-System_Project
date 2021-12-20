@@ -54,6 +54,10 @@ class Product(db.Model):
 
     @staticmethod
     def getAll():
+        return Product.query.all()
+
+    @staticmethod
+    def getAllWithoutInactive():
         return Product.query.filter_by(is_active=True).all()
 
     @staticmethod

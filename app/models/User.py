@@ -60,6 +60,10 @@ class User(db.Model, UserMixin):
         return User.query.all()
 
     @staticmethod
+    def getAllWithoutInactive():
+        return User.query.filter_by(is_active=True).all()
+
+    @staticmethod
     def getByID(user_id):
         return User.query.filter(User.user_id==user_id, User.is_active==True).first()
 
