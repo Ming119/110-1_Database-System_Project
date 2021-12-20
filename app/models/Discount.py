@@ -20,6 +20,54 @@ class Discount(db.Model):
         'polymorphic_on':type
     }
 
+    def update(self, name=None, description=None, type=None, start_at=None, end_at=None):
+        try:
+            self.name = name or self.name
+            self.description = description or self.description
+            self.type = type or self.type
+            self.start_at = start_at or self.start_at
+            self.end_at = end_at or self.end_at
+            db.session.commit()
+            return True
+
+        except: return False
+
+
+    @staticmethod
+    def getAll():
+        return Discount.query.all()
+
+    @staticmethod
+    def getAllWithoutInactive():
+        return Discount.query.filter_by(is_active=True).all()
+
+    @staticmethod
+    def create(discount_code, name, type, start_at, end_at, description=None):
+        try:
+            db.session.add(Discount(
+                discount_code = discount_code,
+                name          = name,
+                description   = description,
+                type          = type,
+                start_at      = start_at,
+                end_at        = end_at
+            ))
+            db.session.commit()
+            return True
+
+        except: return False
+
+    @staticmethod
+    def delete(discount_code):
+        try:
+            db.session.delete(Discount.getByID(discount_code))
+            db.session.commit()
+            return True
+
+        except: return False
+
+
+
     def __repr__(self):
         return '<Discount %r>' % (
             self.discount_code,

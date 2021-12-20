@@ -28,8 +28,8 @@
                     {% elif current_user.role == 'staff' %}
                     <!-- Staff Nav bar -->
                     <li class="nav-item mx-1"><a href='{{ url_for('product.index') }}' class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a></li>
-                    <li class="nav-item mx-1"><a href='#' class="nav-link"><i class="fas fa-file-alt me-2"></i>Orders</a></li>
-                    <li class="nav-item mx-1"><a href='#' class="nav-link"><i class="fas fa-ticket-alt me-2"></i>Promotions</a></li>
+                    <li class="nav-item mx-1"><a href='{{ url_for('discount.index') }}' class="nav-link"><i class="fas fa-file-alt me-2"></i>Manage Discounts</a></li>
+                    <li class="nav-item mx-1"><a href='#' class="nav-link"><i class="fas fa-ticket-alt me-2"></i>Manage Orders</a></li>
                     {% else %}
                     <!-- customer Nav bar -->
                     <li class="nav-item"><a href='#' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Shopping Cart</a></li>
