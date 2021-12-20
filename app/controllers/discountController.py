@@ -25,21 +25,56 @@ def create(type):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    createDiscountForm = CreateDiscountForm()
+    if type == 'shipping':
+        createDiscountForm = CreateShippingDiscountForm()
+    elif type == 'product':
+        createDiscountForm = CreateproductDiscountForm()
+    elif type == 'order':
+        createDiscountForm = CreateOrderDiscountForm()
 
     if request.method == 'POST' and createDiscountForm.validate_on_submit():
-        if Discount.create(
-            discount_code = createDiscountForm.discount_code.data,
-            name          = createDiscountForm.name.data,
-            description   = createDiscountForm.description.data,
-            type          = type,
-            start_at      = createDiscountForm.start_at.data,
-            end_at        = createDiscountForm.end_at.data
-        ):
-            flash(f'Successfully created the discount', 'success')
+        if type == 'shipping':
+            if ShippingDiscount.create(
+                discount_code = createDiscountForm.discount_code.data,
+                name          = createDiscountForm.name.data,
+                description   = createDiscountForm.description.data,
+                start_at      = createDiscountForm.start_at.data,
+                end_at        = createDiscountForm.end_at.data,
+                atLeastAmount = createDiscountForm.atLeastAmount.data
+            ):
+                flash(f'Successfully created the shipping discount', 'success')
 
-        else:
-            flash(f'Error creating the discount', 'warning')
+            else:
+                flash(f'Error creating the shipping discount', 'warning')
+
+        elif type == 'product':
+            if ProductDiscount.create(
+                discount_code      = createDiscountForm.discount_code.data,
+                name               = createDiscountForm.name.data,
+                description        = createDiscountForm.description.data,
+                start_at           = createDiscountForm.start_at.data,
+                end_at             = createDiscountForm.end_at.data,
+                discountPercentage = createDiscountForm.discount_percentage.data
+            ):
+                flash(f'Successfully created the product discount', 'success')
+
+            else:
+                flash(f'Error creating the product discount', 'warning')
+
+        elif type == 'order':
+            if ProductDiscount.create(
+                discount_code      = createDiscountForm.discount_code.data,
+                name               = createDiscountForm.name.data,
+                description        = createDiscountForm.description.data,
+                start_at           = createDiscountForm.start_at.data,
+                end_at             = createDiscountForm.end_at.data,
+                discountPercentage = createDiscountForm.discount_percentage.data
+                atLeastAmount      = createDiscountForm.atLeastAmount.data
+            ):
+                flash(f'Successfully created the order discount', 'success')
+
+            else:
+                flash(f'Error creating the order discount', 'warning')
 
         return redirect(url_for('discount.index'))
 

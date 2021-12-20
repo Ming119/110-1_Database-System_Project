@@ -84,7 +84,7 @@ class ShippingDiscount(Discount):
         return False
 
     @staticmethod
-    def create(discount_code, name, type, start_at, end_at, atLeastAmount, description=None):
+    def create(discount_code, name, start_at, end_at, atLeastAmount, description=None, type='shipping'):
         try:
             db.session.add(Discount(
                 discount_code = discount_code,
@@ -124,7 +124,7 @@ class ProductDiscount(Discount):
         return False
 
     @staticmethod
-    def create(discount_code, name, type, start_at, end_at, discountPercentage, description=None):
+    def create(discount_code, name, start_at, end_at, discountPercentage, description=None, type='product'):
         try:
             db.session.add(Discount(
                 discount_code      = discount_code,
@@ -165,7 +165,7 @@ class OrderDiscount(Discount):
         return False
 
     @staticmethod
-    def create(discount_code, name, type, start_at, end_at, discountPercentage, atLeastAmount, description=None):
+    def create(discount_code, name, start_at, end_at, discountPercentage, atLeastAmount, description=None, type='order'):
         try:
             db.session.add(Discount(
                 discount_code      = discount_code,
