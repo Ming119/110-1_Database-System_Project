@@ -3,12 +3,14 @@ from datetime import datetime
 
 class Comment(db.Model):
     __tablename__ = 'comments'
-    cid           = db.Column(db.Integer, primary_key=True, nullable=False)
-    pid           = db.relationship('')
-    uid           = db.relationship('User', backref='comments')
-    date          = db.Column(db.Date, default=datetime.now, unique=False, nullable=False)
-    comment       = db.Column(db.String(64), unique=False, nullable=True)
-    rate          = db.Column(db.Integer, unique=False, nullable=False)
+
+    cid        = db.Column(db.Integer, primary_key=True, nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=False)
+    user_id    = db.Column(db.Integer, db.ForeignKey('customer.user_id'),   nullable=False)
+
+    comment = db.Column(db.String(256), nullable=True)
+    rating  = db.Column(db.Integer,     nullable=False)
+    date    = db.Column(db.DateTime,    nullable=False, default=datetime.now)
 
     def __repr__(self):
         return '<comment: %r>' % (

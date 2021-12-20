@@ -24,8 +24,7 @@ def index():
             products_list.extend(Product.query.filter(Product.description.contains(word)).all())
         products = set(products_list)
 
-    else:
-        products = Product.getAll()
+    else: products = Product.getAll()
 
     return render_template('index.html',
                             searchForm = searchForm,
