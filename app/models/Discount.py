@@ -20,6 +20,14 @@ class Discount(db.Model):
         'polymorphic_on':type
     }
 
+    @staticmethod
+    def getAll():
+        return Discount.query.all()
+
+    @staticmethod
+    def getAllWithoutInactive():
+        return Discount.query.filter_by(is_active=True).all()
+
     def __repr__(self):
         return '<Discount %r>' % (
             self.discount_code,
