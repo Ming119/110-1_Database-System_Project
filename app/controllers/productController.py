@@ -105,7 +105,8 @@ def details(product_id):
                     productDescription = product.description,
                     price              = product.price,
                     quantity           = product.quantity,
-                    category           = product.category_id
+                    category           = product.category_id,
+                    categories = categories
                 )
         form.category.choices = [(category.category_id, category.name) for category in categories]
 

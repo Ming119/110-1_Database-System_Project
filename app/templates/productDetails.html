@@ -37,7 +37,10 @@
         {{ form.discount.label() }}
     </div>
 
-    {{ form.productSubmit(class='btn btn-primary px-5') }}
+    <div class="btn-group">
+      {{ form.productSubmit(class='btn btn-primary px-5') }}
+      <a class="btn btn-danger px-5" href="{{ url_for('product.deleteProduct', product_id=product.product_id) }}">Delete</a>
+    </div>
 </form>
 {% else %}
 <div class="row my-5">
