@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="btn-group float-end pt-4" role="group" aria-label="Basic mixed styles example">
-    <a id= "NewCustomer" href="{{ url_for('user.createUser', role='customer') }}" type="button" class="btn btn-success">New Customer</a>
-    <a id= "NewStaff" href="{{ url_for('user.createUser', role='staff') }}" type="button" class="btn btn-success">New Staff</a>
+    <a href="{{ url_for('user.createUser', role='customer') }}" type="button" class="btn btn-success">New Customer</a>
+    <a href="{{ url_for('user.createUser', role='staff') }}" type="button" class="btn btn-success">New Staff</a>
 </div>
 
 <table id="data" class="table table-hover">
