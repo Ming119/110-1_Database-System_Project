@@ -16,7 +16,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container d-flex justify-content-between">
-            <a class="navbar-brand" href="{{ url_for('index.index') }}">
+            <a id="Home" class="navbar-brand" href="{{ url_for('index.index') }}">
                 <img src="{{ url_for('static', filename='images/moonbird.png') }}" alt="" height="40" class="d-inline-block align-text-top">
             </a>
             {% if current_user.is_authenticated %}
@@ -24,29 +24,29 @@
                 <ul class="navbar-nav">
                     {% if current_user.role == 'admin' %}
                     <!-- Admin Nav bar -->
-                    <li class="nav-item"><a href='{{ url_for('user.index') }}' class="nav-link"><i class="fas fa-users me-1"></i>Manage Users</a></li>
+                    <li class="nav-item"><a id="ManageUser" href='{{ url_for('user.index') }}' class="nav-link"><i class="fas fa-users me-1"></i>Manage Users</a></li>
                     {% elif current_user.role == 'staff' %}
                     <!-- Staff Nav bar -->
-                    <li class="nav-item mx-1"><a href='{{ url_for('product.index') }}' class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a></li>
-                    <li class="nav-item mx-1"><a href='{{ url_for('discount.index') }}' class="nav-link"><i class="fas fa-ticket-alt me-2"></i>Manage Discounts</a></li>
-                    <li class="nav-item mx-1"><a href='#' class="nav-link"><i class="fas fa-file-alt me-2"></i>Manage Orders</a></li>
+                    <li class="nav-item mx-1"><a id="ManageProduct" href='{{ url_for('product.index') }}' class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a></li>
+                    <li class="nav-item mx-1"><a id="ManagePromotions" href='{{ url_for('discount.index') }}' class="nav-link"><i class="fas fa-ticket-alt me-2"></i>Manage Discounts</a></li>
+                    <li class="nav-item mx-1"><a id="ManageOrders" href='#' class="nav-link"><i class="fas fa-file-alt me-2"></i>Manage Orders</a></li>
                     {% else %}
                     <!-- customer Nav bar -->
-                    <li class="nav-item"><a href='#' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Shopping Cart</a></li>
+                    <li class="nav-item"><a id="ShoppingCart" href='#' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Shopping Cart</a></li>
                     {% endif %}
                 </ul>
             </div>
             <div class="">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a href='{{ url_for('user.profile', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-user me-1"></i>{{ current_user.username }}</a></li>
-                    <li class="nav-item"><a href='{{ url_for('index.logout') }}' class="nav-link"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
+                    <li class="nav-item"><a id="UserProfile" href='{{ url_for('user.profile', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-user me-1"></i>{{ current_user.username }}</a></li>
+                    <li class="nav-item"><a id="Logout" href='{{ url_for('index.logout') }}' class="nav-link"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
                 </ul>
             </div>
             {% else %}
             <div class="">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a href='{{ url_for('index.login') }}' class="nav-link"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
-                    <li class="nav-item"><a href='{{ url_for('index.register') }}' class="nav-link"><i class="fas fa-user-plus me-1"></i>Sign-up</a></li>
+                    <li class="nav-item"><a id="Login" href='{{ url_for('index.login') }}' class="nav-link"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
+                    <li class="nav-item"><a id="SignUp" href='{{ url_for('index.register') }}' class="nav-link"><i class="fas fa-user-plus me-1"></i>Sign-up</a></li>
                 </ul>
             </div>
             {% endif %}
