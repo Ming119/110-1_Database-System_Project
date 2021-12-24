@@ -2,7 +2,7 @@
 Library    Selenium2Library
 Resource    ../allVariables.txt
 
-**keywords**
+*** keywords ***
 Common::Wait Until Navbar Button Is Visible
     [Arguments]    ${buttonID}
     ${button} =    Set Variable    //*[contains(@class, 'navbar')]//*[contains(@id, '${buttonID}')]
@@ -19,6 +19,15 @@ Common::Click Navbar Button
     [arguments]    ${buttonID}
     ${button} =    Common::Wait Until Navbar Button Is Visible    ${buttonID}
     Click Element    ${button}
+
+Flash::Wait Until Flash Message With Category Is Visible
+    [Arguments]    ${message}    ${category}
+    ${flaskBox} =    Set Variable    //*[contains(@class, 'alert-${category}')]//*[contains(@class, 'flash')]
+    ${flaskMessage} =    Set Variable    //*[contains(@class, 'alert')]//*[contains(@class, 'flash') and normalize-space()='${message}']
+    ${flaskCloseButton} =    Set Variable    //*[contains(@class, 'alert')]//*[contains(@class, 'flash')]//button[contains(@class, 'btn-close')]
+    Wait Until Element Is Visible    ${flaskBox}    ${shortPeriodOfTime}    'Flash Box Should Be Visible'
+    Wait Until Element Is Visible    ${flaskMessage}    ${shortPeriodOfTime}    'Flash Message Should Be Visible'
+    Wait Until Element Is Visible    ${flaskCloseButton}    ${shortPeriodOfTime}    'Flash Close Button Should Be Visible'
 
 Go To Home Page
     Common::Click Navbar Button    Home
@@ -40,15 +49,15 @@ Go To ShoppingCart Page
     Common::Click Navbar Button    ShoppingCart
     Common::Wait Until Navbar Contains    Home    ShoppingCart    UserProfile    Logout
 
-Go To Order Page
+Go To manage Order Page
     Common::Click Navbar Button    ManageOrders
     Common::Wait Until Navbar Contains    Home    ManageProduct    ManagePromotions    ManageOrders    UserProfile   Logout
 
-Go To Discount Page
+Go To Manage Discount Page
     Common::Click Navbar Button    ManagePromotions
     Common::Wait Until Navbar Contains    Home    ManageProduct    ManagePromotions    ManageOrders    UserProfile   Logout
 
-Go To ManageUser Page
+Go To Manage User Page
     Common::Click Navbar Button    ManageUser
     Common::Wait Until Navbar Contains    Home    ManagerUser    UserProfile    Logout
 

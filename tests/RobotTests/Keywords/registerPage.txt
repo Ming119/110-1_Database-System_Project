@@ -2,7 +2,7 @@
 Library    Selenium2Library
 Resource    ../allVariables.txt
 
-**keywords**
+*** keywords ***
 Verify Register Form Is Visible
     Register Page::Wait Until Register Form Is Visible
 

@@ -1,7 +1,6 @@
 *** Settings ***
 Library    Selenium2Library
 Resource    Keywords/common.txt
-Resource    Keywords/flash.txt
 Resource    Keywords/forgotPasswordPage.txt
 Resource    Keywords/indexPage.txt
 Resource    Keywords/loginPage.txt
