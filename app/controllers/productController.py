@@ -78,8 +78,9 @@ def createProduct(form):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif Product.create(category_id = form.category.data,
+    if Product.create(category_id = form.category.data,
                    name        = form.productName.data,
                    description = form.productDescription.data,
                    price       = form.price.data,
@@ -132,8 +133,9 @@ def edit(product, form):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif form.productName.data != product.name and Product.getByProductName(form.productName.data) is not None:
+    if form.productName.data != product.name and Product.getByProductName(form.productName.data) is not None:
         flash(f'Product already exists.', 'warning')
 
     else:
@@ -164,8 +166,9 @@ def deleteCategory(category_id):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif ProductCategory.deleteByID(category_id):
+    if ProductCategory.deleteByID(category_id):
         flash(f'Category deleted successfully.', 'success')
 
     else:
@@ -183,8 +186,9 @@ def deleteCategory(category_id):
 def deleteProduct(product_id):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif Product.deleteByID(product_id):
+    if Product.deleteByID(product_id):
         flash(f'Product deleted successfully.', 'success')
 
     else:
