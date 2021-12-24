@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if current_user.is_authenticated and (current_user.role == 'admin' or current_user.user_id == user.user_id) %}
-<a href="{{ url_for('user.updateProfile', user_id=user.user_id) }}" type="button" class="btn btn-info">Update Profile</a>
+<a href="{{ url_for('user.update', user_id=user.user_id) }}" type="button" class="btn btn-info">Update Profile</a>
 {% endif %}
 
 {% for attribute, value in user.__dict__.items() %}

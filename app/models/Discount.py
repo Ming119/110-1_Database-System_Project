@@ -20,6 +20,37 @@ class Discount(db.Model):
         'polymorphic_on':type
     }
 
+    def update(self, name=None, description=None, start_at=None, end_at=None):
+        try:
+            self.name = name or self.name
+            self.description = description or self.description
+            self.start_at = start_at or self.start_at
+            self.end_at = end_at or self.end_at
+            db.session.commit()
+            return True
+
+        except: return False
+
+
+    @staticmethod
+    def getAll():
+        return Discount.query.all()
+
+    @staticmethod
+    def getAllWithoutInactive():
+        return Discount.query.filter_by(is_active=True).all()
+
+    @staticmethod
+    def delete(discount_code):
+        try:
+            db.session.delete(Discount.getByID(discount_code))
+            db.session.commit()
+            return True
+
+        except: return False
+
+
+
     def __repr__(self):
         return '<Discount %r>' % (
             self.discount_code,
@@ -42,6 +73,33 @@ class ShippingDiscount(Discount):
 
     atLeastAmount = db.Column(db.Float(), nullable=False)
 
+    def update(self, name=None, description=None, start_at=None, end_at=None, atLeastAmount=None):
+        if super().update(name, description, start_at, end_at):
+            try:
+                self.atLeastAmount = atLeastAmount or self.atLeastAmount
+                db.session.commit()
+                return True
+
+            except: return False
+        return False
+
+    @staticmethod
+    def create(discount_code, name, start_at, end_at, atLeastAmount, description=None, type='shipping'):
+        try:
+            db.session.add(Discount(
+                discount_code = discount_code,
+                name          = name,
+                description   = description,
+                type          = type,
+                start_at      = start_at,
+                end_at        = end_at,
+                atLeastAmount = atLeastAmount
+            ))
+            db.session.commit()
+            return True
+
+        except: return False
+
 
 
 class ProductDiscount(Discount):
@@ -55,6 +113,33 @@ class ProductDiscount(Discount):
 
     discountPercentage = db.Column(db.Float(), nullable=False)
 
+    def update(self, name=None, description=None, start_at=None, end_at=None, discountPercentage=None):
+        if super().update(name, description, start_at, end_at):
+            try:
+                self.discountPercentage = discountPercentage or self.discountPercentage
+                db.session.commit()
+                return True
+
+            except: return False
+        return False
+
+    @staticmethod
+    def create(discount_code, name, start_at, end_at, discountPercentage, description=None, type='product'):
+        try:
+            db.session.add(Discount(
+                discount_code      = discount_code,
+                name               = name,
+                description        = description,
+                type               = type,
+                start_at           = start_at,
+                end_at             = end_at,
+                discountPercentage = discountPercentage
+            ))
+            db.session.commit()
+            return True
+
+        except: return False
+
 
 
 class OrderDiscount(Discount):
@@ -67,3 +152,32 @@ class OrderDiscount(Discount):
 
     discountPercentage = db.Column(db.Float(), nullable=False)
     atLeastAmount      = db.Column(db.Float(), nullable=False)
+
+    def update(self, name=None, description=None, start_at=None, end_at=None, discountPercentage=None, atLeastAmount=None):
+        if super().update(name, description, start_at, end_at):
+            try:
+                self.discountPercentage = discountPercentage or self.discountPercentage
+                self.atLeastAmount = atLeastAmount or self.atLeastAmount
+                db.session.commit()
+                return True
+
+            except: return False
+        return False
+
+    @staticmethod
+    def create(discount_code, name, start_at, end_at, discountPercentage, atLeastAmount, description=None, type='order'):
+        try:
+            db.session.add(Discount(
+                discount_code      = discount_code,
+                name               = name,
+                description        = description,
+                type               = type,
+                start_at           = start_at,
+                end_at             = end_at,
+                discountPercentage = discountPercentage,
+                atLeastAmount      = atLeastAmount
+            ))
+            db.session.commit()
+            return True
+
+        except: return False
