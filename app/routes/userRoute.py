@@ -7,4 +7,5 @@ bp.route('/', methods=['GET'])(index)                               # Index page
 bp.route('/create/<role>', methods=['GET', 'POST'])(create)         # Create
 bp.route('/<int:user_id>', methods=['GET'])(profile)                # Read
 bp.route('/update/<int:user_id>', methods=['GET', 'POST'])(update)  # Update
-bp.route('/delete/<int:user_id>', methods=['GET'])(delete)          # Delete
+bp.route('/active/<int:user_id>', methods=['GET'])(active)
+bp.route('/deactive/<int:user_id>', methods=['GET'])(deactive)

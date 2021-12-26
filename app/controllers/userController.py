@@ -68,7 +68,7 @@ def create(role):
                     first_name = newUserForm.first_name.data,
                     last_name  = newUserForm.last_name.data,
                     DOB        = newUserForm.DOB.data,
-                    confirm    = True
+                    is_active    = True
                 )):
                 flash(f'Customer created successfully!', 'success')
 
@@ -136,20 +136,40 @@ def update(user_id):
 
 
 
-# delete(deprecated) user
-# GET method to delete(deprecated) the user
+# active an user
+# GET method to active the user
 #   :param: user_id
 # POST method is not supported
 @login_required
-def delete(user_id):
+def active(user_id):
     if current_user.role != 'admin':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if current_user.deleteUserByID(user_id):
-        flash(f'Delete profile was successful.', 'success')
+    if current_user.activeUserByID(user_id):
+        flash(f'Active profile was successful.', 'success')
 
     else:
-        flash(f'Delete profile failed.', 'warning')
+        flash(f'Active profile failed.', 'warning')
+
+    return redirect(url_for('user.index'))
+
+
+
+# deactive an user
+# GET method to deactive the user
+#   :param: user_id
+# POST method is not supported
+@login_required
+def deactive(user_id):
+    if current_user.role != 'admin':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    if current_user.deactiveUserByID(user_id):
+        flash(f'Deactive profile was successful.', 'success')
+
+    else:
+        flash(f'Deactive profile failed.', 'warning')
 
     return redirect(url_for('user.index'))
