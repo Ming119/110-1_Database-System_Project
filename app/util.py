@@ -36,6 +36,7 @@ def init_db_command():
             password   = 'customer',
             first_name = 'customer',
             last_name  = 'customer',
+            confirm    = True,
             DOB        = date.today()
         )
 
