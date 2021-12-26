@@ -29,9 +29,9 @@
             <td>{{ user.role }}</td>
             <td>
                 {% if user.is_active %}
-                Active
+                Activated
                 {% else %}
-                Deactive
+                Inactivated 
                 {% endif %}
             </td>
             <td>{{ user.last_login }}</td>
@@ -41,9 +41,9 @@
                 <div class="btn-group-vertical ">
                     <a class="btn btn-info btn-block" type="button" href="{{ url_for('user.profile', user_id=user.user_id) }}">View</a>
                         {% if user.is_active %}
-                        <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.deactive', user_id=user.user_id) }}">Deactive</a>
+                        <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.deactivate', user_id=user.user_id) }}">Deactivate</a>
                         {% else %}
-                        <a class="btn btn-success btn-block" type="button" href="{{ url_for('user.active', user_id=user.user_id) }}">Active</a>
+                        <a class="btn btn-success btn-block" type="button" href="{{ url_for('user.activate', user_id=user.user_id) }}">Activate</a>
                         {% endif %}
                 </div>
             </td>

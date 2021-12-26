@@ -205,7 +205,7 @@ class Admin(User):
         except:
             return None
 
-    def activeUserByID(self, user_id):
+    def activateUserByID(self, user_id):
         try:
             user = User.getByIDWithInactive(user_id)
             if (user.role == 'admin'): return False
@@ -215,7 +215,7 @@ class Admin(User):
 
         except: return False
 
-    def deactiveUserByID(self, user_id):
+    def deactivateUserByID(self, user_id):
         try:
             user = User.getByID(user_id)
             if (user.role == 'admin'): return False

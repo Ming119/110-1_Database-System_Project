@@ -136,40 +136,40 @@ def update(user_id):
 
 
 
-# active an user
-# GET method to active the user
+# activate an user
+# GET method to activate the user
 #   :param: user_id
 # POST method is not supported
 @login_required
-def active(user_id):
+def activate(user_id):
     if current_user.role != 'admin':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if current_user.activeUserByID(user_id):
-        flash(f'Active profile was successful.', 'success')
+    if current_user.activateUserByID(user_id):
+        flash(f'Activate profile was successful.', 'success')
 
     else:
-        flash(f'Active profile failed.', 'warning')
+        flash(f'Activate profile failed.', 'warning')
 
     return redirect(url_for('user.index'))
 
 
 
-# deactive an user
-# GET method to deactive the user
+# deactivate an user
+# GET method to deactivate the user
 #   :param: user_id
 # POST method is not supported
 @login_required
-def deactive(user_id):
+def deactivate(user_id):
     if current_user.role != 'admin':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if current_user.deactiveUserByID(user_id):
-        flash(f'Deactive profile was successful.', 'success')
+    if current_user.deactivateUserByID(user_id):
+        flash(f'Deactivate profile was successful.', 'success')
 
     else:
-        flash(f'Deactive profile failed.', 'warning')
+        flash(f'Deactivate profile failed.', 'warning')
 
     return redirect(url_for('user.index'))
