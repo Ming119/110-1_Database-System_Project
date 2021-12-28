@@ -198,3 +198,8 @@ def resetPassword(token):
         return redirect(url_for('index.login'))
 
     return render_template('resetPassword.html', form=form)
+
+
+
+def shoppingCart(user_id):
+    return render_template('shoppingCart.html')
