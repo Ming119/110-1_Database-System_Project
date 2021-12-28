@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    indexPage.txt
+Resource    index.txt
 
 *** Variables ***
 ${addNewCategoryButton} =    ${categoryList}//a[normalize-space()='+ Add a new category']
