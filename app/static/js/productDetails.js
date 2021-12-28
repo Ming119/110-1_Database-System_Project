@@ -4,7 +4,7 @@ function quantityStepUp(node) {
 
 function quantityStepDown(node) {
     quantity = node.parentNode.parentNode.querySelector('input[type=number]').value;
-    if (quantity > 0) {
+    if (quantity > 1) {
         node.parentNode.parentNode.querySelector('input[type=number]').stepDown();
     }
 }

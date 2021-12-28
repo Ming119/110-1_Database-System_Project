@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     user_id       = db.Column(db.Integer, primary_key=True)
+    cartItmes   = db.relationship('CartItem', backref='user')
 
     email         = db.Column(db.String(64),   nullable=False, unique=True)
     username      = db.Column(db.String(32),   nullable=False, unique=True)

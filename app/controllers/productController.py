@@ -14,7 +14,7 @@ def index():
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
-    
+
     categories = ProductCategory.getAll()
 
     searchForm      = SearchForm()
@@ -128,7 +128,8 @@ def details(product_id):
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():
-            return addToCard(form)
+            return addToCart(form, product)
+
 
         return render_template('productDetails.html', form=form, product=product, category=category)
 
@@ -158,9 +159,32 @@ def edit(product, form):
 
 
 
-# @login_required
-# def addToCard(form):
+@login_required
+def addToCart(form, product):
+    item = CartItem.query.filter_by(cart_id=current_user.user_id, product_id=product.product_id).first()
+    quantity   = form.quantity.data
+    amount     = product.price * quantity
 
+    if item is None:
+        if (CartItem.create(
+            cart_id    = current_user.user_id,
+            product_id = product.product_id,
+            quantity   = quantity,
+            amount     = amount
+        )):
+            flash(f'Added to cart successfully', 'success')
+
+        else:
+            flash(f'Failed to add to cart', 'warning')
+
+    else:
+        if (item.update(item.quantity+quantity, item.amount+amount)):
+            flash(f'Added to cart successfully', 'success')
+
+        else:
+            flash(f'Failed to add to cart', 'warning')
+
+    return redirect(url_for('product.details', product_id=product.product_id))
 
 
 # delete category funciton
