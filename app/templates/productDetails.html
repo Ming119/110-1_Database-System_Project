@@ -73,14 +73,14 @@
         <form method="post" action='' class="form" role="form">
         <div class="row justify-content-center">
             <div class="col-1 my-2">
-                <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepDown()" class="btn btn-danger bi bi-dash"></button>
+                <button onclick="quantityStepDown(this)" type="button" class="btn btn-danger bi bi-dash"></button>
             </div>
             <div class="col-8 form-floating">
-                {{ form.quantity(class="form-control", placeholder="quantity", type="number") }}
+                {{ form.quantity(class="form-control", placeholder="quantity", type="number", min="0") }}
                 {{ form.quantity.label() }}
             </div>
             <div class="col-1 my-2">
-                <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepUp()" class="btn btn-success bi bi-plus"></button>
+                <button onclick="quantityStepUp(this)" type="button" class="btn btn-success bi bi-plus"></button>
             </div>
             <div class="col-auto my-3">
                 {{ form.addToCard(class='btn btn-primary px-5') }}
@@ -90,6 +90,8 @@
 
     </div>
 </div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/productDetails.js') }}"></script>
 
 {% endif %}
 {% endblock content %}
