@@ -15,8 +15,8 @@ def index():
     searchForm = SearchForm()
 
     # Search
-    if request.method == 'POST' and form_search.validate_on_submit():
-        words = form_search.search.data.split(' ')
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
 
         products_list = list()
         for word in words:
