@@ -65,15 +65,15 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def getByID(user_id):
-        return User.query.filter(User.user_id==user_id, User.is_active==True).first()
+        return User.query.filter_by(user_id=user_id).first()
 
     @staticmethod
     def getByEmail(email):
-        return User.query.filter(User.email==email, User.is_active==True).first()
+        return User.query.filter(email==email).first()
 
     @staticmethod
     def getByUsername(username):
-        return User.query.filter(User.username==username, User.is_active==True).first()
+        return User.query.filter(username==username).first()
 
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
