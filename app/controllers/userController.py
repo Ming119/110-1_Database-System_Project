@@ -13,8 +13,21 @@ def index():
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    users = User.getAll()
     searchForm = SearchForm()
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        users_list = list()
+        for word in words:
+            users_list.extend(User.query.filter(User.email.contains(word)).all())
+            users_list.extend(User.query.filter(User.username.contains(word)).all())
+            users_list.extend(User.query.filter(User.first_name.contains(word)).all())
+            users_list.extend(User.query.filter(User.last_name.contains(word)).all())
+
+        users = set(users_list)
+
+    else: users = User.getAll()
+
     return render_template("manageUser.html", users=users, searchForm=searchForm)
 
 
@@ -25,8 +38,22 @@ def filter_index(role):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    users = User.getByRole(role)
+
     searchForm = SearchForm()
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        users_list = list()
+        for word in words:
+            users_list.extend(User.query.filter(User.email.contains(word), User.role==role).all())
+            users_list.extend(User.query.filter(User.username.contains(word), User.role==role).all())
+            users_list.extend(User.query.filter(User.first_name.contains(word), User.role==role).all())
+            users_list.extend(User.query.filter(User.last_name.contains(word), User.role==role).all())
+
+        users = set(users_list)
+
+    else: users = User.getByRole(role)
+
     return render_template("manageUser.html", users=users, searchForm=searchForm)
 
 
