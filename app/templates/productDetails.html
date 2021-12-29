@@ -38,8 +38,8 @@
     </div>
 
     <div class="btn-group">
-      {{ form.productSubmit(class='btn btn-primary px-5') }}
-      <a class="btn btn-danger px-5" href="{{ url_for('product.deleteProduct', product_id=product.product_id) }}">Delete</a>
+        {{ form.productSubmit(class='btn btn-primary px-5') }}
+        <a class="btn btn-danger px-5" href="{{ url_for('product.deleteProduct', product_id=product.product_id) }}">Delete</a>
     </div>
 </form>
 {% else %}
@@ -70,26 +70,29 @@
         <p><span class="mr-1"><strong>${{ product.price }}</strong></span></p>
         <p class="pt-1">{{ product.description }}</p>
         <hr />
-        <form method="post" action='' class="form" role="form">
-        <div class="row justify-content-center">
-            <div class="col-1 my-2">
-                <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepDown()" class="btn btn-danger bi bi-dash"></button>
+        <form method="post" action="" class="form" role="form">
+            {{ form.hidden_tag() }}
+            <div class="row justify-content-center">
+                <div class="col-1 my-2">
+                    <button onclick="quantityStepDown(this)" type="button" class="btn btn-danger bi bi-dash"></button>
+                </div>
+                <div class="col-8 form-floating">
+                    {{ form.quantity(class="form-control", placeholder="quantity", type="number", min="0") }}
+                    {{ form.quantity.label() }}
+                </div>
+                <div class="col-1 my-2">
+                    <button onclick="quantityStepUp(this)" type="button" class="btn btn-success bi bi-plus"></button>
+                </div>
+                <div class="col-auto my-3">
+                    {{ form.addToCard(class='btn btn-primary px-5') }}
+                </div>
             </div>
-            <div class="col-8 form-floating">
-                {{ form.quantity(class="form-control", placeholder="quantity", type="number") }}
-                {{ form.quantity.label() }}
-            </div>
-            <div class="col-1 my-2">
-                <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepUp()" class="btn btn-success bi bi-plus"></button>
-            </div>
-            <div class="col-auto my-3">
-                {{ form.addToCard(class='btn btn-primary px-5') }}
-            </div>
-        </div>
         </form>
 
     </div>
 </div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/productDetails.js') }}"></script>
 
 {% endif %}
 {% endblock content %}
