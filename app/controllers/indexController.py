@@ -11,12 +11,12 @@ from app.emailHelper import send_mail
 # GET method to render index page
 # POST method for search function
 def index():
-    categories  = ProductCategory.getAll()
+    categories = ProductCategory.getAll()
     searchForm = SearchForm()
 
     # Search
-    if request.method == 'POST' and form_search.validate_on_submit():
-        words = form_search.search.data.split(' ')
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
 
         products_list = list()
         for word in words:
@@ -24,7 +24,31 @@ def index():
             products_list.extend(Product.query.filter(Product.description.contains(word)).all())
         products = set(products_list)
 
-    else: products = Product.getAll()
+    else: products = Product.getAllWithoutInactive()
+
+    return render_template('index.html',
+                            searchForm = searchForm,
+                            categories = categories,
+                            products   = products
+                        )
+
+
+
+def filterIndex(category_id):
+    categories = ProductCategory.getAll()
+    searchForm = SearchForm()
+
+    # Search
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        products_list = list()
+        for word in words:
+            products_list.extend(Product.query.filter(Product.name.contains(word), Product.category_id==category_id).all())
+            products_list.extend(Product.query.filter(Product.description.contains(word), Product.category_id==category_id).all())
+        products = set(products_list)
+
+    else: products = Product.getByCategoryIDWithoutInactive(category_id)
 
     return render_template('index.html',
                             searchForm = searchForm,
