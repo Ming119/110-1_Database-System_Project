@@ -8,7 +8,13 @@ from flask_login import current_user, login_required
 # PMS page of the website
 # GET method to render PMS page
 # POST method for create category, create product or search function
+@login_required
 def index():
+    # access control
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
     categories = ProductCategory.getAll()
 
     searchForm      = SearchForm()
@@ -102,11 +108,7 @@ def details(product_id):
     if current_user.is_authenticated and current_user.role == 'staff':
         categories = ProductCategory.getAll()
         form = NewProductForm(
-                    productName        = product.name,
-                    productDescription = product.description,
-                    price              = product.price,
-                    quantity           = product.quantity,
-                    category           = product.category_id,
+                    product    = product,
                     categories = categories
                 )
         # Edit
@@ -116,13 +118,18 @@ def details(product_id):
         return render_template('productDetails.html', form=form, product=product)
 
     else:
+        if not product.is_active:
+            flash(f'You are not allowed to access.', 'danger')
+            return redirect(url_for('index.index'))
+
         category = ProductCategory.getByID(product.category_id)
 
         form = AddToCardForm()
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():
-            return addToCard(form)
+            return addToCart(form, product)
+
 
         return render_template('productDetails.html', form=form, product=product, category=category)
 
@@ -152,9 +159,32 @@ def edit(product, form):
 
 
 
-# @login_required
-# def addToCard(form):
+@login_required
+def addToCart(form, product):
+    item = CartItem.query.filter_by(cart_id=current_user.user_id, product_id=product.product_id).first()
+    quantity   = form.quantity.data
+    amount     = product.price * quantity
 
+    if item is None:
+        if (CartItem.create(
+            cart_id    = current_user.user_id,
+            product_id = product.product_id,
+            quantity   = quantity,
+            amount     = amount
+        )):
+            flash(f'Added to cart successfully', 'success')
+
+        else:
+            flash(f'Failed to add to cart', 'warning')
+
+    else:
+        if (item.update(item.quantity+quantity, item.amount+amount)):
+            flash(f'Added to cart successfully', 'success')
+
+        else:
+            flash(f'Failed to add to cart', 'warning')
+
+    return redirect(url_for('product.details', product_id=product.product_id))
 
 
 # delete category funciton
