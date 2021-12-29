@@ -108,7 +108,7 @@ def details(product_id):
     if current_user.is_authenticated and current_user.role == 'staff':
         categories = ProductCategory.getAll()
         form = NewProductForm(
-                    product    = prodcut,
+                    product    = product,
                     categories = categories
                 )
         # Edit
