@@ -4,17 +4,17 @@
 <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">+ Add a new category</a>
 {% for category in categories %}
 <li class="list-group-item list-group-item-action d-flex justify-content-between">
-    <a class="mute-link" href="{{ url_for('product.filterIndex', category_id=category.category_id) }}">{{ category.name }}<span class="badge bg-secondary rounded-pill">0</span>
-    </a>
+    <a class="mute-link" href="{{ url_for('product.filterIndex', category_id=category.category_id) }}">{{ category.name }}</a>
     <div class="d-flex justify-content-end">
         <span class="badge bg-secondary rounded-pill">0</span>
-        <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('product.deleteCategory', category_id=category.category_id) }}"></a>
+        {% if category.is_active %}
+        <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('product.withholdCategory', category_id=category.category_id) }}"></a>
+        {% else %}
+        <a type="button" class="btn p-0" href="{{ url_for('product.publishCategory', category_id=category.category_id) }}"><i class="fas fa-plus px-1"></i></a>
+        {% endif%}
     </div>
 </li>
 {% endfor %}
-{% endblock %}
-
-{% block categoryCross %}
 {% endblock %}
 
 {% block product %}
@@ -83,11 +83,15 @@
                 <div class="modal-body">
                     <div class="form my-3">
                         {{ newProductForm.productName.label() }}
-                        {{ newProductForm.productName(class="form-control", placeholder='Product Name') }}
+                        {{ newProductForm.productName(class="form-control") }}
                     </div>
                     <div class="form my-3">
                         {{ newProductForm.productDescription.label() }}
-                        {{ newProductForm.productDescription(class="form-control", placeholder='Product Description') }}
+                        {{ newProductForm.productDescription(class="form-control") }}
+                    </div>
+                    <div class="form my-3">
+                        {{ newProductForm.image_url.label() }}
+                        {{ newProductForm.image_url(class="form-control") }}
                     </div>
                     <div class="form my-3">
                         {{ newProductForm.price.label() }}

@@ -1,20 +1,23 @@
 {% extends 'base.html' %}
 
-{% import 'bootstrap/wtf.html' as wtf %}
-
 {% block content %}
 {% if current_user.is_authenticated and current_user.role == 'staff' %}
 <form action="" method="post" class="form" role="form">
     {{ form.hidden_tag() }}
 
     <div class="form-floating my-3">
-        {{ form.productName(class="form-control disable") }}
+        {{ form.productName(class="form-control") }}
         {{ form.productName.label() }}
     </div>
 
     <div class="form-floating my-3">
         {{ form.productDescription(class="form-control") }}
         {{ form.productDescription.label() }}
+    </div>
+
+    <div class="form-floating my-3">
+        {{ form.image_url(class="form-control") }}
+        {{ form.image_url.label() }}
     </div>
 
     <div class="form-floating my-3">
@@ -39,7 +42,11 @@
 
     <div class="btn-group">
         {{ form.productSubmit(class='btn btn-primary px-5') }}
-        <a class="btn btn-danger px-5" href="{{ url_for('product.deleteProduct', product_id=product.product_id) }}">Delete</a>
+        {% if product.is_active %}
+        <a class="btn btn-danger px-5" href="{{ url_for('product.withholdProduct', product_id=product.product_id) }}">Withhold</a>
+        {% else %}
+        <a class="btn btn-success px-5" href="{{ url_for('product.publishProduct', product_id=product.product_id) }}">Publish</a>
+        {% endif %}
     </div>
 </form>
 {% else %}

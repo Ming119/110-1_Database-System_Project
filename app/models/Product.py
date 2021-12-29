@@ -61,14 +61,6 @@ class Product(db.Model):
         return Product.query.filter_by(is_active=True).all()
 
     @staticmethod
-    def getByCategoryId(category_id):
-        return Product.query.filter_by(category_id=category_id).all()
-
-    @staticmethod
-    def getByID(product_id):
-        return Product.query.filter_by(product_id=product_id).first()
-
-    @staticmethod
     def getByCategoryID(category_id):
         return Product.query.filter_by(category_id=category_id).all()
 
@@ -77,22 +69,32 @@ class Product(db.Model):
         return Product.query.filter_by(category_id=category_id, is_active=True).all()
 
     @staticmethod
+    def getByID(product_id):
+        return Product.query.filter_by(product_id=product_id).first()
+
+    @staticmethod
+    def getByIDWithoutInactive(product_id):
+        return Product.query.filter_by(product_id=product_id, is_active=True).first()
+
+    @staticmethod
     def getByName(name):
         return Product.query.filter_by(name=name).first()
 
     @staticmethod
-    def deleteByID(product_id):
+    def publishByID(product_id):
         try:
             product = Product.getByID(product_id)
-            product.is_active = False
+            category = ProductCategory.getByIDWithoutInactive(product.category_id)
+            if category is None: return False
+            product.is_active = True
             db.session.commit()
             return True
         except: return False
 
     @staticmethod
-    def deleteByName(name):
+    def withholdByID(product_id):
         try:
-            product = Product.getByName(name)
+            product = Product.getByIDWithoutInactive(product_id)
             product.is_active = False
             db.session.commit()
             return True

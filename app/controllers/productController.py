@@ -144,14 +144,12 @@ def details(product_id):
 
     if current_user.is_authenticated and current_user.role == 'staff':
         categories = ProductCategory.getAll()
-        form = NewProductForm(
-                    product    = product,
-                    categories = categories
-                )
+        form = NewProductForm(categories)
         # Edit
         if request.method == 'POST' and form.validate_on_submit():
             return edit(product, form)
 
+        form.initProductData(product)
         return render_template('productDetails.html', form=form, product=product)
 
     else:
@@ -229,17 +227,34 @@ def addToCart(form, product):
 #   delete category based on category_id
 # redirect to PMS page and flash message after category is deleted
 @login_required
-def deleteCategory(category_id):
+def withholdCategory(category_id):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if ProductCategory.deleteByID(category_id):
-        flash(f'Category deleted successfully.', 'success')
+    if ProductCategory.withholdByID(category_id):
+        flash(f'Category withhold successfully.', 'success')
 
     else:
         flash(f'Category is still in use.', 'warning')
+
+    return redirect(url_for('product.index'))
+
+
+
+@login_required
+def publishCategory(category_id):
+    # access control
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    if ProductCategory.publishByID(category_id):
+        flash(f'Category publish successfully.', 'success')
+
+    else:
+        flash(f'Category publish failed.', 'warning')
 
     return redirect(url_for('product.index'))
 
@@ -250,15 +265,31 @@ def deleteCategory(category_id):
 #   delete product based on category_id
 # redirect to PMS page and flash message after product is deleted
 @login_required
-def deleteProduct(product_id):
+def withholdProduct(product_id):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if Product.deleteByID(product_id):
-        flash(f'Product deleted successfully.', 'success')
+    if Product.withholdByID(product_id):
+        flash(f'Product withhold successfully.', 'success')
 
     else:
-        flash(f'Product deleted failed.', 'warning')
+        flash(f'Product withhold failed.', 'warning')
+
+    return redirect(url_for('product.index'))
+
+
+
+@login_required
+def publishProduct(product_id):
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    if Product.publishByID(product_id):
+        flash(f'Product publish successfully.', 'success')
+
+    else:
+        flash(f'Product publish failed.', 'warning')
 
     return redirect(url_for('product.index'))

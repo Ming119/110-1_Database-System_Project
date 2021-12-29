@@ -11,7 +11,7 @@ from app.emailHelper import send_mail
 # GET method to render index page
 # POST method for search function
 def index():
-    categories = ProductCategory.getAll()
+    categories = ProductCategory.getAllWithoutInactive()
     searchForm = SearchForm()
 
     # Search
@@ -35,7 +35,7 @@ def index():
 
 
 def filterIndex(category_id):
-    categories = ProductCategory.getAll()
+    categories = ProductCategory.getAllWithoutInactive()
     searchForm = SearchForm()
 
     # Search
