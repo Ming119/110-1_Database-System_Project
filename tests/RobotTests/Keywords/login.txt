@@ -3,7 +3,7 @@ Library    Selenium2Library
 Resource    ../allKeywords.txt
 Resource    ../allVariables.txt
 
-**keywords**
+*** keywords ***
 Verify Login Form Is Visible
     Login Page::Wait Until Login Form Is Visible
 
