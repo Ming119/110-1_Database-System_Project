@@ -30,14 +30,12 @@ def init_db():
 def init_db_command():
     init_db()
 
-    Customer.create(
-            email      = 'customer@domain.com',
-            username   = 'customer',
-            password   = 'customer',
-            first_name = 'customer',
-            last_name  = 'customer',
-            confirm    = True,
-            DOB        = date.today()
+    Admin.create(
+            email      = 'admin@domain.com',
+            username   = 'admin',
+            password   = 'admin',
+            first_name = 'admin',
+            last_name  = 'admin',
         )
 
     Staff.create(
@@ -48,12 +46,14 @@ def init_db_command():
             last_name  = 'staff',
         )
 
-    Admin.create(
-            email      = 'admin@domain.com',
-            username   = 'admin',
-            password   = 'admin',
-            first_name = 'admin',
-            last_name  = 'admin',
+    Customer.create(
+            email      = 'customer@domain.com',
+            username   = 'customer',
+            password   = 'customer',
+            first_name = 'customer',
+            last_name  = 'customer',
+            is_active  = True,
+            DOB        = date.today()
         )
 
     ProductCategory.create(
