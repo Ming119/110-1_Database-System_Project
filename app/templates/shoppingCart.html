@@ -5,40 +5,44 @@
     <div class="col-md-5 col-lg-4 order-md-last">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-primary">Your cart</span>
-            <span class="badge bg-primary rounded-pill">3</span>
+            <span class="badge bg-primary rounded-pill">{{ quantity }}</span>
         </h4>
         <ul class="list-group mb-3">
+            <!-- Cart Items -->
+            {% for item in items %}
             <li class="list-group-item d-flex justify-content-between lh-sm">
                 <div>
-                    <h6 class="my-0">Product name</h6>
-                    <small class="text-muted">Brief description</small>
+                    <h6 class="my-0">{{ item.name }}<sup class="badge bg-primary rounded-pill">{{ item.quantity }}</sup></h6>
+
+                    <small class="text-muted">{{ item.description }}</small>
                 </div>
-                <span class="text-muted">$12</span>
+                <span class="text-muted">${{ item.amount }}</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between lh-sm">
+            {% endfor %}
+
+            <!-- Shipping Fee -->
+            <li class="list-group-item d-flex justify-content-between lh-sm" id="shippingFee">
                 <div>
-                    <h6 class="my-0">Second product</h6>
-                    <small class="text-muted">Brief description</small>
+                    <h6 class="my-0">Shipping Fee</h6>
+
+                    <small class="text-muted">5% of amount</small>
                 </div>
-                <span class="text-muted">$8</span>
+                <span class="text-muted"></span>
             </li>
-            <li class="list-group-item d-flex justify-content-between lh-sm">
-                <div>
-                    <h6 class="my-0">Third item</h6>
-                    <small class="text-muted">Brief description</small>
-                </div>
-                <span class="text-muted">$5</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between bg-light">
+
+            <!-- Discount Code -->
+            <!-- <li class="list-group-item d-flex justify-content-between bg-light" id="discount">
                 <div class="text-success">
                     <h6 class="my-0">Promo code</h6>
                     <small>EXAMPLECODE</small>
                 </div>
                 <span class="text-success">−$5</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
+            </li> -->
+
+            <!--  -->
+            <li class="list-group-item d-flex justify-content-between" id="amount">
                 <span>Total (USD)</span>
-                <strong>$20</strong>
+                <strong>${{ amount }}</strong>
             </li>
         </ul>
 
@@ -49,21 +53,20 @@
             </div>
         </form>
     </div>
+
     <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Address</h4>
         <form>
             <ul class="list-group list-group-flus form-check">
-
+                {% for address in addresses %}
                 <li class="list-group-item">
-                <input class="form-check-input" type="radio" value="" id="t">
-                <label class="form-check-label" for="t">
-                    Default checkbox
-                </label>
+                    <input class="form-check-input" type="radio" value="" id="{{ address.address_id }}">
+                    <label class="form-check-label" for="{{ address.address_id }}">
+                        {{ address.address }}
+                    </label>
                 </li>
-
-                <li class="list-group-item">
-                    <a class="mute-link" href="#">+ Add a new address</a>
-                </li>
+                {% endfor %}
+                <a class="mute-link list-group-item" href="#">+ Add a new address</a>
             </ul>
 
             <!-- <div class="row g-3">
@@ -150,12 +153,12 @@
 
             <h4 class="mb-3">Payment</h4>
 
-            <div class="my-3">
-                <div class="form-check">
+            <div class="row my-3">
+                <div class="col-3 form-check">
                     <input id="cash" name="paymentMethod" type="radio" class="form-check-input" checked="" required="">
                     <label class="form-check-label" for="cash">Cash on delivery</label>
                 </div>
-                <div class="form-check">
+                <div class="col-3 form-check">
                     <input id="credit" name="paymentMethod" type="radio" class="form-check-input" required="">
                     <label class="form-check-label" for="credit">Credit card</label>
                 </div>
