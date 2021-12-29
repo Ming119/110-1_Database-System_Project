@@ -30,13 +30,12 @@ def init_db():
 def init_db_command():
     init_db()
 
-    Customer.create(
-            email      = 'customer@domain.com',
-            username   = 'customer',
-            password   = 'customer',
-            first_name = 'customer',
-            last_name  = 'customer',
-            DOB        = date.today()
+    Admin.create(
+            email      = 'admin@domain.com',
+            username   = 'admin',
+            password   = 'admin',
+            first_name = 'admin',
+            last_name  = 'admin',
         )
 
     Staff.create(
@@ -47,25 +46,42 @@ def init_db_command():
             last_name  = 'staff',
         )
 
-    Admin.create(
-            email      = 'admin@domain.com',
-            username   = 'admin',
-            password   = 'admin',
-            first_name = 'admin',
-            last_name  = 'admin',
+    Customer.create(
+            email      = 'customer@domain.com',
+            username   = 'customer',
+            password   = 'customer',
+            first_name = 'customer',
+            last_name  = 'customer',
+            is_active  = True,
+            DOB        = date.today()
         )
 
     ProductCategory.create(
-            name = 'category1',
-            description = 'category1 description'
+            name = 'Shoes',
+            description = 'Shoes'
+        )
+
+    ProductCategory.create(
+            name = 'Watch',
+            description = 'Watch'
         )
 
     Product.create(
             category_id = 1,
             quantity    = 1,
-            name        = 'product',
-            description = 'Product description',
-            price       = 100
+            name        = 'Shoe',
+            description = 'Shoe description',
+            price       = 100,
+            image_url   = 'https://api.lorem.space/image/shoes?w=304&h=225'
+        )
+
+    Product.create(
+            category_id = 2,
+            quantity    = 1,
+            name        = 'Watch',
+            description = 'Watch description',
+            price       = 100,
+            image_url   = 'https://api.lorem.space/image/watch?w=304&h=225'
         )
 
     click.echo('Initialized the database.')

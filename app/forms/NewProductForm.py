@@ -10,6 +10,10 @@ class NewProductForm(Form):
 
     productDescription = StringField('Description')
 
+    image_url = StringField('Image URL', validators=[
+        validators.DataRequired(),
+    ])
+
     price = FloatField('Price', validators=[
         validators.InputRequired(),
         validators.NumberRange(min=0)
@@ -25,6 +29,16 @@ class NewProductForm(Form):
     discount = StringField('Discount Code')
 
     productSubmit = SubmitField('Submit')
+
+    def __init__(self, categories, product=None, *arg, **kwargs):
+        super(NewProductForm, self).__init__(*arg, **kwargs)
+        self.category.choices = [(category.category_id, category.name) for category in categories]
+        if product is not None:
+            self.productName        = product.name
+            self.productDescription = product.description
+            self.price              = product.price
+            self.quantity           = product.quantity
+            self.category           = product.category_id
 
     def validate_price(self, field):
         if field.data < 0:
