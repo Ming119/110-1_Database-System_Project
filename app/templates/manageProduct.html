@@ -3,7 +3,9 @@
 {% block category %}
 <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">+ Add a new category</a>
 {% for category in categories %}
-<li href="#" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
+<li class="list-group-item list-group-item-action d-flex justify-content-between">
+    <a class="mute-link" href="{{ url_for('product.filterIndex', category_id=category.category_id) }}">{{ category.name }}<span class="badge bg-secondary rounded-pill">0</span>
+    </a>
     <div class="d-flex justify-content-end">
         <span class="badge bg-secondary rounded-pill">0</span>
         <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('product.deleteCategory', category_id=category.category_id) }}"></a>

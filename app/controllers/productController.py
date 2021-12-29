@@ -53,6 +53,43 @@ def index():
 
 
 
+def filterIndex(category_id):
+    categories = ProductCategory.getAll()
+
+    searchForm      = SearchForm()
+    newCategoryForm = NewCategoryForm()
+    newProductForm  = NewProductForm(categories)
+
+    # Create a new category
+    if request.method == 'POST' and newCategoryForm.validate_on_submit():
+        return createCategory(newCategoryForm)
+
+    # Create a new product
+    if request.method == 'POST' and newProductForm.validate_on_submit():
+        return createProduct(newProductForm)
+
+    # Search
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        products_list = list()
+        for word in words:
+            products_list.extend(Product.query.filter(Product.name.contains(word), Product.category_id==category_id).all())
+            products_list.extend(Product.query.filter(Product.description.contains(word), Product.category_id==category_id).all())
+
+        products = set(products_list)
+
+    else:
+        products = Product.getByCategoryID(category_id)
+
+    return render_template('manageProduct.html',
+                            searchForm      = searchForm,
+                            newCategoryForm = newCategoryForm,
+                            newProductForm  = newProductForm,
+                            categories      = categories,
+                            products        = products
+                        )
+
 # create category function
 # :param: form
 #   create category based on a validate form

@@ -4,6 +4,7 @@ from flask import Blueprint
 bp = Blueprint('index', __name__)
 
 bp.route('/', methods=['GET', 'POST'])(index)
+bp.route('/filter/<int:category_id>', methods=['GET', 'POST'])(filterIndex)
 bp.route('/register', methods=['GET', 'POST'])(register)
 bp.route('/register/<token>', methods=['GET'])(confirmRegistration)
 bp.route('/forgotPassword', methods=['GET', 'POST'])(forgotPassword)
