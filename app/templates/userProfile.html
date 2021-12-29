@@ -14,16 +14,7 @@
                 class="img-fluid my-5"
                 style="width: 80px;"
               />
-              <h5>adminone</h5>
-              <p>admin1</p>
-
-              <!-- {% if current_user.is_authenticated and current_user.role == 'staff' %}
-              <a href="{{ url_for('user.update', user_id=user.user_id) }}" type="button" class="btn btn-info">Update Profile</a>
-              {% endif %} -->
-
-              <!-- {% for attribute, value in user.__dict__.items() %}
-              <br /> {{ attribute }}::{{ value }}
-              {% endfor %} -->
+              <h5>{{ current_user.username }}</h5>
 
             </div>
             <div class="col-md-8">
@@ -34,49 +25,43 @@
 
                   <div class="col-6 mb-3">
                     <h6>First name</h6>
-                    <p class="text-muted">Irene</p>
+                    <p class="text-muted">{{ current_user.first_name }}</p>
                   </div>
 
                   <div class="col-6 mb-3">
                     <h6>Last name</h6>
-                    <p class="text-muted">Zheng</p>
+                    <p class="text-muted">{{ current_user.last_name }}</p>
                   </div>
 
                   <div class="col-6 mb-3">
                     <h6>email</h6>
-                    <p class="text-muted">hello@gmail.com</p>
+                    <p class="text-muted">{{ current_user.email }}</p>
                   </div>
 
                   <div class="col-6 mb-3">
                     <h6>username</h6>
-                    <p class="text-muted">adminone</p>
+                    <p class="text-muted">{{ current_user.username }}</p>
                   </div>
 
                   {% if current_user.is_authenticated and current_user.role == 'admin' %}
                   <div class="col-6 mb-3">
                     <h6>role</h6>
-                    <p class="text-muted">admin</p>
+                    <p class="text-muted">{{ current_user.role }}</p>
                   </div>
-                  {% endif %}
 
-                  {% if current_user.is_authenticated and current_user.role == 'admin' %}
                   <div class="col-6 mb-3">
                     <h6>last_login</h6>
-                    <p class="text-muted">active</p>
+                    <p class="text-muted">{{ current_user.last_login }}</p>
                   </div>
-                  {% endif %}
 
-                  {% if current_user.is_authenticated and current_user.role == 'admin' %}
                   <div class="col-6 mb-3">
                     <h6>create_at</h6>
-                    <p class="text-muted">active</p>
+                    <p class="text-muted">{{ current_user.create_at }}</p>
                   </div>
-                  {% endif %}
 
-                  {% if current_user.is_authenticated and current_user.role == 'admin' %}
                   <div class="col-6 mb-3">
                     <h6>modified_at</h6>
-                    <p class="text-muted">active</p>
+                    <p class="text-muted">{{ current_user.modified_at }}</p>
                   </div>
                   {% endif %}
 
