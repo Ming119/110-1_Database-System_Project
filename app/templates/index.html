@@ -6,9 +6,9 @@
         <div id="category-list" class="list-group">
             {% block category %}
             {% for category in categories %}
-            <li href="#" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
+            <a href="{{ url_for('index.filterIndex', category_id=category.category_id) }}" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
                 <span class="badge bg-secondary rounded-pill">0</span>
-            </li>
+            </a>
             {% endfor %}
             {% endblock %}
         </div>
