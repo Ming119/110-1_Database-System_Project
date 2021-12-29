@@ -80,6 +80,10 @@ class User(db.Model, UserMixin):
     def getByUsername(username):
         return User.query.filter(User.username==username, User.is_active==True).first()
 
+    @staticmethod
+    def getByRole(role):
+        return User.query.filter(User.role==role).all()
+
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.user_id,

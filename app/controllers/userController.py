@@ -14,7 +14,20 @@ def index():
         return redirect(url_for('index.index'))
 
     users = User.getAll()
-    return render_template("manageUser.html", users=users)
+    searchForm = SearchForm()
+    return render_template("manageUser.html", users=users, searchForm=searchForm)
+
+
+
+@login_required
+def filter_index(role):
+    if current_user.role != 'admin':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    users = User.getByRole(role)
+    searchForm = SearchForm()
+    return render_template("manageUser.html", users=users, searchForm=searchForm)
 
 
 
