@@ -61,8 +61,12 @@ class Product(db.Model):
         return Product.query.filter_by(is_active=True).all()
 
     @staticmethod
+    def getByCategoryId(category_id):
+        return Product.query.filter_by(category_id=category_id).all()
+
+    @staticmethod
     def getByID(product_id):
-        return Product.query.filter_by(product_id=product_id, is_active=True).first()
+        return Product.query.filter_by(product_id=product_id).first()
 
     @staticmethod
     def getByCategoryID(category_id):
@@ -74,7 +78,7 @@ class Product(db.Model):
 
     @staticmethod
     def getByName(name):
-        return Product.query.filter_by(name=name, is_active=True).first()
+        return Product.query.filter_by(name=name).first()
 
     @staticmethod
     def deleteByID(product_id):

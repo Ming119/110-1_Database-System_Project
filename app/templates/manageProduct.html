@@ -7,6 +7,7 @@
     <a class="mute-link" href="{{ url_for('product.filterIndex', category_id=category.category_id) }}">{{ category.name }}<span class="badge bg-secondary rounded-pill">0</span>
     </a>
     <div class="d-flex justify-content-end">
+        <span class="badge bg-secondary rounded-pill">0</span>
         <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('product.deleteCategory', category_id=category.category_id) }}"></a>
     </div>
 </li>

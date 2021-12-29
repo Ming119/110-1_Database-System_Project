@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     user_id       = db.Column(db.Integer, primary_key=True)
+    cartItmes   = db.relationship('CartItem', backref='user')
 
     email         = db.Column(db.String(64),   nullable=False, unique=True)
     username      = db.Column(db.String(32),   nullable=False, unique=True)
@@ -66,7 +67,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def getByID(user_id):
-        return User.query.filter(User.user_id==user_id, User.is_active==True).first()
+        return User.query.filter_by(user_id=user_id).first()
 
     @staticmethod
     def getByIDWithInactive(user_id):
@@ -74,11 +75,11 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def getByEmail(email):
-        return User.query.filter(User.email==email, User.is_active==True).first()
+        return User.query.filter(email==email).first()
 
     @staticmethod
     def getByUsername(username):
-        return User.query.filter(User.username==username, User.is_active==True).first()
+        return User.query.filter(username==username).first()
 
     @staticmethod
     def getByRole(role):
