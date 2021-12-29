@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="btn-group" role="group" aria-label="Basic mixed styles example">
+<div class="btn-group float-end pt-4" role="group" aria-label="Basic mixed styles example">
     <a href="{{ url_for('user.create', role='customer') }}" type="button" class="btn btn-success">New Customer</a>
     <a href="{{ url_for('user.create', role='staff') }}" type="button" class="btn btn-success">New Staff</a>
 </div>
@@ -38,7 +38,7 @@
             <td>{{ user.create_at }}</td>
             <td>{{ user.modified_at }}</td>
             <td>
-                <div class="btn-group-vertical">
+                <div class="btn-group-vertical ">
                     <a class="btn btn-info btn-block" type="button" href="{{ url_for('user.profile', user_id=user.user_id) }}">View</a>
                     <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.delete', user_id=user.user_id) }}">Delete</a>
                 </div>
