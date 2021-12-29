@@ -1,0 +1,75 @@
+*** Settings ***
+Library    Selenium2Library
+Resource    ../allVariables.txt
+
+*** keywords ***
+Verify Register Form Is Visible
+    Register Page::Wait Until Register Form Is Visible
+
+Verify "Already Have An Account" Button
+    Register Page::Wait Until Register Form Is Visible
+    Click Element    ${alreadyHaveAnAccountButton}
+    Login Page::Wait Until Login Form Is Visible
+    [Teardown]    Go To Register Page
+
+Verify Register With Registered Email
+    # customer@domain.com has been registered in the database initialization
+    Register    customer@domain.com    regTest   regTest1234    regTest1234    regTest   regTest    01/01/2021
+    Flash::Wait Until Flash Message With Category Is Visible    message=This email (customer@domain.com) address is already register     category=warning
+
+Verify Register With Registered Username
+    # customer has been registered in the database initialization
+    Register    regTest@regTest.com    customer   regTest1234    regTest1234    regTest   regTest    01/01/2021
+    Flash::Wait Until Flash Message With Category Is Visible    message=This username (customer) is already register     category=warning
+
+Verify Register With Invalid Password (Length)
+    Register    regTest@regTest.com    regTest   rt1    rt1    regTest   regTest    01/01/2021
+    Flash::Wait Until Flash Message With Category Is Visible    message=Field must be at least 8 characters long.     category=warning
+
+Verify Register With Invalid Password (Only Number)
+    Register    regTest@regTest.com    regTest   12345678    12345678    regTest   regTest    01/01/2021
+    Flash::Wait Until Flash Message With Category Is Visible    message=Password must contains number and alphabet.      category=warning
+
+Verify Register With Invalid Password (Only Alphabet)
+    Register    regTest@regTest.com    regTest   registerTest    registerTest    regTest   regTest    01/01/2021
+    Flash::Wait Until Flash Message With Category Is Visible    message=Password must contains number and alphabet.      category=warning
+
+Verify Register With Invalid Confirm Password
+    Register    regTest@regTest.com    regTest   regTest1234    regTest4321    regTest   regTest    01/01/2021
+    Flash::Wait Until Flash Message With Category Is Visible    message=Passwords do not match.      category=warning
+
+Verify Register With Invalid Date
+    Register    regTest@regTest.com    regTest   regTest1234    regTest1234    regTest   regTest    01/01/2100
+    Flash::Wait Until Flash Message With Category Is Visible    message=Date must before today.     category=warning
+
+Verify Register
+    Register    regTest@regTest.com    regTest   regTest1234    regTest1234    regTest   regTest    01/01/2021
+    Flash::Wait Until Flash Message With Category Is Visible    message=A confirmation email has been sent to regTest@regTest.com, please check your email inbox.    category=info
+
+Register Page::Wait Until Register Form Is Visible
+    Wait Until Element Is Visible    ${registerTitle}    ${normalPeriodOfTime}    'Register Title Should Be Visible'
+    Wait Until Element Is Visible    ${emailField}    ${normalPeriodOfTime}    'Email Field Should Be Visible'
+    Wait Until Element Is Visible    ${usernameField}    ${normalPeriodOfTime}    'Username Field Should Be Visible'
+    Wait Until Element Is Visible    ${passwordField}    ${normalPeriodOfTime}    'Password Field Should Be Visible'
+    Wait Until Element Is Visible    ${confirmPasswordField}    ${normalPeriodOfTime}    'Confirm Password Field Should Be Visible'
+    Wait Until Element Is Visible    ${firstNameField}    ${normalPeriodOfTime}    'First Name Field Should Be Visible'
+    Wait Until Element Is Visible    ${lastNameField}    ${normalPeriodOfTime}    'Last Name Field Should Be Visible'
+    Wait Until Element Is Visible    ${DOBDatePicker}    ${normalPeriodOfTime}    'DOB Field Should Be Visible'
+    Wait Until Element Is Visible    ${registerButton}    ${normalPeriodOfTime}    'Register Button Should Be Visible'
+    Wait Until Element Is Visible    ${alreadyHaveAnAccountButton}    ${normalPeriodOfTime}    'Already Have An Account Button Should Be Visible'
+
+Register
+    [Arguments]    ${email}    ${username}    ${password}    ${confirmPassword}    ${firstName}    ${lastName}    ${DOB}
+    Input Text    ${emailField}    ${email}
+    Input Text    ${usernameField}    ${username}
+    Input Text    ${passwordField}    ${password}
+    Input Text    ${confirmPasswordField}    ${confirmPassword}
+    Input Text    ${firstNameField}    ${firstName}
+    Input Text    ${lastNameField}    ${lastName}
+    Select Date In Date Picker    ${DOBDatePicker}    ${DOB}
+    Click Element    ${RegisterButton}
+
+Select Date In Date Picker
+    [Arguments]    ${datePicker}    ${date}
+    Click Element    ${datePicker}
+    Press Keys    ${datePicker}    ${date}
