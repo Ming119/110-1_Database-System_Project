@@ -69,17 +69,17 @@ def register():
     if request.method == 'POST' and registerForm.validate_on_submit():
         # check that the username is used and confirmed
         userCheck = User.getByUsername(registerForm.username.data)
-        if userCheck and userCheck.confirm:
+        if userCheck and userCheck.is_active:
             flash(f'This username ({registerForm.username.data}) is already register', 'warning')
             return redirect(url_for('index.register'))
 
         # check that the email is used and confirmed
         userCheck = User.getByEmail(registerForm.email.data)
-        if userCheck and userCheck.confirm:
+        if userCheck and userCheck.is_active:
             flash(f'This email ({registerForm.email.data}) address is already register', 'warning')
             return redirect(url_for('index.register'))
 
-        if userCheck and userCheck.confirm == False:
+        if userCheck and userCheck.is_active == False:
             customer = userCheck
 
         elif not userCheck:
@@ -119,7 +119,7 @@ def confirmRegistration(token):
 
     else:
         customer = Customer.getByID(data.get('user_id'))
-        customer.updateConfirm()
+        customer.update(is_active=True)
 
         send_mail(recipients = [customer.email],
                   subject    = 'Welcome to ...',
@@ -179,7 +179,7 @@ def forgotPassword():
 
     if request.method == 'POST' and form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user is not None and user.confirm == True:
+        if user is not None and user.is_active == True:
             send_mail(recipients = [user.email],
                       subject    = 'Reset your password',
                       template   = 'mail/resetPassword',

@@ -46,11 +46,12 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    def update(self, username=None, first_name=None, last_name=None):
+    def update(self, username=None, first_name=None, last_name=None, is_active=None):
         try:
             self.username   = username or self.username
             self.first_name = first_name or self.first_name
             self.last_name  = last_name or self.last_name
+            self.is_active  = is_active or self.is_active
             db.session.commit()
             return True
         except: return False
@@ -68,12 +69,20 @@ class User(db.Model, UserMixin):
         return User.query.filter(User.user_id==user_id, User.is_active==True).first()
 
     @staticmethod
+    def getByIDWithInactive(user_id):
+        return User.query.filter(User.user_id==user_id).first()
+
+    @staticmethod
     def getByEmail(email):
         return User.query.filter(User.email==email, User.is_active==True).first()
 
     @staticmethod
     def getByUsername(username):
         return User.query.filter(User.username==username, User.is_active==True).first()
+
+    @staticmethod
+    def getByRole(role):
+        return User.query.filter(User.role==role).all()
 
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
@@ -104,7 +113,6 @@ class Customer(User):
     orderHistory = db.relationship('Order',           backref='customer')
     comments     = db.relationship('Comment',         backref='customer')
 
-    confirm = db.Column(db.Boolean, nullable=False, default=False)
     DOB     = db.Column(db.Date,    nullable=False)
 
     def create_confirm_token(self, expires_in=300):
@@ -128,15 +136,8 @@ class Customer(User):
             return True
         except: return False
 
-    def updateConfirm(self, flag):
-        try:
-            self.confirm = flag
-            db.session.commit()
-            return True
-        except: return False
-
     @staticmethod
-    def create(email, username, password, first_name, last_name, DOB, confirm=False):
+    def create(email, username, password, first_name, last_name, DOB, is_active=False):
         try:
             customer = Customer(
                             email      = email,
@@ -145,7 +146,7 @@ class Customer(User):
                             first_name = first_name,
                             last_name  = last_name,
                             DOB        = DOB,
-                            confirm    = confirm
+                            is_active  = is_active
                        )
             db.session.add(customer)
             db.session.commit()
@@ -208,7 +209,17 @@ class Admin(User):
         except:
             return None
 
-    def deleteUserByID(self, user_id):
+    def activateUserByID(self, user_id):
+        try:
+            user = User.getByIDWithInactive(user_id)
+            if (user.role == 'admin'): return False
+            user.is_active = True
+            db.session.commit()
+            return True
+
+        except: return False
+
+    def deactivateUserByID(self, user_id):
         try:
             user = User.getByID(user_id)
             if (user.role == 'admin'): return False

@@ -13,8 +13,48 @@ def index():
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    users = User.getAll()
-    return render_template("manageUser.html", users=users)
+    searchForm = SearchForm()
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        users_list = list()
+        for word in words:
+            users_list.extend(User.query.filter(User.email.contains(word)).all())
+            users_list.extend(User.query.filter(User.username.contains(word)).all())
+            users_list.extend(User.query.filter(User.first_name.contains(word)).all())
+            users_list.extend(User.query.filter(User.last_name.contains(word)).all())
+
+        users = set(users_list)
+
+    else: users = User.getAll()
+
+    return render_template("manageUser.html", users=users, searchForm=searchForm)
+
+
+
+@login_required
+def filter_index(role):
+    if current_user.role != 'admin':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+
+    searchForm = SearchForm()
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        users_list = list()
+        for word in words:
+            users_list.extend(User.query.filter(User.email.contains(word), User.role==role).all())
+            users_list.extend(User.query.filter(User.username.contains(word), User.role==role).all())
+            users_list.extend(User.query.filter(User.first_name.contains(word), User.role==role).all())
+            users_list.extend(User.query.filter(User.last_name.contains(word), User.role==role).all())
+
+        users = set(users_list)
+
+    else: users = User.getByRole(role)
+
+    return render_template("manageUser.html", users=users, searchForm=searchForm)
 
 
 
@@ -68,7 +108,7 @@ def create(role):
                     first_name = newUserForm.first_name.data,
                     last_name  = newUserForm.last_name.data,
                     DOB        = newUserForm.DOB.data,
-                    confirm    = True
+                    is_active    = True
                 )):
                 flash(f'Customer created successfully!', 'success')
 
@@ -136,20 +176,40 @@ def update(user_id):
 
 
 
-# delete(deprecated) user
-# GET method to delete(deprecated) the user
+# activate an user
+# GET method to activate the user
 #   :param: user_id
 # POST method is not supported
 @login_required
-def delete(user_id):
+def activate(user_id):
     if current_user.role != 'admin':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if current_user.deleteUserByID(user_id):
-        flash(f'Delete profile was successful.', 'success')
+    if current_user.activateUserByID(user_id):
+        flash(f'Activate profile was successful.', 'success')
 
     else:
-        flash(f'Delete profile failed.', 'warning')
+        flash(f'Activate profile failed.', 'warning')
+
+    return redirect(url_for('user.index'))
+
+
+
+# deactivate an user
+# GET method to deactivate the user
+#   :param: user_id
+# POST method is not supported
+@login_required
+def deactivate(user_id):
+    if current_user.role != 'admin':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    if current_user.deactivateUserByID(user_id):
+        flash(f'Deactivate profile was successful.', 'success')
+
+    else:
+        flash(f'Deactivate profile failed.', 'warning')
 
     return redirect(url_for('user.index'))
