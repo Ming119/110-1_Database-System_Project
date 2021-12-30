@@ -53,29 +53,37 @@ class ProductCategory(db.Model):
         return ProductCategory.query.filter_by(category_id=category_id).first()
 
     @staticmethod
+    def getByIDWithoutInactive(category_id):
+        return ProductCategory.query.filter_by(category_id=category_id, is_active=True).first()
+
+    @staticmethod
     def getByName(name):
         return ProductCategory.query.filter_by(name=name).first()
 
     @staticmethod
-    def deleteByID(category_id):
-        productCategory = ProductCategory.getByID(category_id)
-        if productCategory.product_id:
-            return False
+    def withholdByID(category_id):
+        productCategory = ProductCategory.getByIDWithoutInactive(category_id)
+
+        for product in productCategory.product_id:
+            if product.is_active:
+                return False
         else:
             productCategory.is_active = False
             db.session.commit()
             return True
 
     @staticmethod
-    def deleteByName(name):
-        productCategory = ProductCategory.getByName(category_id)
-        if productCategory.product_id:
-            return False
-
-        else:
-            productCategory.is_active = False
+    def publishByID(category_id):
+        try:
+            productCategory = ProductCategory.getByID(category_id)
+            productCategory.is_active = True
             db.session.commit()
             return True
+        except: return False
+
+    @staticmethod
+    def dropInactive(categoryList):
+        return [category for category in categoryList if category.is_active]
 
     def __repr__(self):
         return '<Category %r>' % (

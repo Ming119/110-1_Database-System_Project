@@ -34,11 +34,17 @@ class NewProductForm(Form):
         super(NewProductForm, self).__init__(*arg, **kwargs)
         self.category.choices = [(category.category_id, category.name) for category in categories]
         if product is not None:
-            self.productName        = product.name
-            self.productDescription = product.description
-            self.price              = product.price
-            self.quantity           = product.quantity
-            self.category           = product.category_id
+            self.initProductData(product)
+
+    def initProductData(self, product):
+        self.category.default = product.category_id
+        self.process()
+
+        self.productName.data        = product.name
+        self.productDescription.data = product.description
+        self.image_url.data          = product.image_url
+        self.price.data              = product.price
+        self.quantity.data           = product.quantity
 
     def validate_price(self, field):
         if field.data < 0:
