@@ -37,23 +37,12 @@ class Discount(db.Model):
         return Discount.query.all()
 
     @staticmethod
-    def getAllWithoutInactive():
-        return Discount.query.filter_by(is_active=True).all()
-
-    @staticmethod
     def getByCode(code):
         return Discount.query.filter_by(discount_code=code).first()
 
     @staticmethod
-    def delete(discount_code):
-        try:
-            db.session.delete(Discount.getByID(discount_code))
-            db.session.commit()
-            return True
-
-        except: return False
-
-
+    def getByType(type):
+        return Discount.query.filter_by(type=type).all()
 
     def __repr__(self):
         return '<Discount %r>' % (

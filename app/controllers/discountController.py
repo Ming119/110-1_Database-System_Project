@@ -12,8 +12,20 @@ def index():
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    discounts = Discount.getAll()
     searchForm = SearchForm()
+
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        discount_list = list()
+        for word in words:
+            discount_list.extend(Discount.query.filter(Discount.discount_code.contains(word)).all())
+            discount_list.extend(Discount.query.filter(Discount.name.contains(word)).all())
+            discount_list.extend(Discount.query.filter(Discount.description.contains(word)).all())
+
+        discounts = set(discount_list)
+
+    else: discounts = Discount.getAll()
 
     return render_template('manageDiscount.html', searchForm=searchForm, discounts=discounts)
 
@@ -26,8 +38,20 @@ def filterIndex(type):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    discounts = Discount.getAll()
     searchForm = SearchForm()
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        discount_list = list()
+        for word in words:
+            discount_list.extend(Discount.query.filter(Discount.discount_code.contains(word), Discount.type==type).all())
+            discount_list.extend(Discount.query.filter(Discount.name.contains(word), Discount.type==type).all())
+            discount_list.extend(Discount.query.filter(Discount.description.contains(word), Discount.type==type).all())
+
+        discounts = set(discount_list)
+
+    else: discounts = Discount.getByType(type)
+
     return render_template('manageDiscount.html', searchForm=searchForm, discounts=discounts)
 
 
