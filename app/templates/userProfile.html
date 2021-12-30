@@ -14,7 +14,7 @@
                 class="img-fluid my-5"
                 style="width: 80px;"
               />
-              <h5>{{ current_user.username }}</h5>
+              <h5>{{ user.username }}</h5>
 
             </div>
             <div class="col-md-8">
@@ -25,43 +25,43 @@
 
                   <div class="col-10 mb-3">
                     <h6>First name</h6>
-                    <p class="text-muted">{{ current_user.first_name }}</p>
+                    <p class="text-muted">{{ user.first_name }}</p>
                   </div>
 
                   <div class="col-10 mb-3">
                     <h6>Last name</h6>
-                    <p class="text-muted">{{ current_user.last_name }}</p>
+                    <p class="text-muted">{{ user.last_name }}</p>
                   </div>
 
                   <div class="col-10 mb-3">
                     <h6>email</h6>
-                    <p class="text-muted">{{ current_user.email }}</p>
+                    <p class="text-muted">{{ user.email }}</p>
                   </div>
 
                   <div class="col-10 mb-3">
                     <h6>username</h6>
-                    <p class="text-muted">{{ current_user.username }}</p>
+                    <p class="text-muted">{{ user.username }}</p>
                   </div>
 
                   {% if current_user.is_authenticated and current_user.role == 'admin' %}
                   <div class="col-10 mb-3">
                     <h6>role</h6>
-                    <p class="text-muted">{{ current_user.role }}</p>
+                    <p class="text-muted">{{ user.role }}</p>
                   </div>
 
                   <div class="col-10 mb-3">
                     <h6>last_login</h6>
-                    <p class="text-muted">{{ current_user.last_login }}</p>
+                    <p class="text-muted">{{ user.last_login }}</p>
                   </div>
 
                   <div class="col-10 mb-3">
                     <h6>create_at</h6>
-                    <p class="text-muted">{{ current_user.create_at }}</p>
+                    <p class="text-muted">{{ user.create_at }}</p>
                   </div>
 
                   <div class="col-10 mb-3">
                     <h6>modified_at</h6>
-                    <p class="text-muted">{{ current_user.modified_at }}</p>
+                    <p class="text-muted">{{ user.modified_at }}</p>
                   </div>
                   {% endif %}
 
