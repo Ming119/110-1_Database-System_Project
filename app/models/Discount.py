@@ -41,6 +41,10 @@ class Discount(db.Model):
         return Discount.query.filter_by(is_active=True).all()
 
     @staticmethod
+    def getByCode(code):
+        return Discount.query.filter_by(discount_code=code).first()
+
+    @staticmethod
     def delete(discount_code):
         try:
             db.session.delete(Discount.getByID(discount_code))
@@ -86,7 +90,7 @@ class ShippingDiscount(Discount):
     @staticmethod
     def create(discount_code, name, start_at, end_at, atLeastAmount, description=None, type='shipping'):
         try:
-            db.session.add(Discount(
+            db.session.add(ShippingDiscount(
                 discount_code = discount_code,
                 name          = name,
                 description   = description,
@@ -126,7 +130,7 @@ class ProductDiscount(Discount):
     @staticmethod
     def create(discount_code, name, start_at, end_at, discountPercentage, description=None, type='product'):
         try:
-            db.session.add(Discount(
+            db.session.add(ProductDiscount(
                 discount_code      = discount_code,
                 name               = name,
                 description        = description,
@@ -167,7 +171,7 @@ class OrderDiscount(Discount):
     @staticmethod
     def create(discount_code, name, start_at, end_at, discountPercentage, atLeastAmount, description=None, type='order'):
         try:
-            db.session.add(Discount(
+            db.session.add(OrderDiscount(
                 discount_code      = discount_code,
                 name               = name,
                 description        = description,
