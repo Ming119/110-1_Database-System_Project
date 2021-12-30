@@ -45,29 +45,25 @@
 {% else %}
 <div class="row my-5">
     <div class="col-md-6 mb-4 mb-md-0">
-        Column
+      <div class="col-md-10">
+          <div class="images p-3">
+              <div class="text-center p-4"> <img id="main-image" img src="https://api.lorem.space/image/shoes?w=304&amp;h=225" width="450" /> </div>
+          </div>
+      </div>
     </div>
     <div class="col-md-6">
-        <h5>{{ product.name }}</h5>
-        <p class="mb-2 text-muted text-uppercase small">{{ category.name }}</p>
-        <ul class="rating">
-            <li>
-                <i class="fas fa-star fa-sm text-primary"></i>
-            </li>
-            <li>
-                <i class="fas fa-star fa-sm text-primary"></i>
-            </li>
-            <li>
-                <i class="fas fa-star fa-sm text-primary"></i>
-            </li>
-            <li>
-                <i class="fas fa-star fa-sm text-primary"></i>
-            </li>
-            <li>
-                <i class="far fa-star fa-sm text-primary"></i>
-            </li>
-        </ul>
-        <p><span class="mr-1"><strong>${{ product.price }}</strong></span></p>
+        <h5 class="text-uppercase"> {{ product.name }} </h5>
+        <p class="mb-2 text-muted text-uppercase small"> {{ category.name }} </p>
+        <div class="d-flex flex-row">
+                  <div class="text-danger mb-1 me-2">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </div>
+                </div>
+        <div class="price d-flex flex-row align-items-center"> <span class="act-price">${{ product.price }}</span>
+        </div>
         <p class="pt-1">{{ product.description }}</p>
         <hr />
         <form method="post" action="" class="form" role="form">
