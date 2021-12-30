@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<nav class="my-5" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('index.index') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('user.index') }}">Manage User</a></li>
+        <li class="breadcrumb-item active" aria-current="New User">Create User</li>
+    </ol>
+</nav>
+
 <div class="card text-dark bg-light mx-auto mt-5" style="width: 36rem;">
     <div class="card-header">
         <h2>Create a new {{ newUserForm.role }}</h2>
