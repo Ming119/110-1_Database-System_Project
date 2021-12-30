@@ -8,5 +8,6 @@ bp.route('/filter/<role>', methods=['GET', 'POST'])(filter_index)   # Filter ind
 bp.route('/create/<role>', methods=['GET', 'POST'])(create)         # Create
 bp.route('/<int:user_id>', methods=['GET'])(profile)                # Read
 bp.route('/update/<int:user_id>', methods=['GET', 'POST'])(update)  # Update
+bp.route('/changePassword/<int:user_id>', methods=['GET', 'POST'])(changePassword)
 bp.route('/activate/<int:user_id>', methods=['GET'])(activate)
 bp.route('/deactivate/<int:user_id>', methods=['GET'])(deactivate)

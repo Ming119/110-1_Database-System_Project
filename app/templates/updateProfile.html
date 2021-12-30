@@ -29,7 +29,7 @@
             {{ updateProfileForm.submit(class='btn btn-success px-5') }}
         </form>
 
-        <a href="#" class="btn btn-warning mt-3 px-3" type="button">Change Password</a>
+        <a href="{{ url_for('user.changePassword', user_id=user.user_id) }}" class="btn btn-warning mt-3 px-3" type="button">Change Password</a>
     </div>
 
     <div class="card-footer text-mute text-center">
