@@ -19,7 +19,7 @@ def index():
 
     searchForm      = SearchForm()
     newCategoryForm = NewCategoryForm()
-    newProductForm  = NewProductForm(categories)
+    newProductForm  = NewProductForm(ProductCategory.dropInactive(categories))
 
     # Create a new category
     if request.method == 'POST' and newCategoryForm.validate_on_submit():

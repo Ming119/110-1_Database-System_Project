@@ -81,6 +81,10 @@ class ProductCategory(db.Model):
             return True
         except: return False
 
+    @staticmethod
+    def dropInactive(categoryList):
+        return [category for category in categoryList if category.is_active]
+
     def __repr__(self):
         return '<Category %r>' % (
             self.category_id,

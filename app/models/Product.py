@@ -1,5 +1,6 @@
 from app.util import db
 from datetime import datetime
+from app.models.ProductCategory import ProductCategory
 
 class Product(db.Model):
     __tablename__ = 'product'
@@ -83,7 +84,7 @@ class Product(db.Model):
     @staticmethod
     def publishByID(product_id):
         try:
-            product = Product.getByID(product_id)
+            product  = Product.getByID(product_id)
             category = ProductCategory.getByIDWithoutInactive(product.category_id)
             if category is None: return False
             product.is_active = True
