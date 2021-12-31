@@ -54,7 +54,7 @@
     <div class="col-md-6">
         <h5 class="text-uppercase"> {{ product.name }} </h5>
         <p class="mb-2 text-muted text-uppercase small"> {{ category.name }} </p>
-        <p class="text-muted mb-0">Available: <span class="fw-bold">{{ product.quantity }}</span></p>
+        <p class="text-muted mb-0" id="productQuantity">Available: {{ product.quantity }}</p>
         <div class="d-flex flex-row">
                   <div class="text-danger mb-1 me-2">
                     <i class="fa fa-star"></i>
@@ -73,14 +73,14 @@
             {{ form.hidden_tag() }}
             <div class="row justify-content-center">
                 <div class="col-1 my-2">
-                    <button onclick="quantityStepDown(this)" type="button" class="btn btn-danger bi bi-dash"></button>
+                    <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepDown();" type="button" class="btn btn-danger bi bi-dash"></button>
                 </div>
                 <div class="col-8 form-floating">
-                    {{ form.quantity(class="form-control", placeholder="quantity", type="number", min="0") }}
+                    {{ form.quantity(class="form-control", placeholder="quantity", type="number", min="1", max=product.quantity) }}
                     {{ form.quantity.label() }}
                 </div>
                 <div class="col-1 my-2">
-                    <button onclick="quantityStepUp(this)" type="button" class="btn btn-success bi bi-plus"></button>
+                    <button onclick="this.parentNode.parentNode.querySelector('input[type=number]').stepUp();" type="button" class="btn btn-success bi bi-plus"></button>
                 </div>
                 <div class="col-auto my-3">
                     {{ form.addToCard(class='btn btn-primary px-5') }}
