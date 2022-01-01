@@ -22,13 +22,13 @@ class Product(db.Model):
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
     modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
-    def update(self, category_id, name=None, description=None, price=None, quantity=None):
+    def update(self, category_id, discount_code=None, name=None, description=None, price=None, quantity=None):
         self.category_id = category_id or self.category_id
+        self.discount_code = discount_code or self.discount_code
         self.name        = name or self.name
         self.description = description or self.description
         self.price       = price or self.price
         self.quantity    = quantity or self.quantity
-        self.is_active   = True
         db.session.commit()
 
     @staticmethod

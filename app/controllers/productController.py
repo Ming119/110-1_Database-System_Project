@@ -16,10 +16,11 @@ def index():
         return redirect(url_for('index.index'))
 
     categories = ProductCategory.getAll()
+    discounts  = Discount.getByType('product')
 
     searchForm      = SearchForm()
     newCategoryForm = NewCategoryForm()
-    newProductForm  = NewProductForm(ProductCategory.dropInactive(categories))
+    newProductForm  = NewProductForm(ProductCategory.dropInactive(categories), discounts)
 
     # Create a new category
     if request.method == 'POST' and newCategoryForm.validate_on_submit():
@@ -54,11 +55,17 @@ def index():
 
 
 def filterIndex(category_id):
+    # access control
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
     categories = ProductCategory.getAll()
+    discounts  = Discount.getByType('product')
 
     searchForm      = SearchForm()
     newCategoryForm = NewCategoryForm()
-    newProductForm  = NewProductForm(categories)
+    newProductForm  = NewProductForm(categories, discounts)
 
     # Create a new category
     if request.method == 'POST' and newCategoryForm.validate_on_submit():
@@ -89,6 +96,8 @@ def filterIndex(category_id):
                             categories      = categories,
                             products        = products
                         )
+
+
 
 # create category function
 # :param: form
@@ -144,7 +153,8 @@ def details(product_id):
 
     if current_user.is_authenticated and current_user.role == 'staff':
         categories = ProductCategory.getAll()
-        form = NewProductForm(categories)
+        discounts  = Discount.getByType('product')
+        form = NewProductForm(categories, discounts)
         # Edit
         if request.method == 'POST' and form.validate_on_submit():
             return edit(product, form)
@@ -158,15 +168,14 @@ def details(product_id):
             return redirect(url_for('index.index'))
 
         category = ProductCategory.getByID(product.category_id)
-
         form = AddToCardForm()
+        discount = Discount.getByCode(product.discount_code)
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():
-            return addToCart(form, product)
+            return addToCart(form, product, discount)
 
-
-        return render_template('productDetails.html', form=form, product=product, category=category)
+        return render_template('productDetails.html', form=form, product=product, category=category, discount=discount)
 
 
 
@@ -181,11 +190,12 @@ def edit(product, form):
         flash(f'Product already exists.', 'warning')
 
     else:
-        product.update(name        = form.productName.data,
-                       description = form.productDescription.data,
-                       category_id = form.category.data,
-                       price       = form.price.data,
-                       quantity    = form.quantity.data
+        product.update(name         = form.productName.data,
+                       description  = form.productDescription.data,
+                       category_id  = form.category.data,
+                       discount_code = form.discount.data,
+                       price        = form.price.data,
+                       quantity     = form.quantity.data
                       )
 
         flash(f'Product updated successfully.', 'success')
@@ -195,7 +205,7 @@ def edit(product, form):
 
 
 @login_required
-def addToCart(form, product):
+def addToCart(form, product, discount):
     item = CartItem.query.filter_by(cart_id=current_user.user_id, product_id=product.product_id).first()
     quantity   = form.quantity.data
     amount     = product.price * quantity
@@ -220,6 +230,7 @@ def addToCart(form, product):
             flash(f'Failed to add to cart', 'warning')
 
     return redirect(url_for('product.details', product_id=product.product_id))
+
 
 
 # delete category funciton
