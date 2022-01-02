@@ -74,7 +74,6 @@ def create(type):
         if type == 'shipping':
             if ShippingDiscount.create(
                 discount_code = newDiscountForm.code.data,
-                name          = newDiscountForm.name.data,
                 description   = newDiscountForm.description.data,
                 start_at      = newDiscountForm.start_at.data,
                 end_at        = newDiscountForm.end_at.data,
@@ -88,7 +87,6 @@ def create(type):
         elif type == 'product':
             if ProductDiscount.create(
                 discount_code      = newDiscountForm.code.data,
-                name               = newDiscountForm.name.data,
                 description        = newDiscountForm.description.data,
                 start_at           = newDiscountForm.start_at.data,
                 end_at             = newDiscountForm.end_at.data,
@@ -102,7 +100,6 @@ def create(type):
         elif type == 'order':
             if OrderDiscount.create(
                 discount_code      = newDiscountForm.code.data,
-                name               = newDiscountForm.name.data,
                 description        = newDiscountForm.description.data,
                 start_at           = newDiscountForm.start_at.data,
                 end_at             = newDiscountForm.end_at.data,
@@ -150,7 +147,7 @@ def update(discount_code):
 
     if request.method == 'POST' and updateDiscountForm.validate_on_submit():
         if Discount.update(
-            name        = updateDiscountForm.name.data,
+            code        = updateDiscountForm.code.data,
             description = updateDiscountForm.description.data,
             start_at    = updateDiscountForm.start_at.data,
             end_at      = updateDiscountForm.end_at.data

@@ -4,30 +4,25 @@ from wtforms.fields.html5 import DateField, IntegerRangeField
 
 class NewDiscountForm(Form):
     code = StringField('Code', validators=[
-        validators.DataRequired()
-    ])
-
-    name = StringField('Name', validators=[
-        validators.DataRequired()
+        validators.DataRequired("The field {Code} is required.")
     ])
 
     description = StringField('Description', validators=[
-        validators.DataRequired()
+        validators.DataRequired("The field {Description} is required.")
     ])
 
     start_at = DateField('Start At', validators=[
-        validators.DataRequired()
+        validators.DataRequired("The field {Start At} is required.")
     ])
 
     end_at = DateField('End At', validators=[
-        validators.DataRequired()
+        validators.DataRequired("The field {End At} is required.")
     ])
 
     submit = SubmitField('Submit')
 
     def initData(self, discount):
         self.code.data        = discount.discount_code
-        self.name.data        = discount.name
         self.description.data = discount.description
         self.start_at.data    = discount.start_at
         self.end_at.data      = discount.end_at

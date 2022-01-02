@@ -35,13 +35,8 @@
             {{ updateDiscountForm.hidden_tag() }}
 
             <div class="form-floating my-3">
-                {{ updateDiscountForm.code(class="form-control", placeholder='Code', disabled=True) }}
+                {{ updateDiscountForm.code(class="form-control", placeholder='Code') }}
                 {{ updateDiscountForm.code.label() }}
-            </div>
-
-            <div class="form-floating my-3">
-                {{ updateDiscountForm.name(class="form-control", placeholder='Name') }}
-                {{ updateDiscountForm.name.label() }}
             </div>
 
             <div class="form-floating my-3">
