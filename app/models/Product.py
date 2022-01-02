@@ -8,7 +8,7 @@ class Product(db.Model):
 
     product_id    = db.Column(db.Integer, primary_key=True)
     category_id   = db.Column(db.Integer,   db.ForeignKey('product_category.category_id'),   nullable=False)
-    discount_code = db.Column(db.String(8), db.ForeignKey('product_discount.discount_code'), nullable=True)
+    discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), nullable=True)
     comments      = db.relationship('Comment', backref='product')
 
     name        = db.Column(db.String(63),  nullable=False)

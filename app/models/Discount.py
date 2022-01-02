@@ -5,6 +5,7 @@ class Discount(db.Model):
     __tablename__ = 'discount'
 
     discount_code = db.Column(db.String(8), primary_key=True)
+    product_id    = db.relationship('Product', backref='discount')
 
     description      = db.Column(db.String(255), nullable=True)
     type             = db.Column(db.String(255), nullable=False)
@@ -43,10 +44,17 @@ class Discount(db.Model):
     def getByType(type):
         return Discount.query.filter_by(type=type).all()
 
+    @staticmethod
+    def count():
+        return Discount.query.count()
+
+    @staticmethod
+    def countByType(type):
+        return Discount.query.filter_by(type=type).count()
+
     def __repr__(self):
         return '<Discount {}, {}, {}, {}, {}, {}>'.format(
             self.discount_code,
-            self.name,
             self.description,
             self.start_at,
             self.end_at,

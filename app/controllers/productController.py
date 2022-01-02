@@ -57,6 +57,7 @@ def index():
 
 
 
+@login_required
 def filterIndex(category_id):
     # access control
     if current_user.role != 'staff':
@@ -175,8 +176,8 @@ def details(product_id):
             return redirect(url_for('index.index'))
 
         category = ProductCategory.getByID(product.category_id)
+        discount = ProductDiscount.getByCode(product.discount_code)
         form = AddToCardForm()
-        discount = Discount.getByCode(product.discount_code)
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():

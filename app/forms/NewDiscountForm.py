@@ -1,11 +1,10 @@
+from app.models import Discount
 from flask_wtf import Form
 from wtforms import StringField, FloatField, SubmitField, validators, ValidationError
 from wtforms.fields.html5 import DateField, IntegerRangeField
 
 class NewDiscountForm(Form):
-    code = StringField('Code', validators=[
-        validators.DataRequired("The field {Code} is required.")
-    ])
+    code = StringField('Code')
 
     description = StringField('Description', validators=[
         validators.DataRequired("The field {Description} is required.")
