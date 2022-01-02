@@ -26,7 +26,7 @@ def index():
 
     else: products = Product.getAllJoinedProduct(True)
 
-    categoryCount = {category.name: ProductCategory.countTypeWithoutInactive(category.name) for category in categories}
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
 
     return render_template('index.html',
                             searchForm    = searchForm,
@@ -53,7 +53,7 @@ def filterIndex(category_id):
 
     else: products = Product.getAllJoinedProductByCategoryID(category_id, True)
     print(products)
-    categoryCount = {category.name: ProductCategory.countTypeWithoutInactive(category.name) for category in categories}
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
 
     return render_template('index.html',
                             searchForm    = searchForm,

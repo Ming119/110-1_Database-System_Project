@@ -41,14 +41,16 @@ def index():
 
         products = set(products_list)
 
-    else:
-        products = Product.getAllJoinedProduct()
+    else: products = Product.getAllJoinedProduct()
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
 
     return render_template('manageProduct.html',
                             searchForm      = searchForm,
                             newCategoryForm = newCategoryForm,
                             newProductForm  = newProductForm,
                             categories      = categories,
+                            categoryCount   = categoryCount,
                             products        = products
                         )
 
@@ -86,14 +88,16 @@ def filterIndex(category_id):
 
         products = set(products_list)
 
-    else:
-        products = Product.getAllJoinedProductByCategoryID(category_id)
+    else: products = Product.getAllJoinedProductByCategoryID(category_id)
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
 
     return render_template('manageProduct.html',
                             searchForm      = searchForm,
                             newCategoryForm = newCategoryForm,
                             newProductForm  = newProductForm,
                             categories      = categories,
+                            categoryCount   = categoryCount,
                             products        = products
                         )
 

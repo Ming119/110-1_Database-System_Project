@@ -49,14 +49,6 @@ class ProductCategory(db.Model):
         return ProductCategory.query.filter_by(is_active=True).all()
 
     @staticmethod
-    def countType(name):
-        return ProductCategory.query.filter_by(name=name).count()
-
-    @staticmethod
-    def countTypeWithoutInactive(name):
-        return ProductCategory.query.filter_by(name=name, is_active=True).count()
-
-    @staticmethod
     def getByID(category_id):
         return ProductCategory.query.filter_by(category_id=category_id).first()
 
