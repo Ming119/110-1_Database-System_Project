@@ -118,12 +118,18 @@ class Product(db.Model):
         ).all()
 
     @staticmethod
+    def count(is_active=None):
+        if is_active is None:
+            return Product.query.count()
+
+        return Product.query.filter_by(is_active=is_active).count()
+
+    @staticmethod
     def countProductByCategory(category_id, is_active=None):
         if is_active is None:
             return Product.query.filter_by(category_id=category_id).count()
 
         return Product.query.filter_by(category_id=category_id, is_active=is_active).count()
-
 
     @staticmethod
     def getByCategoryID(category_id):

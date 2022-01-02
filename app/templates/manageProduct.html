@@ -12,13 +12,24 @@
 
 {% block category %}
 <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">+ Add a new category</a>
-<a href="{{ url_for('product.index') }}" class="list-group-item list-group-item-action d-flex justify-content-between active">All Product
-    <span class="badge bg-secondary rounded-pill">0</span>
+{% if filter %}
+<a href="{{ url_for('product.index') }}" class="list-group-item list-group-item-action d-flex justify-content-between">All Product
+    <span class="badge bg-secondary rounded-pill">{{ categoryCount[0] }}</span>
 </a>
+{% else %}
+<a href="{{ url_for('product.index') }}" class="list-group-item list-group-item-action d-flex justify-content-between active">All Product
+    <span class="badge bg-secondary rounded-pill">{{ categoryCount[0] }}</span>
+</a>
+{% endif %}
+
 {% for category in categories %}
+{% if category.category_id == filter %}
+<li class="list-group-item list-group-item-action d-flex justify-content-between active">
+{% else %}
 <li class="list-group-item list-group-item-action d-flex justify-content-between">
+{% endif %}
     {% if category.category_id == filter %}
-    <a href="{{ url_for('product.filterIndex', category_id=category.category_id) }}" class="mute-link d-flex flex-fill justify-content-between active">{{ category.name }}
+    <a href="{{ url_for('product.filterIndex', category_id=category.category_id) }}" class="mute-link d-flex flex-fill justify-content-between text-white">{{ category.name }}
         <span class="badge bg-secondary rounded-pill">{{ categoryCount[category.category_id] }}</span>
     </a>
     {% else %}
@@ -26,6 +37,7 @@
         <span class="badge bg-secondary rounded-pill">{{ categoryCount[category.category_id] }}</span>
     </a>
     {% endif %}
+
     <div class="d-flex">
         {% if category.is_active %}
         <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('product.withholdCategory', category_id=category.category_id) }}"></a>
