@@ -1,7 +1,20 @@
 {% extends 'index.html' %}
 
+
+{% block breadcrumb %}
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('index.index') }}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="Home">Manage Product</li>
+    </ol>
+</nav>
+{% endblock %}
+
 {% block category %}
 <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#Modal_AddANewCategory">+ Add a new category</a>
+<a href="{{ url_for('product.index') }}" class="list-group-item list-group-item-action d-flex justify-content-between active">All Product
+    <span class="badge bg-secondary rounded-pill">0</span>
+</a>
 {% for category in categories %}
 <li class="list-group-item list-group-item-action d-flex justify-content-between">
     <a class="mute-link" href="{{ url_for('product.filterIndex', category_id=category.category_id) }}">{{ category.name }}</a>
