@@ -1,13 +1,13 @@
 from app.util import db
 from datetime import datetime
 from app.models.ProductCategory import ProductCategory
+from app.models.Discount import ProductDiscount
 
 class Product(db.Model):
     __tablename__ = 'product'
 
     product_id    = db.Column(db.Integer, primary_key=True)
     category_id   = db.Column(db.Integer,   db.ForeignKey('product_category.category_id'),   nullable=False)
-    # cart_id       = db.Column(db.Integer,   db.ForeignKey('shopping_cart.customer_id'),      nullable=True)
     discount_code = db.Column(db.String(8), db.ForeignKey('product_discount.discount_code'), nullable=True)
     comments      = db.relationship('Comment', backref='product')
 
@@ -60,6 +60,20 @@ class Product(db.Model):
     @staticmethod
     def getAllWithoutInactive():
         return Product.query.filter_by(is_active=True).all()
+
+    @staticmethod
+    def getAllJoinedProduct():
+        return db.session.query(
+            Product, ProductCategory, ProductDiscount
+        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==True).all()
+
+    @staticmethod
+    def getAllJoinedProductByCategoryID(category_id):
+        return db.session.query(
+            Product, ProductCategory, ProductDiscount
+        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+            Product.category_id==category_id, Product.is_active==True
+        ).all()
 
     @staticmethod
     def getByCategoryID(category_id):

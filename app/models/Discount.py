@@ -45,11 +45,12 @@ class Discount(db.Model):
         return Discount.query.filter_by(type=type).all()
 
     def __repr__(self):
-        return '<Discount %r>' % (
+        return '<Discount {}, {}, {}, {}, {}, {}>'.format(
             self.discount_code,
             self.name,
             self.description,
-            self.is_active,
+            self.start_at,
+            self.end_at,
             self.create_at,
             self.modified_at,
         )
@@ -104,7 +105,7 @@ class ProductDiscount(Discount):
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
     product_id    = db.relationship('Product', backref='product_discount')
 
-    discountPercentage = db.Column(db.Float(), nullable=False)
+    discountPercentage = db.Column(db.Integer, nullable=False)
 
     def update(self, name=None, description=None, start_at=None, end_at=None, discountPercentage=None):
         if super().update(name, description, start_at, end_at):
@@ -143,7 +144,7 @@ class OrderDiscount(Discount):
 
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
 
-    discountPercentage = db.Column(db.Float(), nullable=False)
+    discountPercentage = db.Column(db.Integer, nullable=False)
     atLeastAmount      = db.Column(db.Float(), nullable=False)
 
     def update(self, name=None, description=None, start_at=None, end_at=None, discountPercentage=None, atLeastAmount=None):

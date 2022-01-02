@@ -6,9 +6,15 @@
         <div id="category-list" class="list-group">
             {% block category %}
             {% for category in categories %}
+            {% if category.category_id == filter %}
+            <a href="{{ url_for('index.filterIndex', category_id=category.category_id) }}" class="list-group-item list-group-item-action d-flex justify-content-between active">{{ category.name }}
+                <span class="badge bg-secondary rounded-pill">0</span>
+            </a>
+            {% else %}
             <a href="{{ url_for('index.filterIndex', category_id=category.category_id) }}" class="list-group-item list-group-item-action d-flex justify-content-between">{{ category.name }}
                 <span class="badge bg-secondary rounded-pill">0</span>
             </a>
+            {% endif %}
             {% endfor %}
             {% endblock %}
         </div>
@@ -16,29 +22,35 @@
 
     <div class="col-9">
         <div class="mb-3">
-            {{ wtf.quick_form(searchForm) }}
+            <form action="" method="post" class="form" role="form">
+                {{ searchForm.hidden_tag() }}
+                <div class="form-floating">
+                    {{ searchForm.search(class="form-control", placeholder='search') }}
+                    {{ searchForm.search.label() }}
+                </div>
+            </form>
         </div>
         <div id="product-list" class='row row-cols-3'>
             {% block product %}{% endblock %}
             {% for product in products %}
             <div class="col">
                 <div class="card shadow-sm">
-                    <a class='mute-link' href='{{ url_for('product.details', product_id=product.product_id) }}'>
-                        <!-- <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: " preserveAspectRatio="xMidYMid slice" focusable="false">
-                            <title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
-                        </svg> -->
-
+                    <a class='mute-link' href="{{ url_for('product.details', product_id=product.Product.product_id) }}">
                         <div class="bd-placeholder-img card-img-top" width="100%" height="225">
-                            <img src="{{ product.image_url }}"/>
+                            <img src="{{ product.Product.image_url }}" />
                         </div>
                         <div class="card-body">
-                            <p class="card-text">{{ product.name }}</p>
+                            <p class="card-text">{{ product.Product.name }}</p>
+                            <p class="card-text">{{ product.Product.description }}</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">{{ product.category_id }}</button>
-                                </div>
-                                <small class="text-muted">${{ product.price }}</small>
+                                {% if product.ProductDiscount is not none %}
+                                <small class="text-muted"><del>${{ product.Product.price }}</del></small>
+                                <small class="text-success">${{ product.Product.price * (1-product.ProductDiscount.discountPercentage/100) }}</small>
+                                <small class="text-success">{{ product.ProductDiscount.discountPercentage }}% off</small>
+                                {% else %}
+                                <small class="text-muted">${{ product.Product.price }}</small>
+                                {% endif %}
+                                <a type="button" class="btn btn-sm btn-outline-secondary" href="{{ url_for('index.filterIndex', category_id=product.ProductCategory.category_id) }}">{{ product.ProductCategory.name }}</a>
                             </div>
                         </div>
                     </a>

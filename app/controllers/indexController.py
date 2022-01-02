@@ -24,7 +24,7 @@ def index():
             products_list.extend(Product.query.filter(Product.description.contains(word)).all())
         products = set(products_list)
 
-    else: products = Product.getAllWithoutInactive()
+    else: products = Product.getAllJoinedProduct()
 
     return render_template('index.html',
                             searchForm = searchForm,
@@ -48,12 +48,13 @@ def filterIndex(category_id):
             products_list.extend(Product.query.filter(Product.description.contains(word), Product.category_id==category_id).all())
         products = set(products_list)
 
-    else: products = Product.getByCategoryIDWithoutInactive(category_id)
+    else: products = Product.getAllJoinedProductByCategoryID(category_id)
 
     return render_template('index.html',
                             searchForm = searchForm,
                             categories = categories,
-                            products   = products
+                            products   = products,
+                            filter     = category_id,
                         )
 
 

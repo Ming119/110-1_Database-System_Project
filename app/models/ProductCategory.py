@@ -86,11 +86,11 @@ class ProductCategory(db.Model):
         return [category for category in categoryList if category.is_active]
 
     def __repr__(self):
-        return '<Category %r>' % (
+        return '<Category {}, {}, {}, {}, {}, {}>'.format(
             self.category_id,
             self.name,
             self.description,
             self.is_active,
             self.create_at,
-            self.modified_at,
+            self.modified_at
         )
