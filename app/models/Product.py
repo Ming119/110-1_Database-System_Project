@@ -62,30 +62,60 @@ class Product(db.Model):
         return Product.query.filter_by(is_active=True).all()
 
     @staticmethod
-    def getAllJoinedProduct():
-        return db.session.query(
-            Product, ProductCategory, ProductDiscount
-        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==True).all()
+    def getAllJoinedProduct(is_active=None):
+        if is_active is not None:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==is_active).all()
+        else:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).all()
 
     @staticmethod
-    def getAllJoinedProductContains(word):
-        return db.session.query(
-            Product, ProductCategory, ProductDiscount
-        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==True, Product.name.contains(word)).all()
+    def getAllJoinedProductByCategoryID(category_id, is_active=None):
+        if is_active is not None:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+                Product.category_id==category_id, Product.is_active==is_active
+            ).all()
+        else:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+                Product.category_id==category_id
+            ).all()
 
     @staticmethod
-    def getAllJoinedProductByCategoryID(category_id):
-        return db.session.query(
-            Product, ProductCategory, ProductDiscount
-        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
-            Product.category_id==category_id, Product.is_active==True
-        ).all()
+    def getAllJoinedProductContains(word, is_active=None):
+        if is_active is not None:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+                Product.name.contains(word), Product.is_active==is_active
+            ).all()
+        else:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+                Product.name.contains(word)
+            ).all()
 
     @staticmethod
-    def getAllJoinedProductByCategoryIDContains(category_id, word):
-        return db.session.query(
-            Product, ProductCategory, ProductDiscount
-        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.category_id==category_id, Product.is_active==True, Product.name.contains(word)).all()
+    def getAllJoinedProductByCategoryIDContains(category_id, word, is_active=None):
+        if is_active is not None:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+                Product.category_id==category_id, Product.name.contains(word), Product.is_active==is_active
+            ).all()
+        else:
+            return db.session.query(
+                Product, ProductCategory, ProductDiscount
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+                Product.category_id==category_id, Product.name.contains(word)
+            ).all()
 
     @staticmethod
     def getByCategoryID(category_id):

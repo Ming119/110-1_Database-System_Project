@@ -36,13 +36,13 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word)).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word)).all())
+            products_list.extend(Product.getAllJoinedProductContains(word))
+            products_list.extend(Product.getAllJoinedProductContains(word))
 
         products = set(products_list)
 
     else:
-        products = Product.getAll()
+        products = Product.getAllJoinedProduct()
 
     return render_template('manageProduct.html',
                             searchForm      = searchForm,
@@ -81,13 +81,13 @@ def filterIndex(category_id):
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word), Product.category_id==category_id).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word), Product.category_id==category_id).all())
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
 
         products = set(products_list)
 
     else:
-        products = Product.getByCategoryID(category_id)
+        products = Product.getAllJoinedProductByCategoryID(category_id)
 
     return render_template('manageProduct.html',
                             searchForm      = searchForm,

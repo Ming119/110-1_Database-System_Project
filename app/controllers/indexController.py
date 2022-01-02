@@ -20,11 +20,11 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.getAllJoinedProductContains(word))
-            products_list.extend(Product.getAllJoinedProductContains(word))
+            products_list.extend(Product.getAllJoinedProductContains(word, True))
+            products_list.extend(Product.getAllJoinedProductContains(word, True))
         products = set(products_list)
 
-    else: products = Product.getAllJoinedProduct()
+    else: products = Product.getAllJoinedProduct(True)
 
     categoryCount = {category.name: ProductCategory.countTypeWithoutInactive(category.name) for category in categories}
 
@@ -47,11 +47,11 @@ def filterIndex(category_id):
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
-            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word, True))
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word, True))
         products = set(products_list)
 
-    else: products = Product.getAllJoinedProductByCategoryID(category_id)
+    else: products = Product.getAllJoinedProductByCategoryID(category_id, True)
     print(products)
     categoryCount = {category.name: ProductCategory.countTypeWithoutInactive(category.name) for category in categories}
 

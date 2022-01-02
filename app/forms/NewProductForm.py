@@ -60,6 +60,6 @@ class NewProductForm(Form):
             raise ValidationError("Quantity should not be negative.")
 
     def validate_discount(self, field):
-        if field.data != '' and Discount.query.filter_by(discount_code=field.data).first() is None:
+        if (field.data != '' and field.data != 'None') and Discount.query.filter_by(discount_code=field.data).first() is None:
             flash(f'Discount Code not found.', 'warning')
             raise ValidationError("Discount Code not found.")
