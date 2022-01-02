@@ -68,12 +68,24 @@ class Product(db.Model):
         ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==True).all()
 
     @staticmethod
+    def getAllJoinedProductContains(word):
+        return db.session.query(
+            Product, ProductCategory, ProductDiscount
+        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==True, Product.name.contains(word)).all()
+
+    @staticmethod
     def getAllJoinedProductByCategoryID(category_id):
         return db.session.query(
             Product, ProductCategory, ProductDiscount
         ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
             Product.category_id==category_id, Product.is_active==True
         ).all()
+
+    @staticmethod
+    def getAllJoinedProductByCategoryIDContains(category_id, word):
+        return db.session.query(
+            Product, ProductCategory, ProductDiscount
+        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.category_id==category_id, Product.is_active==True, Product.name.contains(word)).all()
 
     @staticmethod
     def getByCategoryID(category_id):

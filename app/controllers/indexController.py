@@ -20,16 +20,19 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word)).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word)).all())
+            products_list.extend(Product.getAllJoinedProductContains(word))
+            products_list.extend(Product.getAllJoinedProductContains(word))
         products = set(products_list)
 
     else: products = Product.getAllJoinedProduct()
 
+    categoryCount = {category.name: ProductCategory.countTypeWithoutInactive(category.name) for category in categories}
+
     return render_template('index.html',
-                            searchForm = searchForm,
-                            categories = categories,
-                            products   = products
+                            searchForm    = searchForm,
+                            categories    = categories,
+                            categoryCount = categoryCount,
+                            products      = products
                         )
 
 
@@ -44,17 +47,20 @@ def filterIndex(category_id):
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word), Product.category_id==category_id).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word), Product.category_id==category_id).all())
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
         products = set(products_list)
 
     else: products = Product.getAllJoinedProductByCategoryID(category_id)
+    print(products)
+    categoryCount = {category.name: ProductCategory.countTypeWithoutInactive(category.name) for category in categories}
 
     return render_template('index.html',
-                            searchForm = searchForm,
-                            categories = categories,
-                            products   = products,
-                            filter     = category_id,
+                            searchForm    = searchForm,
+                            categories    = categories,
+                            categoryCount = categoryCount,
+                            products      = products,
+                            filter        = category_id,
                         )
 
 
