@@ -194,6 +194,8 @@ def changePassword(user_id):
 
     return render_template("resetPassword.html", form=form)
 
+
+
 # activate an user
 # GET method to activate the user
 #   :param: user_id
@@ -231,3 +233,19 @@ def deactivate(user_id):
         flash(f'Deactivate profile failed.', 'warning')
 
     return redirect(url_for('user.index'))
+
+
+
+
+@login_required
+def addAddress(user_id):
+    if current_user.role != 'admin' and current_user.user_id != user_id:
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    addAddressForm = AddAddressForm()
+
+    if request.method == 'POST' and addAddressForm.validate_on_submit():
+        pass
+
+    return render_template('addAddress.html', addAddressForm=addAddressForm)

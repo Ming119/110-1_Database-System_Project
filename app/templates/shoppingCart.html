@@ -89,7 +89,7 @@
                     </label>
                 </li>
                 {% endfor %}
-                <a class="mute-link list-group-item" href="#">+ Add a new address</a>
+                <a class="mute-link list-group-item" href="{{ url_for('user.addAddress', user_id=user_id) }}">+ Add a new address</a>
             </ul>
 
             <!-- <div class="row g-3">

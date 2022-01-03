@@ -262,5 +262,6 @@ def shoppingCart(user_id):
                             items            = items,
                             quantity         = quantity,
                             amount           = amount,
-                            shippingDiscount = shippingDiscount
+                            shippingDiscount = shippingDiscount,
+                            user_id          = user_id
                         )
