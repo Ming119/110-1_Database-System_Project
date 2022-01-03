@@ -6,5 +6,4 @@ bp = Blueprint('discount', __name__, url_prefix='/discount')    # DMS path prefi
 bp.route('/', methods=['GET'])(index)                           # Index page of DMS
 bp.route('/create', methods=['GET', 'POST'])(create)            # Create
 bp.route('/<discount_code>', methods=['GET'])(details)          # Read
-bp.route('/update/<discount_code>', methods=['GET'])(update)    # Update
-bp.route('/delete/<discount_code>', methods=['GET'])(delete)    # Delete
+bp.route('/update/<discount_code>', methods=['GET', 'POST'])(update)    # Update
