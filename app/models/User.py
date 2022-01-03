@@ -65,20 +65,18 @@ class User(db.Model, UserMixin):
         except: return False
 
     @staticmethod
-    def getAll():
+    def getAll(is_active=None):
+        if is_active:
+            return User.query.filter_by(is_active=True).all()
+
         return User.query.all()
 
     @staticmethod
-    def getAllWithoutInactive():
-        return User.query.filter_by(is_active=True).all()
+    def getByID(user_id, is_active=None):
+        if is_active:
+            return User.query.filter_by(user_id=user_id, is_active=is_active).first()
 
-    @staticmethod
-    def getByID(user_id):
         return User.query.filter_by(user_id=user_id).first()
-
-    @staticmethod
-    def getByIDWithInactive(user_id):
-        return User.query.filter(User.user_id==user_id).first()
 
     @staticmethod
     def getByEmail(email):

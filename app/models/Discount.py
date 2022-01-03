@@ -47,12 +47,11 @@ class Discount(db.Model):
         return Discount.query.filter_by(type=type).all()
 
     @staticmethod
-    def count():
-        return Discount.query.count()
+    def count(type=None):
+        if type:
+            return Discount.query.filter_by(type=type).count()
 
-    @staticmethod
-    def countByType(type):
-        return Discount.query.filter_by(type=type).count()
+        return Discount.query.count()
 
     def __repr__(self):
         return '<Discount {}, {}, {}, {}, {}, {}>'.format(
