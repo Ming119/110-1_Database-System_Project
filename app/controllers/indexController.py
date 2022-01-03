@@ -1,7 +1,7 @@
 from app.models import *
 from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
 from app.emailHelper import send_mail
 
@@ -231,3 +231,21 @@ def resetPassword(token):
         return redirect(url_for('index.login'))
 
     return render_template('resetPassword.html', form=form)
+
+
+
+@login_required
+def shoppingCart():
+    items = CartItem.query.join(
+                Product, CartItem.product_id==Product.product_id
+            ).add_columns(
+                CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price
+            ).all()
+
+    quantity = 0
+    amount = 0
+    for item in items:
+        quantity += item.quantity
+        amount   += item.amount
+
+    return render_template('shoppingCart.html', items=items, quantity=quantity, amount=amount)
