@@ -37,7 +37,7 @@
                 <span class="text-success">$0</span>
             </li>
             {% elif shippingDiscount %}
-            <li class="list-group-item d-flex justify-content-between lh-sm" id="shippingFee">
+            <li class="list-group-item d-flex justify-content-between lh-sm">
                 <div>
                     <h6 class="my-0">Shipping Fee</h6>
                     <small class="text-muted">5% of amount. <br/>${{ shippingDiscount.atLeastAmount - amount }} left to meet the free shipping amount.</small>
@@ -45,6 +45,13 @@
                 <span class="text-muted"></span>
             </li>
             {% else %}
+            <li class="list-group-item d-flex justify-content-between lh-sm" id="shippingFee">
+                <div>
+                    <h6 class="my-0">Shipping Fee</h6>
+                    <small class="text-muted">5% of amount.</small>
+                </div>
+                <span class="text-muted"></span>
+            </li>
             {% endif %}
             <!-- Discount Code -->
             <!-- <li class="list-group-item d-flex justify-content-between bg-light" id="discount">
