@@ -70,7 +70,7 @@
                 <i class="fa fa-star"></i>
             </div>
         </div>
-        {% if discount %}
+        {% if discount and discount.is_active() %}
         <div class="price d-flex flex-row align-items-center"><del>${{ product.price }}</del><span class="text-success ms-3">${{ product.price * (1-discount.discountPercentage/100) }}</span></div>
         {% else %}
         <div class="price d-flex flex-row align-items-center">${{ product.price }}</div>

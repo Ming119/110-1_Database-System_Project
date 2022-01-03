@@ -169,15 +169,40 @@ def update(discount_code):
         updateDiscountForm = NewOrderDiscountForm()
 
     if request.method == 'POST' and updateDiscountForm.validate_on_submit():
-        if discount.update(
-            description = updateDiscountForm.description.data,
-            start_at    = updateDiscountForm.start_at.data,
-            end_at      = updateDiscountForm.end_at.data
-        ):
-            flash(f'Successfully updated the discount', 'success')
+        if (discount.type == 'shipping'):
+            if discount.update(
+                description   = updateDiscountForm.description.data,
+                start_at      = updateDiscountForm.start_at.data,
+                end_at        = updateDiscountForm.end_at.data,
+                atLeastAmount = updateDiscountForm.atLeastAmount.data
+            ):
+                flash(f'Successfully updated the discount', 'success')
 
-        else:
-            flash(f'Error updating the discount', 'warning')
+            else:
+                flash(f'Error updating the discount', 'warning')
+        elif (discount.type == 'product'):
+            if discount.update(
+                description        = updateDiscountForm.description.data,
+                start_at           = updateDiscountForm.start_at.data,
+                end_at             = updateDiscountForm.end_at.data,
+                discountPercentage = updateDiscountForm.discountPercentage.data
+            ):
+                flash(f'Successfully updated the discount', 'success')
+
+            else:
+                flash(f'Error updating the discount', 'warning')
+        elif (discount.type == 'order'):
+            if discount.update(
+                description        = updateDiscountForm.description.data,
+                start_at           = updateDiscountForm.start_at.data,
+                end_at             = updateDiscountForm.end_at.data,
+                discountPercentage = updateDiscountForm.discountPercentage.data,
+                atLeastAmount      = updateDiscountForm.atLeastAmount.data
+            ):
+                flash(f'Successfully updated the discount', 'success')
+
+            else:
+                flash(f'Error updating the discount', 'warning')
 
     updateDiscountForm.initData(discount)
 

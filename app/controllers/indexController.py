@@ -235,17 +235,32 @@ def resetPassword(token):
 
 
 @login_required
-def shoppingCart():
-    items = CartItem.query.join(
-                Product, CartItem.product_id==Product.product_id
-            ).add_columns(
-                CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price
-            ).all()
+def shoppingCart(user_id):
+    if current_user.user_id != user_id:
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    # items = CartItem.query.join(
+    #             Product, CartItem.product_id==Product.product_id
+    #         ).add_columns(
+    #             CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price
+    #         ).filter(CartItem.cart_id==user_id).all()
+    items = CartItem.getAllJoinedItems(user_id)
 
     quantity = 0
     amount = 0
     for item in items:
         quantity += item.quantity
-        amount   += item.amount
+        if item.discountPercentage:
+            amount += item.amount * (1-item.discountPercentage/100)
+        else:
+            amount += item.amount
 
-    return render_template('shoppingCart.html', items=items, quantity=quantity, amount=amount)
+    shippingDiscount = ShippingDiscount.getActive()
+
+    return render_template('shoppingCart.html',
+                            items            = items,
+                            quantity         = quantity,
+                            amount           = amount,
+                            shippingDiscount = shippingDiscount
+                        )

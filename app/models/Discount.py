@@ -31,6 +31,8 @@ class Discount(db.Model):
 
         except: return False
 
+    def is_active(self):
+        return ((self.start_at < datetime.now()) and (self.end_at > datetime.now()))
 
     @staticmethod
     def getAll():
@@ -99,6 +101,10 @@ class ShippingDiscount(Discount):
             return True
 
         except: return False
+
+    @staticmethod
+    def getActive():
+        return ShippingDiscount.query.filter(Discount.start_at<datetime.now(), Discount.end_at>datetime.now()).order_by(ShippingDiscount.atLeastAmount).first()
 
 
 
