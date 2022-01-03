@@ -92,6 +92,13 @@ class User(db.Model, UserMixin):
     def getByRole(role):
         return User.query.filter(User.role==role).all()
 
+    @staticmethod
+    def count(type=None):
+        if type:
+            return User.query.filter_by(role=type).count()
+
+        return User.query.count()
+
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
                     self.user_id,
