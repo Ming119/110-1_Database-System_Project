@@ -82,11 +82,11 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def getByEmail(email):
-        return User.query.filter(email==email).first()
+        return User.query.filter_by(email=email).first()
 
     @staticmethod
     def getByUsername(username):
-        return User.query.filter(username==username).first()
+        return User.query.filter_by(username=username).first()
 
     @staticmethod
     def getByRole(role):

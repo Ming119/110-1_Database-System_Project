@@ -16,7 +16,14 @@
 
                     <small class="text-muted">{{ item.description }}</small>
                 </div>
+                {% if item.discountPercentage %}
+                <div>
+                    <span class="text-success">${{ item.amount * (1-item.discountPercentage/100)}}</span>
+                    <span class="text-muted"><del>${{ item.amount }}</del></span>
+                </div>
+                {% else %}
                 <span class="text-muted">${{ item.amount }}</span>
+                {% endif %}
             </li>
             {% endfor %}
 
