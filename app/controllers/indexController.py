@@ -1,7 +1,7 @@
 from app.models import *
 from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
 from app.emailHelper import send_mail
 
@@ -11,7 +11,7 @@ from app.emailHelper import send_mail
 # GET method to render index page
 # POST method for search function
 def index():
-    categories = ProductCategory.getAll()
+    categories = ProductCategory.getAllWithoutInactive()
     searchForm = SearchForm()
 
     # Search
@@ -20,22 +20,26 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word)).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word)).all())
+            products_list.extend(Product.getAllJoinedProductContains(word, True))
+            products_list.extend(Product.getAllJoinedProductContains(word, True))
         products = set(products_list)
 
-    else: products = Product.getAllWithoutInactive()
+    else: products = Product.getAllJoinedProduct(True)
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
+    categoryCount[0] = Product.count(True)
 
     return render_template('index.html',
-                            searchForm = searchForm,
-                            categories = categories,
-                            products   = products
+                            searchForm    = searchForm,
+                            categories    = categories,
+                            categoryCount = categoryCount,
+                            products      = products
                         )
 
 
 
 def filterIndex(category_id):
-    categories = ProductCategory.getAll()
+    categories = ProductCategory.getAllWithoutInactive()
     searchForm = SearchForm()
 
     # Search
@@ -44,16 +48,21 @@ def filterIndex(category_id):
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word), Product.category_id==category_id).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word), Product.category_id==category_id).all())
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word, True))
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word, True))
         products = set(products_list)
 
-    else: products = Product.getByCategoryIDWithoutInactive(category_id)
+    else: products = Product.getAllJoinedProductByCategoryID(category_id, True)
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
+    categoryCount[0] = Product.count(True)
 
     return render_template('index.html',
-                            searchForm = searchForm,
-                            categories = categories,
-                            products   = products
+                            searchForm    = searchForm,
+                            categories    = categories,
+                            categoryCount = categoryCount,
+                            products      = products,
+                            filter        = category_id,
                         )
 
 
@@ -222,3 +231,21 @@ def resetPassword(token):
         return redirect(url_for('index.login'))
 
     return render_template('resetPassword.html', form=form)
+
+
+
+@login_required
+def shoppingCart():
+    items = CartItem.query.join(
+                Product, CartItem.product_id==Product.product_id
+            ).add_columns(
+                CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price
+            ).all()
+
+    quantity = 0
+    amount = 0
+    for item in items:
+        quantity += item.quantity
+        amount   += item.amount
+
+    return render_template('shoppingCart.html', items=items, quantity=quantity, amount=amount)

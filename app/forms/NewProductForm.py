@@ -26,19 +26,28 @@ class NewProductForm(Form):
 
     category = SelectField('Category')
 
-    discount = StringField('Discount Code')
+    discount = SelectField('Discount Code')
 
     productSubmit = SubmitField('Submit')
 
-    def __init__(self, categories, product=None, *arg, **kwargs):
+    def __init__(self, categories, discounts, product=None, *arg, **kwargs):
         super(NewProductForm, self).__init__(*arg, **kwargs)
         self.category.choices = [(category.category_id, category.name) for category in categories]
+        self.discount.choices = [(None, None)]
+        self.discount.choices.extend([(discount.discount_code, discount.discount_code) for discount in discounts])
         if product is not None:
-            self.productName        = product.name
-            self.productDescription = product.description
-            self.price              = product.price
-            self.quantity           = product.quantity
-            self.category           = product.category_id
+            self.initProductData(product)
+
+    def initProductData(self, product):
+        self.category.default = product.category_id
+        self.discount.default = product.discount_code
+        self.process()
+
+        self.productName.data        = product.name
+        self.productDescription.data = product.description
+        self.image_url.data          = product.image_url
+        self.price.data              = product.price
+        self.quantity.data           = product.quantity
 
     def validate_price(self, field):
         if field.data < 0:
@@ -49,8 +58,3 @@ class NewProductForm(Form):
         if field.data < 0:
             flash(f'Quantity should not be negative.', 'warning')
             raise ValidationError("Quantity should not be negative.")
-
-    def validate_discount(self, field):
-        if field.data != '' and Discount.query.filter_by(code=field.data).first() is None:
-            flash(f'Discount Code not found.', 'warning')
-            raise ValidationError("Discount Code not found.")

@@ -57,6 +57,13 @@ class User(db.Model, UserMixin):
             return True
         except: return False
 
+    def changePassword(self, password):
+        try:
+            self.password = password
+            db.session.commit()
+            return True
+        except: return False
+
     @staticmethod
     def getAll():
         return User.query.all()

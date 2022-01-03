@@ -33,7 +33,7 @@ def index():
 
 
 @login_required
-def filter_index(role):
+def filterIndex(role):
     if current_user.role != 'admin':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
@@ -175,6 +175,24 @@ def update(user_id):
             );
 
 
+
+def changePassword(user_id):
+    if current_user.role != 'admin' and current_user.user_id != user_id:
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    form = ResetPasswordForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user = User.getByID(user_id)
+        if user.changePassword(form.password):
+            flash(f'Password changed', 'success')
+
+        else:
+            flash(f'Change password failed', 'warning')
+
+        return redirect(url_for('user.profile', user_id=user.user_id))
+
+    return render_template("resetPassword.html", form=form)
 
 # activate an user
 # GET method to activate the user
