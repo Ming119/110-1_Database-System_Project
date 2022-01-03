@@ -31,6 +31,8 @@ class Discount(db.Model):
 
         except: return False
 
+    def is_active(self):
+        return ((self.start_at < datetime.now()) and (self.end_at > datetime.now()))
 
     @staticmethod
     def getAll():

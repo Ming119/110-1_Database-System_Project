@@ -34,7 +34,7 @@
             {{ newDiscountForm.hidden_tag() }}
 
             <div class="form-floating my-3">
-                {{ newDiscountForm.code(class="form-control", placeholder='Code') }}
+                {{ newDiscountForm.code(class="form-control", placeholder='Code', required=True) }}
                 {{ newDiscountForm.code.label() }}
             </div>
 

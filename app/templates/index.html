@@ -62,7 +62,7 @@
                             <p class="card-text">{{ product.Product.name }}</p>
                             <p class="card-text">{{ product.Product.description }}</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                {% if product.ProductDiscount is not none %}
+                                {% if product.ProductDiscount is not none and product.ProductDiscount.is_active() %}
                                 <small class="text-muted"><del>${{ product.Product.price }}</del></small>
                                 <small class="text-success">${{ product.Product.price * (1-product.ProductDiscount.discountPercentage/100) }}</small>
                                 <small class="text-success">{{ product.ProductDiscount.discountPercentage }}% off</small>
