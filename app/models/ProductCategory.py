@@ -6,7 +6,6 @@ class ProductCategory(db.Model):
 
     category_id   = db.Column(db.Integer, primary_key=True)
     product_id    = db.relationship('Product', backref='product_category')
-    # discount_code = db.Column(db.String(8), db.ForeignKey('category_discount.discount_code'), nullable=True)
 
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)
@@ -86,11 +85,11 @@ class ProductCategory(db.Model):
         return [category for category in categoryList if category.is_active]
 
     def __repr__(self):
-        return '<Category %r>' % (
+        return '<Category {}, {}, {}, {}, {}, {}>'.format(
             self.category_id,
             self.name,
             self.description,
             self.is_active,
             self.create_at,
-            self.modified_at,
+            self.modified_at
         )

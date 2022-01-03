@@ -5,8 +5,8 @@ class Discount(db.Model):
     __tablename__ = 'discount'
 
     discount_code = db.Column(db.String(8), primary_key=True)
+    product_id    = db.relationship('Product', backref='discount')
 
-    name             = db.Column(db.String(64),  nullable=False)
     description      = db.Column(db.String(255), nullable=True)
     type             = db.Column(db.String(255), nullable=False)
 
@@ -20,9 +20,9 @@ class Discount(db.Model):
         'polymorphic_on':type
     }
 
-    def update(self, name=None, description=None, start_at=None, end_at=None):
+    def update(self, code=None, description=None, start_at=None, end_at=None):
         try:
-            self.name = name or self.name
+            self.discount_code = code or self.discount_code
             self.description = description or self.description
             self.start_at = start_at or self.start_at
             self.end_at = end_at or self.end_at
@@ -44,12 +44,20 @@ class Discount(db.Model):
     def getByType(type):
         return Discount.query.filter_by(type=type).all()
 
+    @staticmethod
+    def count():
+        return Discount.query.count()
+
+    @staticmethod
+    def countByType(type):
+        return Discount.query.filter_by(type=type).count()
+
     def __repr__(self):
-        return '<Discount %r>' % (
+        return '<Discount {}, {}, {}, {}, {}, {}>'.format(
             self.discount_code,
-            self.name,
             self.description,
-            self.is_active,
+            self.start_at,
+            self.end_at,
             self.create_at,
             self.modified_at,
         )
@@ -66,8 +74,8 @@ class ShippingDiscount(Discount):
 
     atLeastAmount = db.Column(db.Float(), nullable=False)
 
-    def update(self, name=None, description=None, start_at=None, end_at=None, atLeastAmount=None):
-        if super().update(name, description, start_at, end_at):
+    def update(self, code=None, description=None, start_at=None, end_at=None, atLeastAmount=None):
+        if super().update(code, description, start_at, end_at):
             try:
                 self.atLeastAmount = atLeastAmount or self.atLeastAmount
                 db.session.commit()
@@ -77,11 +85,10 @@ class ShippingDiscount(Discount):
         return False
 
     @staticmethod
-    def create(discount_code, name, start_at, end_at, atLeastAmount, description=None, type='shipping'):
+    def create(discount_code, start_at, end_at, atLeastAmount, description=None, type='shipping'):
         try:
             db.session.add(ShippingDiscount(
                 discount_code = discount_code,
-                name          = name,
                 description   = description,
                 type          = type,
                 start_at      = start_at,
@@ -104,10 +111,10 @@ class ProductDiscount(Discount):
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
     product_id    = db.relationship('Product', backref='product_discount')
 
-    discountPercentage = db.Column(db.Float(), nullable=False)
+    discountPercentage = db.Column(db.Integer, nullable=False)
 
-    def update(self, name=None, description=None, start_at=None, end_at=None, discountPercentage=None):
-        if super().update(name, description, start_at, end_at):
+    def update(self, code=None, description=None, start_at=None, end_at=None, discountPercentage=None):
+        if super().update(code, description, start_at, end_at):
             try:
                 self.discountPercentage = discountPercentage or self.discountPercentage
                 db.session.commit()
@@ -117,11 +124,10 @@ class ProductDiscount(Discount):
         return False
 
     @staticmethod
-    def create(discount_code, name, start_at, end_at, discountPercentage, description=None, type='product'):
+    def create(discount_code, start_at, end_at, discountPercentage, description=None, type='product'):
         try:
             db.session.add(ProductDiscount(
                 discount_code      = discount_code,
-                name               = name,
                 description        = description,
                 type               = type,
                 start_at           = start_at,
@@ -143,11 +149,11 @@ class OrderDiscount(Discount):
 
     discount_code = db.Column(db.String(8), db.ForeignKey('discount.discount_code'), primary_key=True)
 
-    discountPercentage = db.Column(db.Float(), nullable=False)
+    discountPercentage = db.Column(db.Integer, nullable=False)
     atLeastAmount      = db.Column(db.Float(), nullable=False)
 
-    def update(self, name=None, description=None, start_at=None, end_at=None, discountPercentage=None, atLeastAmount=None):
-        if super().update(name, description, start_at, end_at):
+    def update(self, code=None, description=None, start_at=None, end_at=None, discountPercentage=None, atLeastAmount=None):
+        if super().update(code, description, start_at, end_at):
             try:
                 self.discountPercentage = discountPercentage or self.discountPercentage
                 self.atLeastAmount = atLeastAmount or self.atLeastAmount
@@ -158,11 +164,10 @@ class OrderDiscount(Discount):
         return False
 
     @staticmethod
-    def create(discount_code, name, start_at, end_at, discountPercentage, atLeastAmount, description=None, type='order'):
+    def create(discount_code, start_at, end_at, discountPercentage, atLeastAmount, description=None, type='order'):
         try:
             db.session.add(OrderDiscount(
                 discount_code      = discount_code,
-                name               = name,
                 description        = description,
                 type               = type,
                 start_at           = start_at,

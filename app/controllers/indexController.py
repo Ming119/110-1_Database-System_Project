@@ -20,16 +20,20 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word)).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word)).all())
+            products_list.extend(Product.getAllJoinedProductContains(word, True))
+            products_list.extend(Product.getAllJoinedProductContains(word, True))
         products = set(products_list)
 
-    else: products = Product.getAllWithoutInactive()
+    else: products = Product.getAllJoinedProduct(True)
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
+    categoryCount[0] = Product.count(True)
 
     return render_template('index.html',
-                            searchForm = searchForm,
-                            categories = categories,
-                            products   = products
+                            searchForm    = searchForm,
+                            categories    = categories,
+                            categoryCount = categoryCount,
+                            products      = products
                         )
 
 
@@ -44,16 +48,21 @@ def filterIndex(category_id):
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word), Product.category_id==category_id).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word), Product.category_id==category_id).all())
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word, True))
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word, True))
         products = set(products_list)
 
-    else: products = Product.getByCategoryIDWithoutInactive(category_id)
+    else: products = Product.getAllJoinedProductByCategoryID(category_id, True)
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id, True) for category in categories}
+    categoryCount[0] = Product.count(True)
 
     return render_template('index.html',
-                            searchForm = searchForm,
-                            categories = categories,
-                            products   = products
+                            searchForm    = searchForm,
+                            categories    = categories,
+                            categoryCount = categoryCount,
+                            products      = products,
+                            filter        = category_id,
                         )
 
 

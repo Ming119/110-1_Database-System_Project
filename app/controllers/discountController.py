@@ -20,14 +20,23 @@ def index():
         discount_list = list()
         for word in words:
             discount_list.extend(Discount.query.filter(Discount.discount_code.contains(word)).all())
-            discount_list.extend(Discount.query.filter(Discount.name.contains(word)).all())
             discount_list.extend(Discount.query.filter(Discount.description.contains(word)).all())
 
         discounts = set(discount_list)
 
     else: discounts = Discount.getAll()
 
-    return render_template('manageDiscount.html', searchForm=searchForm, discounts=discounts)
+    discountCount = {'all': Discount.count(),
+                     'product': Discount.countByType('product'),
+                     'shipping': Discount.countByType('shipping'),
+                     'order': Discount.countByType('order'),
+                    }
+
+    return render_template('manageDiscount.html',
+                            searchForm    = searchForm,
+                            discounts     = discounts,
+                            discountCount = discountCount
+                        )
 
 
 
@@ -45,14 +54,24 @@ def filterIndex(type):
         discount_list = list()
         for word in words:
             discount_list.extend(Discount.query.filter(Discount.discount_code.contains(word), Discount.type==type).all())
-            discount_list.extend(Discount.query.filter(Discount.name.contains(word), Discount.type==type).all())
             discount_list.extend(Discount.query.filter(Discount.description.contains(word), Discount.type==type).all())
 
         discounts = set(discount_list)
 
     else: discounts = Discount.getByType(type)
 
-    return render_template('manageDiscount.html', searchForm=searchForm, discounts=discounts)
+    discountCount = {'all': Discount.count(),
+                     'product': Discount.countByType('product'),
+                     'shipping': Discount.countByType('shipping'),
+                     'order': Discount.countByType('order'),
+                    }
+
+    return render_template('manageDiscount.html',
+                            searchForm    = searchForm,
+                            discounts     = discounts,
+                            discountCount = discountCount,
+                            filter        = type
+                        )
 
 
 
@@ -71,10 +90,13 @@ def create(type):
         newDiscountForm = NewOrderDiscountForm()
 
     if request.method == 'POST' and newDiscountForm.validate_on_submit():
+        if newDiscountForm.code.data == '':
+            flash(f'Code field is required', 'warning')
+            return redirect(url_for('discount.create', type=type))
+
         if type == 'shipping':
             if ShippingDiscount.create(
                 discount_code = newDiscountForm.code.data,
-                name          = newDiscountForm.name.data,
                 description   = newDiscountForm.description.data,
                 start_at      = newDiscountForm.start_at.data,
                 end_at        = newDiscountForm.end_at.data,
@@ -88,7 +110,6 @@ def create(type):
         elif type == 'product':
             if ProductDiscount.create(
                 discount_code      = newDiscountForm.code.data,
-                name               = newDiscountForm.name.data,
                 description        = newDiscountForm.description.data,
                 start_at           = newDiscountForm.start_at.data,
                 end_at             = newDiscountForm.end_at.data,
@@ -102,7 +123,6 @@ def create(type):
         elif type == 'order':
             if OrderDiscount.create(
                 discount_code      = newDiscountForm.code.data,
-                name               = newDiscountForm.name.data,
                 description        = newDiscountForm.description.data,
                 start_at           = newDiscountForm.start_at.data,
                 end_at             = newDiscountForm.end_at.data,
@@ -149,8 +169,7 @@ def update(discount_code):
         updateDiscountForm = NewOrderDiscountForm()
 
     if request.method == 'POST' and updateDiscountForm.validate_on_submit():
-        if Discount.update(
-            name        = updateDiscountForm.name.data,
+        if discount.update(
             description = updateDiscountForm.description.data,
             start_at    = updateDiscountForm.start_at.data,
             end_at      = updateDiscountForm.end_at.data
