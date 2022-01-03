@@ -256,6 +256,11 @@ def shoppingCart(user_id):
         else:
             amount += item.amount
 
-    # shippingDiscount = ShippingDiscount.getAllActive()
+    shippingDiscount = ShippingDiscount.getActive()
 
-    return render_template('shoppingCart.html', items=items, quantity=quantity, amount=amount)
+    return render_template('shoppingCart.html',
+                            items            = items,
+                            quantity         = quantity,
+                            amount           = amount,
+                            shippingDiscount = shippingDiscount
+                        )

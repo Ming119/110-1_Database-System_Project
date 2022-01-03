@@ -102,6 +102,10 @@ class ShippingDiscount(Discount):
 
         except: return False
 
+    @staticmethod
+    def getActive():
+        return ShippingDiscount.query.filter(Discount.start_at<datetime.now(), Discount.end_at>datetime.now()).order_by(ShippingDiscount.atLeastAmount).first()
+
 
 
 class ProductDiscount(Discount):
