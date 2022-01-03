@@ -5,11 +5,10 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('index.index') }}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{ url_for('discount.index') }}">Manage Discount</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Update Discount</li>
+        <li class="breadcrumb-item active" aria-current="page">Create Discount</li>
     </ol>
 </nav>
-
-{% for errors in updateDiscountForm.errors.values() %}
+{% for errors in newDiscountForm.errors.values() %}
 {% for error in errors %}
 <div class='pt-3'>
     <div class='alert alert-warning d-flex align-items-center alert-dismissible fade show' role='alert'>
@@ -27,50 +26,50 @@
 
 <div class="card text-dark bg-light mx-auto mt-5" style="width: 36rem;">
     <div class="card-header">
-        <h2>Update {{ updateDiscountForm.type }} discount: {{ updateDiscountForm.code.data }}</h2>
+        <h2>Create a new {{ newDiscountForm.type }} discount</h2>
     </div>
 
     <div class="card-body text-center">
         <form action="" method="post" class="form" role="form">
-            {{ updateDiscountForm.hidden_tag() }}
+            {{ newDiscountForm.hidden_tag() }}
 
             <div class="form-floating my-3">
-                {{ updateDiscountForm.code(class="form-control", placeholder='Code', disabled=True) }}
-                {{ updateDiscountForm.code.label() }}
+                {{ newDiscountForm.code(class="form-control", placeholder='Code', required=True) }}
+                {{ newDiscountForm.code.label() }}
             </div>
 
             <div class="form-floating my-3">
-                {{ updateDiscountForm.description(class="form-control", placeholder='Description') }}
-                {{ updateDiscountForm.description.label() }}
+                {{ newDiscountForm.description(class="form-control", placeholder='Description') }}
+                {{ newDiscountForm.description.label() }}
             </div>
 
             <div class="form-floating my-3">
-                {{ updateDiscountForm.start_at(class="form-control", placeholder='Start At') }}
-                {{ updateDiscountForm.start_at.label() }}
+                {{ newDiscountForm.start_at(class="form-control", placeholder='Start At') }}
+                {{ newDiscountForm.start_at.label() }}
             </div>
 
             <div class="form-floating my-3">
-                {{ updateDiscountForm.end_at(class="form-control", placeholder='End At') }}
-                {{ updateDiscountForm.end_at.label() }}
+                {{ newDiscountForm.end_at(class="form-control", placeholder='End At') }}
+                {{ newDiscountForm.end_at.label() }}
             </div>
 
-            {% if updateDiscountForm.type != 'product'%}
+            {% if newDiscountForm.type != 'product'%}
             <div class="form-floating my-3">
-                {{ updateDiscountForm.atLeastAmount(class="form-control") }}
-                {{ updateDiscountForm.atLeastAmount.label() }}
-            </div>
-            {% endif %}
-
-            {% if updateDiscountForm.type != 'shipping'%}
-            <div class="form-floating my-3">
-                {{ updateDiscountForm.discountPercentage(min=0, max=100, oninput="outputUpdate(value)") }}
-                {{ updateDiscountForm.discountPercentage.label() }}
-                <output for="age" id="selected-rate">{{ updateDiscountForm.discountPercentage.data }}</output>
+                {{ newDiscountForm.atLeastAmount(class="form-control") }}
+                {{ newDiscountForm.atLeastAmount.label() }}
             </div>
             {% endif %}
 
+            {% if newDiscountForm.type != 'shipping'%}
+            <div class="form-floating my-3">
+                {{ newDiscountForm.discountPercentage(min=0, max=100, oninput="outputUpdate(value)") }}
+                {{ newDiscountForm.discountPercentage.label() }}
+                <output for="age" id="selected-rate">{{ newDiscountForm.discountPercentage.data }}</output>
+            </div>
+            {% endif %}
 
-            {{ updateDiscountForm.submit(class='btn btn-primary px-5') }}
+
+            {{ newDiscountForm.submit(class='btn btn-primary px-5') }}
         </form>
     </div>
 
