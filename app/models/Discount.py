@@ -185,3 +185,7 @@ class OrderDiscount(Discount):
             return True
 
         except: return False
+
+    @staticmethod
+    def getByCode(code):
+        return OrderDiscount.query.filter(OrderDiscount.discount_code==code, Discount.start_at<datetime.now(), Discount.end_at>datetime.now()).first()
