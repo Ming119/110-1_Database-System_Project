@@ -54,12 +54,11 @@ class Product(db.Model):
             return False
 
     @staticmethod
-    def getAll():
-        return Product.query.all()
+    def getAll(is_active=None):
+        if is_active:
+            return Product.query.filter_by(is_active=is_active).all()
 
-    @staticmethod
-    def getAllWithoutInactive():
-        return Product.query.filter_by(is_active=True).all()
+        return Product.query.all()
 
     @staticmethod
     def getAllJoinedProduct(is_active=None):
@@ -132,20 +131,11 @@ class Product(db.Model):
         return Product.query.filter_by(category_id=category_id, is_active=is_active).count()
 
     @staticmethod
-    def getByCategoryID(category_id):
-        return Product.query.filter_by(category_id=category_id).all()
+    def getByID(product_id, is_active=None):
+        if is_active:
+            return Product.query.filter_by(product_id=product_id, is_active=is_active).first()
 
-    @staticmethod
-    def getByCategoryIDWithoutInactive(category_id):
-        return Product.query.filter_by(category_id=category_id, is_active=True).all()
-
-    @staticmethod
-    def getByID(product_id):
         return Product.query.filter_by(product_id=product_id).first()
-
-    @staticmethod
-    def getByIDWithoutInactive(product_id):
-        return Product.query.filter_by(product_id=product_id, is_active=True).first()
 
     @staticmethod
     def getByName(name):

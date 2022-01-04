@@ -14,13 +14,13 @@
             <a href="{{ url_for('discount.index') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if not filter %} active {% endif %}">All Discount
                 <span class="badge bg-secondary rounded-pill">{{ discountCount['all'] }}</span>
             </a>
-            <a href="{{ url_for('discount.filterIndex', type='product') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter == 'product' %} active {% endif %}">Product Discount
+            <a href="{{ url_for('discount.filterIndex', type='product') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter=='product' %} active {% endif %}">Product Discount
                 <span class="badge bg-secondary rounded-pill">{{ discountCount['product'] }}</span>
             </a>
-            <a href="{{ url_for('discount.filterIndex', type='shipping') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter == 'shipping' %} active {% endif %}">Shipping Discount
+            <a href="{{ url_for('discount.filterIndex', type='shipping') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter=='shipping' %} active {% endif %}">Shipping Discount
                 <span class="badge bg-secondary rounded-pill">{{ discountCount['shipping'] }}</span>
             </a>
-            <a href="{{ url_for('discount.filterIndex', type='order') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter == 'order' %} active {% endif %}">Order Discount
+            <a href="{{ url_for('discount.filterIndex', type='order') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter=='order' %} active {% endif %}">Order Discount
                 <span class="badge bg-secondary rounded-pill">{{ discountCount['order'] }}</span>
             </a>
         </div>

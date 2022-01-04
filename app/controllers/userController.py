@@ -28,7 +28,13 @@ def index():
 
     else: users = User.getAll()
 
-    return render_template("manageUser.html", users=users, searchForm=searchForm)
+    userCount = {'all': User.count(),
+                    'admin': User.count('admin'),
+                    'staff': User.count('staff'),
+                    'customer': User.count('customer'),
+                }
+
+    return render_template("manageUser.html", users=users, userCount=userCount, searchForm=searchForm)
 
 
 
@@ -54,7 +60,18 @@ def filterIndex(role):
 
     else: users = User.getByRole(role)
 
-    return render_template("manageUser.html", users=users, searchForm=searchForm)
+    userCount = {'all': User.count(),
+                    'admin': User.count('admin'),
+                    'staff': User.count('staff'),
+                    'customer': User.count('customer'),
+                }
+
+    return render_template("manageUser.html",
+                            searchForm=searchForm,
+                            users=users,
+                            userCount=userCount,
+                            filter=role
+                        )
 
 
 

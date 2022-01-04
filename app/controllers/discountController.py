@@ -27,9 +27,9 @@ def index():
     else: discounts = Discount.getAll()
 
     discountCount = {'all': Discount.count(),
-                     'product': Discount.countByType('product'),
-                     'shipping': Discount.countByType('shipping'),
-                     'order': Discount.countByType('order'),
+                     'product': Discount.count('product'),
+                     'shipping': Discount.count('shipping'),
+                     'order': Discount.count('order'),
                     }
 
     return render_template('manageDiscount.html',
@@ -61,9 +61,9 @@ def filterIndex(type):
     else: discounts = Discount.getByType(type)
 
     discountCount = {'all': Discount.count(),
-                     'product': Discount.countByType('product'),
-                     'shipping': Discount.countByType('shipping'),
-                     'order': Discount.countByType('order'),
+                     'product': Discount.count('product'),
+                     'shipping': Discount.count('shipping'),
+                     'order': Discount.count('order'),
                     }
 
     return render_template('manageDiscount.html',
