@@ -8,42 +8,101 @@ from flask_login import current_user, login_required
 # PMS page of the website
 # GET method to render PMS page
 # POST method for create category, create product or search function
+@login_required
 def index():
+    # access control
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
     categories = ProductCategory.getAll()
+    discounts  = Discount.getByType('product')
 
     searchForm      = SearchForm()
-    form_newCategory = NewCategoryForm()
-    form_newProduct  = NewProductForm()
-    form_newProduct.category.choices = [(category.category_id, category.name) for category in categories]
+    newCategoryForm = NewCategoryForm()
+    newProductForm  = NewProductForm(ProductCategory.dropInactive(categories), discounts)
 
     # Create a new category
-    if request.method == 'POST' and form_newCategory.validate_on_submit():
-        return createCategory(form_newCategory)
+    if request.method == 'POST' and newCategoryForm.validate_on_submit():
+        return createCategory(newCategoryForm)
 
     # Create a new product
-    if request.method == 'POST' and form_newProduct.validate_on_submit():
-        return createProduct(form_newProduct)
+    if request.method == 'POST' and newProductForm.validate_on_submit():
+        return createProduct(newProductForm)
 
     # Search
-    if request.method == 'POST' and form_search.validate_on_submit():
-        words = form_search.search.data.split(' ')
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.query.filter(Product.name.contains(word)).all())
-            products_list.extend(Product.query.filter(Product.description.contains(word)).all())
+            products_list.extend(Product.getAllJoinedProductContains(word))
+            products_list.extend(Product.getAllJoinedProductContains(word))
 
         products = set(products_list)
 
-    else:
-        products = Product.getAll()
+    else: products = Product.getAllJoinedProduct()
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id) for category in categories}
+    categoryCount[0] = Product.count()
 
     return render_template('manageProduct.html',
                             searchForm      = searchForm,
-                            form_newCategory = form_newCategory,
-                            form_newProduct  = form_newProduct,
-                            categories       = categories,
-                            products         = products
+                            newCategoryForm = newCategoryForm,
+                            newProductForm  = newProductForm,
+                            categories      = categories,
+                            categoryCount   = categoryCount,
+                            products        = products
+                        )
+
+
+
+@login_required
+def filterIndex(category_id):
+    # access control
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    categories = ProductCategory.getAll()
+    discounts  = Discount.getByType('product')
+
+    searchForm      = SearchForm()
+    newCategoryForm = NewCategoryForm()
+    newProductForm  = NewProductForm(categories, discounts)
+
+    # Create a new category
+    if request.method == 'POST' and newCategoryForm.validate_on_submit():
+        return createCategory(newCategoryForm)
+
+    # Create a new product
+    if request.method == 'POST' and newProductForm.validate_on_submit():
+        return createProduct(newProductForm)
+
+    # Search
+    if request.method == 'POST' and searchForm.validate_on_submit():
+        words = searchForm.search.data.split(' ')
+
+        products_list = list()
+        for word in words:
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
+            products_list.extend(Product.getAllJoinedProductByCategoryIDContains(category_id, word))
+
+        products = set(products_list)
+
+    else: products = Product.getAllJoinedProductByCategoryID(category_id)
+
+    categoryCount = {category.category_id: Product.countProductByCategory(category.category_id) for category in categories}
+    categoryCount[0] = Product.count()
+
+    return render_template('manageProduct.html',
+                            searchForm      = searchForm,
+                            newCategoryForm = newCategoryForm,
+                            newProductForm  = newProductForm,
+                            categories      = categories,
+                            categoryCount   = categoryCount,
+                            products        = products,
+                            filter          = category_id
                         )
 
 
@@ -79,12 +138,14 @@ def createProduct(form):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif Product.create(category_id = form.category.data,
+    if Product.create(category_id = form.category.data,
                    name        = form.productName.data,
                    description = form.productDescription.data,
                    price       = form.price.data,
-                   quantity    = form.quantity.data
+                   quantity    = form.quantity.data,
+                   image_url   = form.image_url.data
                   ):
         flash(f'Product created successfully', 'success')
 
@@ -100,31 +161,29 @@ def details(product_id):
 
     if current_user.is_authenticated and current_user.role == 'staff':
         categories = ProductCategory.getAll()
-        form = NewProductForm(
-                    productName        = product.name,
-                    productDescription = product.description,
-                    price              = product.price,
-                    quantity           = product.quantity,
-                    category           = product.category_id
-                )
-        form.category.choices = [(category.category_id, category.name) for category in categories]
-
+        discounts  = Discount.getByType('product')
+        form = NewProductForm(categories, discounts)
         # Edit
         if request.method == 'POST' and form.validate_on_submit():
             return edit(product, form)
 
+        form.initProductData(product)
         return render_template('productDetails.html', form=form, product=product)
 
     else:
-        category = ProductCategory.getByID(product.category_id)
+        if not product.is_active:
+            flash(f'You are not allowed to access.', 'danger')
+            return redirect(url_for('index.index'))
 
+        category = ProductCategory.getByID(product.category_id)
+        discount = ProductDiscount.getByCode(product.discount_code)
         form = AddToCardForm()
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():
-            return addToCard(form)
+            return addToCart(form, product, discount)
 
-        return render_template('productDetails.html', form=form, product=product, category=category)
+        return render_template('productDetails.html', form=form, product=product, category=category, discount=discount)
 
 
 
@@ -133,16 +192,18 @@ def edit(product, form):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif form.productName.data != product.name and Product.getByProductName(form.productName.data) is not None:
+    if form.productName.data != product.name and Product.getByProductName(form.productName.data) is not None:
         flash(f'Product already exists.', 'warning')
 
     else:
-        product.update(name        = form.productName.data,
-                       description = form.productDescription.data,
-                       category_id = form.category.data,
-                       price       = form.price.data,
-                       quantity    = form.quantity.data
+        product.update(name         = form.productName.data,
+                       description  = form.productDescription.data,
+                       category_id  = form.category.data,
+                       discount_code = form.discount.data,
+                       price        = form.price.data,
+                       quantity     = form.quantity.data
                       )
 
         flash(f'Product updated successfully.', 'success')
@@ -151,8 +212,32 @@ def edit(product, form):
 
 
 
-# @login_required
-# def addToCard(form):
+@login_required
+def addToCart(form, product, discount):
+    item = CartItem.query.filter_by(cart_id=current_user.user_id, product_id=product.product_id).first()
+    quantity   = form.quantity.data
+    amount     = product.price * quantity
+
+    if item is None:
+        if (CartItem.create(
+            cart_id    = current_user.user_id,
+            product_id = product.product_id,
+            quantity   = quantity,
+            amount     = amount
+        )):
+            flash(f'Added to cart successfully', 'success')
+
+        else:
+            flash(f'Failed to add to cart', 'warning')
+
+    else:
+        if (item.update(item.quantity+quantity, item.amount+amount)):
+            flash(f'Added to cart successfully', 'success')
+
+        else:
+            flash(f'Failed to add to cart', 'warning')
+
+    return redirect(url_for('product.details', product_id=product.product_id))
 
 
 
@@ -161,16 +246,34 @@ def edit(product, form):
 #   delete category based on category_id
 # redirect to PMS page and flash message after category is deleted
 @login_required
-def deleteCategory(category_id):
+def withholdCategory(category_id):
     # access control
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif ProductCategory.deleteByID(category_id):
-        flash(f'Category deleted successfully.', 'success')
+    if ProductCategory.withholdByID(category_id):
+        flash(f'Category withhold successfully.', 'success')
 
     else:
         flash(f'Category is still in use.', 'warning')
+
+    return redirect(url_for('product.index'))
+
+
+
+@login_required
+def publishCategory(category_id):
+    # access control
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    if ProductCategory.publishByID(category_id):
+        flash(f'Category publish successfully.', 'success')
+
+    else:
+        flash(f'Category publish failed.', 'warning')
 
     return redirect(url_for('product.index'))
 
@@ -181,14 +284,31 @@ def deleteCategory(category_id):
 #   delete product based on category_id
 # redirect to PMS page and flash message after product is deleted
 @login_required
-def deleteProduct(product_id):
+def withholdProduct(product_id):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
 
-    elif Product.deleteByID(product_id):
-        flash(f'Product deleted successfully.', 'success')
+    if Product.withholdByID(product_id):
+        flash(f'Product withhold successfully.', 'success')
 
     else:
-        flash(f'Product deleted failed.', 'warning')
+        flash(f'Product withhold failed.', 'warning')
+
+    return redirect(url_for('product.index'))
+
+
+
+@login_required
+def publishProduct(product_id):
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    if Product.publishByID(product_id):
+        flash(f'Product publish successfully.', 'success')
+
+    else:
+        flash(f'Product publish failed.', 'warning')
 
     return redirect(url_for('product.index'))

@@ -1,45 +1,90 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<table id="data" class="table table-hover">
-  <thead>
-    <tr>
-      <th>User ID</th>
-      <th>Email</th>
-      <th>Username</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Date of Birth</th>
-      <th>Role</th>
-      <th>is_confirmed</th>
-      <th>Last login</th>
-      <th>Create at</th>
-      <th>Modified at</th>
-      <th>#</th>      <!-- TODO: column name, action? / operations? -->
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
-    <tr>
-      <td>{{ user.user_id }}</td>
-      <td>{{ user.email }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ user.first_name }}</td>
-      <td>{{ user.last_name }}</td>
-      <td>{{ user.DOB }}</td>
-      <td>{{ user.role }}</td>
-      <td>{{ user.confirm }}</td>
-      <td>{{ user.last_login }}</td>
-      <td>{{ user.create_at }}</td>
-      <td>{{ user.modified_at }}</td>
-      <td>
-        <div class="btn-group-vertical">
-          <a class="btn btn-warning btn-block" type="button" href="{{ url_for('user.profile', user_id=user.user_id) }}">Edit</a>
-          <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.deleteProfile', user_id=user.user_id) }}">Delete</a>
+<div class="row my-5">
+    <div class="col-3">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index.index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Manage User</li>
+            </ol>
+        </nav>
+
+        <div id="role-list" class="list-group">
+            <a href="{{ url_for('user.index') }}" class="list-group-item list-group-item-action d-flex justify-content-between active">All Role
+                <span class="badge bg-secondary rounded-pill">0</span>
+            </a>
+            <a href="{{ url_for('user.filterIndex', role='admin') }}" class="list-group-item list-group-item-action d-flex justify-content-between">Admin
+                <span class="badge bg-secondary rounded-pill">0</span>
+            </a>
+            <a href="{{ url_for('user.filterIndex', role='staff') }}" class="list-group-item list-group-item-action d-flex justify-content-between">Staff
+                <span class="badge bg-secondary rounded-pill">0</span>
+            </a>
+            <a href="{{ url_for('user.filterIndex', role='customer') }}" class="list-group-item list-group-item-action d-flex justify-content-between">Customer
+                <span class="badge bg-secondary rounded-pill">0</span>
+            </a>
         </div>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endblock %}
+    </div>
+    <div class="col-9">
+        <div class="row">
+            <div class="col-8">
+                <form action="" method="post" class="form" role="form">
+                    {{ searchForm.hidden_tag() }}
+                    <div class="form-floating">
+                    {{ searchForm.search(class="form-control", placeholder='search') }}
+                    {{ searchForm.search.label() }}
+                    </div>
+                </form>
+            </div>
+            <div class="col-4">
+                <div class="btn-group float-end" role="group" aria-label="Basic mixed styles example">
+                    <a href="{{ url_for('user.create', role='customer') }}" type="button" class="btn btn-success">New Customer</a>
+                    <a href="{{ url_for('user.create', role='staff') }}" type="button" class="btn btn-success">New Staff</a>
+                </div>
+            </div>
+            <table id="userInfoList" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>State</th>
+                        <th>Last login</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>
+                            {% if user.is_active %}
+                            Activated
+                            {% else %}
+                            Inactivated
+                            {% endif %}
+                        </td>
+                        <td>{{ user.last_login }}</td>
+                        <td>
+                            <div class="btn-group-vertical ">
+                                <a class="btn btn-info btn-block" type="button" href="{{ url_for('user.profile', user_id=user.user_id) }}">View</a>
+                                {% if user.is_active %}
+                                <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.deactivate', user_id=user.user_id) }}">Deactivate</a>
+                                {% else %}
+                                <a class="btn btn-success btn-block" type="button" href="{{ url_for('user.activate', user_id=user.user_id) }}">Activate</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    {% endblock %}

@@ -3,7 +3,7 @@ Library    Selenium2Library
 Resource    ../allKeywords.txt
 Resource    ../allVariables.txt
 
-**keywords**
+*** keywords ***
 Verify Index Page Is Visible
     Index Page::Wait Until Index Page Is Visible
 

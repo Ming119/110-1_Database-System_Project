@@ -3,7 +3,7 @@ Library    Selenium2Library
 Resource    ../allKeywords.txt
 Resource    ../allVariables.txt
 
-**keywords**
+*** keywords ***
 Verify Manage Product Page Is Visible
     Manage Product Page::Wait Until Manage Product Page Is Visible
 

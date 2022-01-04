@@ -2,11 +2,11 @@
 Library    Selenium2Library
 Resource    ../allVariables.txt
 
-**keywords**
+*** keywords ***
 Common::Wait Until Navbar Button Is Visible
-    [Arguments]    ${buttonName}
-    ${button} =    Set Variable    //*[contains(@class, 'navbar')]//*[contains(@class, 'nav-link') and normalize-space()='${buttonName}']
-    Wait Until Element Is Visible    ${button}    ${shortPeriodOfTime}    '${buttonName} Button Should Be Visible'
+    [Arguments]    ${buttonID}
+    ${button} =    Set Variable    //*[contains(@class, 'navbar')]//*[contains(@id, '${buttonID}')]
+    Wait Until Element Is Visible    ${button}    ${shortPeriodOfTime}    '${buttonID} Button Should Be Visible'
     [return]    ${button}
 
 Common::Wait Until Navbar Contains
@@ -16,9 +16,18 @@ Common::Wait Until Navbar Contains
     END
 
 Common::Click Navbar Button
-    [arguments]    ${buttonName}
-    ${button} =    Common::Wait Until Navbar Button Is Visible    ${buttonName}
+    [arguments]    ${buttonID}
+    ${button} =    Common::Wait Until Navbar Button Is Visible    ${buttonID}
     Click Element    ${button}
+
+Flash::Wait Until Flash Message With Category Is Visible
+    [Arguments]    ${message}    ${category}
+    ${flaskBox} =    Set Variable    //*[contains(@class, 'alert-${category}')]//*[contains(@class, 'flash')]
+    ${flaskMessage} =    Set Variable    //*[contains(@class, 'alert')]//*[contains(@class, 'flash') and normalize-space()='${message}']
+    ${flaskCloseButton} =    Set Variable    //*[contains(@class, 'alert')]//*[contains(@class, 'flash')]//button[contains(@class, 'btn-close')]
+    Wait Until Element Is Visible    ${flaskBox}    ${shortPeriodOfTime}    'Flash Box Should Be Visible'
+    Wait Until Element Is Visible    ${flaskMessage}    ${shortPeriodOfTime}    'Flash Message Should Be Visible'
+    Wait Until Element Is Visible    ${flaskCloseButton}    ${shortPeriodOfTime}    'Flash Close Button Should Be Visible'
 
 Go To Home Page
     Common::Click Navbar Button    Home
@@ -26,33 +35,33 @@ Go To Home Page
 
 Go to Login Page
     Common::Click Navbar Button    Login
-    Common::Wait Until Navbar Contains    Home    Login    Sign-up
+    Common::Wait Until Navbar Contains    Home    Login    SignUp
 
 Go To Register Page
-    Common::Click Navbar Button    Sign-up
-    Common::Wait Until Navbar Contains    Home    Login    Sign-up
+    Common::Click Navbar Button    SignUp
+    Common::Wait Until Navbar Contains    Home    Login    SignUp
 
 Go To Manage Products Page
-    Common::Click Navbar Button    Manage Products
-    Common::Wait Until Navbar Contains    Home    Logout
+    Common::Click Navbar Button    ManageProduct
+    Common::Wait Until Navbar Contains    Home    ManageProduct    ManagePromotions    ManageOrders    UserProfile   Logout
 
 Go To ShoppingCart Page
-    Common::Click Navbar Button    Shopping Cart
-    Common::Wait Until Navbar Contains    Home    Logout
+    Common::Click Navbar Button    ShoppingCart
+    Common::Wait Until Navbar Contains    Home    ShoppingCart    UserProfile    Logout
 
-Go To Order Page
-    Common::Click Navbar Button    Orders
-    Common::Wait Until Navbar Contains    Home    Logout
+Go To manage Order Page
+    Common::Click Navbar Button    ManageOrders
+    Common::Wait Until Navbar Contains    Home    ManageProduct    ManagePromotions    ManageOrders    UserProfile   Logout
 
-Go To Discount Page
-    Common::Click Navbar Button    Discounts
-    Common::Wait Until Navbar Contains    Home    Products    Logout
+Go To Manage Discount Page
+    Common::Click Navbar Button    ManagePromotions
+    Common::Wait Until Navbar Contains    Home    ManageProduct    ManagePromotions    ManageOrders    UserProfile   Logout
 
-Go To ManageUser Page
-    Common::Click Navbar Button    Manage User
-    Common::Wait Until Navbar Contains    Home    Manager Users    Logout
+Go To Manage User Page
+    Common::Click Navbar Button    ManageUser
+    Common::Wait Until Navbar Contains    Home    ManagerUser    UserProfile    Logout
 
 Logout
     Common::Click Navbar Button    Logout
     Flash::Wait Until Flash Message With Category Is Visible    Logout successful!    success
-    Common::Wait Until Navbar Contains    Home    Login    Sign-up
+    Common::Wait Until Navbar Contains    Home    Login    SignUp

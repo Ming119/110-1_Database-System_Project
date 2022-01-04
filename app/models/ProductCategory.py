@@ -6,19 +6,19 @@ class ProductCategory(db.Model):
 
     category_id   = db.Column(db.Integer, primary_key=True)
     product_id    = db.relationship('Product', backref='product_category')
-    discount_code = db.Column(db.String(8), db.ForeignKey('category_discount.discount_code'), nullable=True)
 
     name        = db.Column(db.String(63),  nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=True)
 
-    create_at   = db.Column(db.DateTime, default=datetime.now)
-    modified_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-    deleted_at  = db.Column(db.DateTime, nullable=True)
+    is_active   = db.Column(db.Boolean, nullable=False, default=True)
 
-    def update(self, name=None, description=None, deleted_at=None):
+    create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+
+    def update(self, name=None, description=None):
         self.name        = name or self.name
         self.description = description or self.description
-        self.deleted_at  = deleted_at
+        self.is_active   = True
         db.session.commit()
 
     @staticmethod
@@ -32,7 +32,7 @@ class ProductCategory(db.Model):
             db.session.commit()
             return True
 
-        elif productCategory.deleted_at is not None:
+        elif not productCategory.is_active:
             productCategory.update(name, description)
             return True
 
@@ -41,43 +41,55 @@ class ProductCategory(db.Model):
 
     @staticmethod
     def getAll():
-        return ProductCategory.query.filter_by(deleted_at=None).all()
+        return ProductCategory.query.all()
+
+    @staticmethod
+    def getAllWithoutInactive():
+        return ProductCategory.query.filter_by(is_active=True).all()
 
     @staticmethod
     def getByID(category_id):
-        return ProductCategory.query.filter_by(category_id=category_id, deleted_at=None).first()
+        return ProductCategory.query.filter_by(category_id=category_id).first()
+
+    @staticmethod
+    def getByIDWithoutInactive(category_id):
+        return ProductCategory.query.filter_by(category_id=category_id, is_active=True).first()
 
     @staticmethod
     def getByName(name):
-        return ProductCategory.query.filter_by(name=name, deleted_at=None).first()
+        return ProductCategory.query.filter_by(name=name).first()
 
     @staticmethod
-    def deleteByID(category_id):
-        productCategory = ProductCategory.getByID(category_id)
-        if productCategory.product_id:
-            return False
+    def withholdByID(category_id):
+        productCategory = ProductCategory.getByIDWithoutInactive(category_id)
+
+        for product in productCategory.product_id:
+            if product.is_active:
+                return False
         else:
-            productCategory.deleted_at = datetime.now()
+            productCategory.is_active = False
             db.session.commit()
             return True
 
     @staticmethod
-    def deleteByName(name):
-        productCategory = ProductCategory.getByName(category_id)
-        if productCategory.product_id:
-            return False
-
-        else:
-            productCategory.deleted_at = datetime.now()
+    def publishByID(category_id):
+        try:
+            productCategory = ProductCategory.getByID(category_id)
+            productCategory.is_active = True
             db.session.commit()
             return True
+        except: return False
+
+    @staticmethod
+    def dropInactive(categoryList):
+        return [category for category in categoryList if category.is_active]
 
     def __repr__(self):
-        return '<Category %r>' % (
+        return '<Category {}, {}, {}, {}, {}, {}>'.format(
             self.category_id,
             self.name,
             self.description,
+            self.is_active,
             self.create_at,
-            self.modified_at,
-            self.deleted_at
+            self.modified_at
         )
