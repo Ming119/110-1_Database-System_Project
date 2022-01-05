@@ -246,6 +246,19 @@ def addAddress(user_id):
     addAddressForm = AddAddressForm()
 
     if request.method == 'POST' and addAddressForm.validate_on_submit():
-        pass
+        if CustomerAddress.create(user_id,
+                                addAddressForm.country.data,
+                                addAddressForm.city.data,
+                                addAddressForm.address.data,
+                                addAddressForm.postal_code.data,
+                                addAddressForm.telephone.data
+                            ):
+            flash(f'Add address successfully.', 'success')
+        else:
+            flash(f'Add address failed.', 'warning')
+
+        return redirect(url_for('index.index'))
+
+    addAddressForm.process()
 
     return render_template('addAddress.html', addAddressForm=addAddressForm)
