@@ -89,15 +89,18 @@
         <h4 class="mb-3">Address</h4>
         <form>
             <ul class="list-group list-group-flus form-check">
+                <a class="mute-link list-group-item" href="{{ url_for('user.addAddress', user_id=user_id) }}">+ Add a new address</a>
                 {% for address in addresses %}
                 <li class="list-group-item">
                     <input class="form-check-input" type="radio" value="" id="{{ address.address_id }}">
                     <label class="form-check-label" for="{{ address.address_id }}">
-                        {{ address.address }}
+                        <p class="my-0">{{ address.address }}</p>
+                        <small class="text-muted mx-3">{{ address.country }}</small>
+                        <small class="text-muted mx-1">{{ address.city }}</small><br/>
+                        <small class="text-muted mx-3">Tel: {{ address.telephone }}</small>
                     </label>
                 </li>
                 {% endfor %}
-                <a class="mute-link list-group-item" href="#">+ Add a new address</a>
             </ul>
 
             <!-- <div class="row g-3">

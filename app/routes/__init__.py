@@ -3,4 +3,5 @@ from app.routes import (
     productRoute,
     userRoute,
     discountRoute,
+    orderRoute,
 )

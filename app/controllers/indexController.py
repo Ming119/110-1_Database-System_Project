@@ -260,11 +260,14 @@ def shoppingCart(user_id):
             amount += item.amount
 
     shippingDiscount = ShippingDiscount.getActive()
+    addresses = CustomerAddress.getAllByID(user_id)
 
     return render_template('shoppingCart.html',
                             items            = items,
                             quantity         = quantity,
                             amount           = amount,
+                            user_id          = user_id,
+                            addresses        = addresses,
                             redeemCodeForm   = redeemCodeForm,
                             shippingDiscount = shippingDiscount,
                             orderDiscount    = orderDiscount

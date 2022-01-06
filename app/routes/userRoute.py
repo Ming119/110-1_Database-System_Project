@@ -11,3 +11,4 @@ bp.route('/update/<int:user_id>', methods=['GET', 'POST'])(update)  # Update
 bp.route('/changePassword/<int:user_id>', methods=['GET', 'POST'])(changePassword)
 bp.route('/activate/<int:user_id>', methods=['GET'])(activate)
 bp.route('/deactivate/<int:user_id>', methods=['GET'])(deactivate)
+bp.route('/addAddress/<int:user_id>', methods=['GET', 'POST'])(addAddress)

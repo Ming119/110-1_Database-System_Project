@@ -13,6 +13,25 @@ class CustomerAddress(db.Model):
     postal_code = db.Column(db.String(8),   nullable=False)
     telephone   = db.Column(db.String(16),  nullable=False)
 
+    @staticmethod
+    def create(user_id, country, city, address, postal_code, telephone):
+        try:
+            db.session.add(CustomerAddress(
+                user_id     = user_id,
+                country     = country,
+                city        = city,
+                address     = address,
+                postal_code = postal_code,
+                telephone   = telephone
+            ))
+            db.session.commit()
+            return True
+        except: return False
+
+    @staticmethod
+    def getAllByID(user_id):
+        return CustomerAddress.query.filter_by(user_id=user_id).all()
+
     def __repr__(self):
         return '<CustomerAddress {}, {}, {}, {}, {}, {}>'.format(
                     # self.address_id,
