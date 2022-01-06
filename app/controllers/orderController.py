@@ -11,8 +11,24 @@ def index():
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    return render_template('order/manageOrder.html')
+    order = Order.getAll()
 
+
+
+    return render_template('order/manageOrder.html', order=order)
+
+@login_required
+def filterIndex(status):
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    order = Order.getByStatus()
+
+    return render_template('order/manageOrder.html',
+                            order=order,
+                            filter=status
+                        )
 
 
 @login_required
