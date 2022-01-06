@@ -1,5 +1,61 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="row my-5">
+    <div class="col-3">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index.index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Manage Order</li>
+            </ol>
+        </nav>
 
+       
+    </div>
+
+    <div class="col-9">
+        <div class="row">
+            <div class="col-9">
+                <form action="" method="post" class="form" role="form">
+                    {{ searchForm.hidden_tag() }}
+                    <div class="form-floating">
+                        {{ searchForm.search(class="form-control", placeholder='search') }}
+                        {{ searchForm.search.label() }}
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-3">
+                
+            </div>
+
+            <table id="orderDetailsList" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Description</th>
+                        <th>Product Type</th>
+                        <th>Customer</th>
+                        <th>Shipping Address</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                {% for order in orders %}
+                <tbody>
+
+                    <td>{{ order.order_id}}</td>
+                    <td>{{ order.description}}</td>
+                    <td>{{ order.type}}</td>
+                    <td>{{ order.customer_id}}</td>
+                    <td>{{ order.address_id }}</td>
+
+                    <td>
+                        
+                    </td>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

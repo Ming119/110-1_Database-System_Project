@@ -11,17 +11,34 @@ def index():
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    return render_template('order/manageOrder.html')
+    searchForm = SearchForm()
+
+    return render_template('order/manageOrder.html',
+                            searchForm    = searchForm,
+                            filter        = type
+                        )
 
 
 
 @login_required
 def details(order_id):
+
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    return render_template('order/orderDetails.html')
+    order = Order.getByID(order_id)
+
+    orders = Order.getAll()
+    form = NewProductForm(orders)
+
+    form.initProductData(order)
+    return render_template('order/manageOrder.html', form=form, order=order)
+
+
+
+    
+    #return render_template('order/manageOrder.html', order=order) #order/orderDeteail.html
 
 
 
@@ -32,3 +49,4 @@ def update(order_id):
         return redirect(url_for('index.index'))
 
     return render_template('order/manageOrder.html')    #FIXME
+
