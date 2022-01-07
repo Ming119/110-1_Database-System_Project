@@ -44,7 +44,8 @@ def index(user_id):
     return render_template('order/manageOrder.html',
                             searchForm = searchForm,
                             orders     = orders,
-                            orderCount = orderCount
+                            orderCount = orderCount,
+                            filter     = -1
                         )
 
 
@@ -105,7 +106,7 @@ def details(order_id):
     form = NewProductForm(orders)
 
     form.initProductData(order)
-    return render_template('order/manageOrder.html', form=form, orders=orders)
+    return render_template('order/orderDetail.html', form=form, orders=orders)
     #return render_template('order/manageOrder.html', order=order) #order/orderDeteail.html
 
 
@@ -117,6 +118,5 @@ def update(order_id):
         return redirect(url_for('index.index'))
 
     order = Order.getByID(order_id)
-
 
     return render_template('order/manageOrder.html')    #FIXME
