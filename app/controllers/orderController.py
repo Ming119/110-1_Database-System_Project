@@ -10,7 +10,7 @@ def index(user_id):
     if current_user.role != 'staff' and current_user.user_id != user_id:
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
-
+      
     searchForm = SearchForm()
     if request.method == 'POST' and searchForm.validate_on_submit():
         words = searchForm.search.data.split(' ')
@@ -47,7 +47,6 @@ def index(user_id):
                             orderCount = orderCount,
                             filter     = -1
                         )
-
 
 
 @login_required
@@ -106,6 +105,7 @@ def details(order_id):
     form = NewProductForm(orders)
 
     form.initProductData(order)
+
     return render_template('order/orderDetail.html', form=form, orders=orders)
     #return render_template('order/manageOrder.html', order=order) #order/orderDeteail.html
 
@@ -118,5 +118,5 @@ def update(order_id):
         return redirect(url_for('index.index'))
 
     order = Order.getByID(order_id)
-
+    
     return render_template('order/manageOrder.html')    #FIXME
