@@ -247,11 +247,14 @@ def shoppingCart(user_id):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    # items = CartItem.query.join(
-    #             Product, CartItem.product_id==Product.product_id
-    #         ).add_columns(
-    #             CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price
-    #         ).filter(CartItem.cart_id==user_id).all()
+    orderDiscount = None
+    redeemCodeForm = RedeemCodeForm()
+    if request.method == 'POST' and redeemCodeForm.validate_on_submit():
+        orderDiscount = OrderDiscount.getByCode(redeemCodeForm.code.data)
+        print(orderDiscount)
+        if orderDiscount is None:
+            flash(f'Promo Code not found', 'warning')
+
     items = CartItem.getAllJoinedItems(user_id)
 
     quantity = 0
@@ -264,10 +267,15 @@ def shoppingCart(user_id):
             amount += item.amount
 
     shippingDiscount = ShippingDiscount.getActive()
+    addresses = CustomerAddress.getAllByID(user_id)
 
     return render_template('shoppingCart.html',
                             items            = items,
                             quantity         = quantity,
                             amount           = amount,
-                            shippingDiscount = shippingDiscount
+                            user_id          = user_id,
+                            addresses        = addresses,
+                            redeemCodeForm   = redeemCodeForm,
+                            shippingDiscount = shippingDiscount,
+                            orderDiscount    = orderDiscount
                         )

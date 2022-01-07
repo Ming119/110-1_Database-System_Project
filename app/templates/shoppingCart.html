@@ -27,20 +27,25 @@
             </li>
             {% endfor %}
 
+            <li class="list-group-item d-flex justify-content-between" id="subTotal">
+                <span>Sub-Total (USD)</span>
+                <strong>${{ amount }}</strong>
+            </li>
+
             <!-- Shipping Fee -->
             {% if shippingDiscount and shippingDiscount.atLeastAmount < amount %}
-            <li class="list-group-item d-flex justify-content-between lh-sm">
+            <li class="list-group-item d-flex justify-content-between bg-light" id="shippingFee">
                 <div>
-                    <h6 class="my-0">Shipping Fee</h6>
-                    <small class="text-muted">You have reached the free shipping amount.</small>
+                    <h6 class="my-0 text-success">Shipping Fee</h6>
+                    <small class="text-success">You have reached the free shipping amount.</small>
                 </div>
                 <span class="text-success">$0</span>
             </li>
             {% elif shippingDiscount %}
-            <li class="list-group-item d-flex justify-content-between lh-sm">
+            <li class="list-group-item d-flex justify-content-between lh-sm" id="shippingFee">
                 <div>
                     <h6 class="my-0">Shipping Fee</h6>
-                    <small class="text-muted">5% of amount. <br/>${{ shippingDiscount.atLeastAmount - amount }} left to meet the free shipping amount.</small>
+                    <small class="text-muted">5% of amount. <br />${{ shippingDiscount.atLeastAmount - amount }} left to meet the free shipping amount.</small>
                 </div>
                 <span class="text-muted"></span>
             </li>
@@ -53,26 +58,29 @@
                 <span class="text-muted"></span>
             </li>
             {% endif %}
-            <!-- Discount Code -->
-            <!-- <li class="list-group-item d-flex justify-content-between bg-light" id="discount">
-                <div class="text-success">
-                    <h6 class="my-0">Promo code</h6>
-                    <small>EXAMPLECODE</small>
-                </div>
-                <span class="text-success">−$5</span>
-            </li> -->
 
-            <!--  -->
-            <li class="list-group-item d-flex justify-content-between" id="amount">
+            <!-- Discount Code -->
+            {% if orderDiscount %}
+            <li class="list-group-item d-flex justify-content-between bg-light" id="discount">
+                <div class="text-success">
+                    <h6 class="my-0">{{ orderDiscount.discount_code }}</h6>
+                    <small>{{ orderDiscount.description }}</small>
+                </div>
+                <span class="text-success">−{{ orderDiscount.discountPercentage }}%</span>
+            </li>
+            {% endif %}
+
+            <li class="list-group-item d-flex justify-content-between" id="totalAmount">
                 <span>Total (USD)</span>
                 <strong>${{ amount }}</strong>
             </li>
         </ul>
 
-        <form class="card p-2">
+        <form class="card p-2" method='POST'>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Promo code">
-                <button type="submit" class="btn btn-secondary">Redeem</button>
+                {{ redeemCodeForm.hidden_tag() }}
+                {{ redeemCodeForm.code(class="form-control", placeholder='Promo code') }}
+                {{ redeemCodeForm.submit(class="btn btn-secondary", placeholder='Redeem') }}
             </div>
         </form>
     </div>
@@ -81,15 +89,18 @@
         <h4 class="mb-3">Address</h4>
         <form>
             <ul class="list-group list-group-flus form-check">
+                <a class="mute-link list-group-item" href="{{ url_for('user.addAddress', user_id=user_id) }}">+ Add a new address</a>
                 {% for address in addresses %}
                 <li class="list-group-item">
                     <input class="form-check-input" type="radio" value="" id="{{ address.address_id }}">
                     <label class="form-check-label" for="{{ address.address_id }}">
-                        {{ address.address }}
+                        <p class="my-0">{{ address.address }}</p>
+                        <small class="text-muted mx-3">{{ address.country }}</small>
+                        <small class="text-muted mx-1">{{ address.city }}</small><br/>
+                        <small class="text-muted mx-3">Tel: {{ address.telephone }}</small>
                     </label>
                 </li>
                 {% endfor %}
-                <a class="mute-link list-group-item" href="#">+ Add a new address</a>
             </ul>
 
             <!-- <div class="row g-3">
