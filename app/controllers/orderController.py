@@ -23,21 +23,23 @@ def index(user_id):
 
         orders = set(orders_list)
 
+    elif current_user.role == 'staff':
+        orders = Order.getAll()
     else:
-        if current_user.role == 'staff':
-            orders = Order.getAll()
-            orderCount = {'all': Order.count(),
-                            'processing': Order.count(status=0),
-                            'delivering': Order.count(status=1),
-                            'delivered': Order.count(status=2),
-                        }
-        else:
-            orders = Order.getByCustomerID(user_id)
-            orderCount = {'all': Order.count(user_id),
-                            'processing': Order.count(status=0, customer_id=user_id),
-                            'delivering': Order.count(status=1, customer_id=user_id),
-                            'delivered': Order.count(status=2, customer_id=user_id),
-                        }
+        orders = Order.getByCustomerID(user_id)
+
+    if current_user.role == 'staff':
+        orderCount = {'all': Order.count(),
+                        'processing': Order.count(status=0),
+                        'delivering': Order.count(status=1),
+                        'delivered': Order.count(status=2),
+                    }
+    else:
+        orderCount = {'all': Order.count(user_id),
+                        'processing': Order.count(status=0, customer_id=user_id),
+                        'delivering': Order.count(status=1, customer_id=user_id),
+                        'delivered': Order.count(status=2, customer_id=user_id),
+                    }
 
     return render_template('order/manageOrder.html',
                             searchForm = searchForm,
@@ -65,21 +67,23 @@ def filterIndex(user_id, status):
 
         orders = set(orders_list)
 
+    elif current_user.role == 'staff':
+        orders = Order.getByStatus(status)
     else:
-        if current_user.role == 'staff':
-            orders = Order.getByStatus(status)
-            orderCount = {'all': Order.count(),
-                            'processing': Order.count(0),
-                            'delivering': Order.count(1),
-                            'delivered': Order.count(2),
-                        }
-        else:
-            orders = Order.getByCustomerID(user_id, status)
-            orderCount = {'all': Order.count(user_id),
-                            'processing': Order.count(0, user_id),
-                            'delivering': Order.count(1, user_id),
-                            'delivered': Order.count(2, user_id),
-                        }
+        orders = Order.getByCustomerID(user_id, status)
+
+    if current_user.role == 'staff':
+        orderCount = {'all': Order.count(),
+                        'processing': Order.count(0),
+                        'delivering': Order.count(1),
+                        'delivered': Order.count(2),
+                    }
+    else:
+        orderCount = {'all': Order.count(user_id),
+                        'processing': Order.count(0, user_id),
+                        'delivering': Order.count(1, user_id),
+                        'delivered': Order.count(2, user_id),
+                    }
 
     return render_template('order/manageOrder.html',
                             searchForm = searchForm,
