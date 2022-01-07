@@ -12,12 +12,22 @@ def index():
         return redirect(url_for('index.index'))
 
     searchForm = SearchForm()
+    order = Order.getAll()
+
+    return render_template('order/manageOrder.html', order=order)
+
+@login_required
+def filterIndex(status):
+    if current_user.role != 'staff':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    order = Order.getByStatus()
 
     return render_template('order/manageOrder.html',
-                            searchForm    = searchForm,
-                            filter        = type
+                            order=order,
+                            filter=status
                         )
-
 
 
 @login_required
@@ -37,7 +47,7 @@ def details(order_id):
 
 
 
-    
+
     #return render_template('order/manageOrder.html', order=order) #order/orderDeteail.html
 
 
@@ -49,4 +59,3 @@ def update(order_id):
         return redirect(url_for('index.index'))
 
     return render_template('order/manageOrder.html')    #FIXME
-
