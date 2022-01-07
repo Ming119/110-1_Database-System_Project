@@ -21,6 +21,13 @@ class Order(db.Model):
 
     create_at = db.Column(db.DateTime, default=datetime.now)
 
+    def process(self):
+        try:
+            self.status += 1
+            db.session.commit()
+            return True
+        except: return False
+
     @staticmethod
     def getAll():
         return Order.query.all()
@@ -28,6 +35,26 @@ class Order(db.Model):
     @staticmethod
     def getByStatus(status):
         return Order.query.filter_by(status=status).all()
+
+    @staticmethod
+    def getByID(order_id):
+        return Order.query.filter_by(order_id=order_id).first()
+
+    @staticmethod
+    def getByCustomerID(customer_id, status=None):
+        if status:
+            return Order.query.filter_by(customer_id=customer_id, status=status).all()
+        return Order.query.filter_by(customer_id=customer_id).all()
+
+    @staticmethod
+    def count(status=None, customer_id=None):
+        if status and customer_id:
+            return Order.query.filter_by(status=status, customer_id=customer_id).count()
+
+        if status:
+            return Order.query.filter_by(status=status).count()
+
+        return Order.query.count()
 
     @staticmethod
     def create(customer_id, address_id, order_discount, items, amount, shippingFee, payment_type='Cash', provider=None, account_no=None):
