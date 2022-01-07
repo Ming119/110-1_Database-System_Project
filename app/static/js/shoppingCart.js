@@ -1,9 +1,9 @@
-document.getElementById('credit').addEventListener('click', ()=> {
+document.getElementById('paymentType-1').addEventListener('click', ()=> {
     var element = document.getElementById('creditInfo');
     element.classList.remove('d-none');
 });
 
-document.getElementById('cash').addEventListener('click', ()=> {
+document.getElementById('paymentType-0').addEventListener('click', ()=> {
     console.log('click pament credit')
     var element = document.getElementById('creditInfo');
     element.classList.add('d-none');

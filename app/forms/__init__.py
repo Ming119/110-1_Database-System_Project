@@ -1,5 +1,6 @@
 from app.forms.AddAddressForm import AddAddressForm
 from app.forms.AddToCardForm import AddToCardForm
+from app.forms.CheckoutForm import CheckoutForm
 from app.forms.ForgotPasswordForm import ForgotPasswordForm
 from app.forms.LoginForm import LoginForm
 from app.forms.NewCategoryForm import NewCategoryForm
