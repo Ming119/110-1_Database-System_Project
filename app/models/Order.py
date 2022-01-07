@@ -1,5 +1,8 @@
 from app.util import db
 from datetime import datetime
+from app.models.User import Customer
+from app.models.CustomerAddress import CustomerAddress
+
 
 class Order(db.Model):
     __tablename__ = 'order'
@@ -30,7 +33,15 @@ class Order(db.Model):
 
     @staticmethod
     def getAll():
-        return Order.query.all()
+        return Order.query.join(Customer, Order.customer_id==Customer.user_id).add_columns(
+            Order.order_id, Order.customer_id, Order.address_id, Order.order_discount, Order.orderItems,
+            Order.amount, Order.shippingFee, Order.shipDate, Order.status,
+            Order.payment_type, Order.provider, Order.account_no, Order.create_at,
+            Customer.username
+        ).join(CustomerAddress, Order.address_id==CustomerAddress.address_id).add_columns(
+            CustomerAddress.address_id, CustomerAddress.country, CustomerAddress.city,
+            CustomerAddress.address, CustomerAddress.postal_code, CustomerAddress.telephone
+        ).all()
 
     @staticmethod
     def getByStatus(status):
