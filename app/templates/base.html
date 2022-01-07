@@ -32,6 +32,7 @@
                     {% else %}
                     <!-- customer Nav bar -->
                     <li class="nav-item"><a id="ShoppingCart" href='{{ url_for('index.shoppingCart', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Shopping Cart</a></li>
+                    <li class="nav-item"><a id="Orders" href='{{ url_for('order.list', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Orders</a></li> <!-- FIXME: change icon -->
                     {% endif %}
                     <li class="nav-item"><a id="UserProfile" href='{{ url_for('user.profile', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-user me-1"></i>{{ current_user.username }}</a></li>
                     <li class="nav-item"><a id="Logout" href='{{ url_for('index.logout') }}' class="nav-link"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
