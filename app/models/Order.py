@@ -21,6 +21,43 @@ class Order(db.Model):
 
     create_at = db.Column(db.DateTime, default=datetime.now)
 
+    @staticmethod
+    def getAll():
+        return Order.query.all()
+
+    @staticmethod
+    def getByStatus(status):
+        return Order.query.filter_by(status=status).all()
+
+    @staticmethod
+    def create(customer_id, address_id, order_discount, items, amount, shippingFee, payment_type='Cash', provider=None, account_no=None):
+        try:
+            order = Order(
+                        customer_id    = customer_id,
+                        address_id     = address_id,
+                        order_discount = order_discount,
+                        amount         = amount,
+                        shippingFee    = shippingFee,
+                        payment_type   = payment_type
+            )
+            if order.payment_type == 'Credit':
+                order.provider = provider
+                order.account_no = account_no
+
+            db.session.add(order)
+            db.session.commit()
+            for item in items:
+                db.session.add(OrderItem(
+                                order_id   = order.order_id,
+                                product_id = item.product_id,
+                                quantity   = item.quantity,
+                                amount     = item.amount
+                            ))
+
+            db.session.commit()
+            return True
+        except: return False
+
 
 
 class OrderItem(db.Model):
