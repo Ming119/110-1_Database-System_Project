@@ -166,6 +166,7 @@ def update(user_id):
         return redirect(url_for('index.index'))
 
     updateProfileForm = UpdateProfileForm();
+    user = User.getByID(user_id)
 
     if request.method == 'POST' and updateProfileForm.validate_on_submit():
         if (user.update(
@@ -179,8 +180,6 @@ def update(user_id):
             flash(f'Error updating profile', 'warning')
 
         return redirect(url_for('user.profile', user_id=user_id))
-
-    user = User.getByID(user_id)
 
     updateProfileForm.username.data = user.username
     updateProfileForm.first_name.data = user.first_name
