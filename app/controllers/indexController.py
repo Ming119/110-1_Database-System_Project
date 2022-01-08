@@ -301,7 +301,8 @@ def shoppingCart(user_id):
                 for item in items:
                     p = Product.getByID(item.product_id)
                     p.sell(item.quantity)
-                    item.delete()
+                    i = CartItem.getByID(item.cart_id, item.product_id)
+                    i.remove()
                 return redirect(url_for('index.index'))
 
             flash(f'Order created failed!', 'warning')
@@ -320,7 +321,8 @@ def shoppingCart(user_id):
                 for item in items:
                     p = Product.getByID(item.product_id)
                     p.sell(item.quantity)
-                    item.delete()
+                    i = CartItem.getByID(item.cart_id, item.product_id)
+                    i.remove()
                 return redirect(url_for('index.index'))
 
             flash(f'Order created failed!', 'warning')

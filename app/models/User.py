@@ -186,7 +186,7 @@ class Staff(User):
                         username   = username,
                         password   = password,
                         first_name = first_name,
-                        last_name  = last_name,
+                        last_name  = last_name
                     )
             db.session.add(staff)
             db.session.commit()
@@ -214,7 +214,7 @@ class Admin(User):
                         username   = username,
                         password   = password,
                         first_name = first_name,
-                        last_name  = last_name,
+                        last_name  = last_name
                         )
             db.session.add(admin)
             db.session.commit()

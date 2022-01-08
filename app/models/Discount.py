@@ -5,7 +5,6 @@ class Discount(db.Model):
     __tablename__ = 'discount'
 
     discount_code = db.Column(db.String(8), primary_key=True)
-    product_id    = db.relationship('Product', backref='discount')
 
     description      = db.Column(db.String(255), nullable=True)
     type             = db.Column(db.String(255), nullable=False)
