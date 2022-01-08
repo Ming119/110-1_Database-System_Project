@@ -32,13 +32,13 @@ def create_app(test_config=None):
         init_app(app)
 
     from app.routes import (
-        indexRoute, userRoute, productRoute, discountRoute, orderRoute  # pylint: disable=import-outside-toplevel
+        index_route, user_route, product_route, discount_route, order_route  # pylint: disable=import-outside-toplevel
     )
     # Register Route Blueprint
-    app.register_blueprint(indexRoute.bp)
-    app.register_blueprint(userRoute.bp)
-    app.register_blueprint(productRoute.bp)
-    app.register_blueprint(discountRoute.bp)
-    app.register_blueprint(orderRoute.bp)
+    app.register_blueprint(index_route.bp)
+    app.register_blueprint(user_route.bp)
+    app.register_blueprint(product_route.bp)
+    app.register_blueprint(discount_route.bp)
+    app.register_blueprint(order_route.bp)
 
     return app
