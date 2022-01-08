@@ -1,9 +1,14 @@
-from app.models.Discount import Discount
 from flask import flash
 from flask_wtf import Form
 from wtforms import StringField, IntegerField, FloatField, SelectField, SubmitField, validators, ValidationError
 
+'''
+'''
+
 class NewProductForm(Form):
+    '''
+    '''
+
     productName = StringField('Name', validators=[
         validators.DataRequired(),
     ])
@@ -31,17 +36,21 @@ class NewProductForm(Form):
     productSubmit = SubmitField('Submit')
 
     def __init__(self, categories, discounts, product=None, *arg, **kwargs):
-        super(NewProductForm, self).__init__(*arg, **kwargs)
+        super().__init__(*arg, **kwargs)
         self.category.choices = [(category.category_id, category.name) for category in categories]
         self.discount.choices = [(None, None)]
         self.discount.choices.extend([(discount.discount_code, discount.discount_code) for discount in discounts])
         if product is not None:
-            self.initProductData(product)
+            self.init(product)
 
-    def initProductData(self, product):
+    def init(self, product):
+        '''
+        Initialize the form data with an existing product
+        '''
+
         self.category.default = product.category_id
         self.discount.default = product.discount_code
-        self.process()
+        self.process()  # pylint: disable=no-member
 
         self.productName.data        = product.name
         self.productDescription.data = product.description
@@ -49,12 +58,22 @@ class NewProductForm(Form):
         self.price.data              = product.price
         self.quantity.data           = product.quantity
 
-    def validate_price(self, field):
+    def validate_price(self, field):    # pylint: disable=no-self-use
+        '''
+        Validate price
+        The input price should not be negative
+        '''
+
         if field.data < 0:
-            flash(f'Price should not be negative.', 'warning')
+            flash('Price should not be negative.', 'warning')
             raise ValidationError("Price should not be negative.")
 
-    def validate_quantity(self, field):
+    def validate_quantity(self, field): # pylint: disable=no-self-use
+        '''
+        Validate quantity
+        The input quantity should not be negative
+        '''
+
         if field.data < 0:
-            flash(f'Quantity should not be negative.', 'warning')
+            flash('Quantity should not be negative.', 'warning')
             raise ValidationError("Quantity should not be negative.")

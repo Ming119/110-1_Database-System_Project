@@ -191,7 +191,7 @@ def update(discount_code):
             else:
                 flash(f'Error updating the discount', 'warning')
 
-    updateDiscountForm.initData(discount)
+    updateDiscountForm.init(discount)
 
     return render_template('discount/updateDiscount.html', updateDiscountForm=updateDiscountForm)
 

@@ -1,9 +1,15 @@
-from app.models import Discount
 from flask_wtf import Form
-from wtforms import StringField, FloatField, SubmitField, validators, ValidationError
+from wtforms import StringField, FloatField, SubmitField, validators
 from wtforms.fields.html5 import DateField, IntegerRangeField
 
+'''
+'''
+
 class NewDiscountForm(Form):
+    '''
+    Base class for creating new discount
+    '''
+
     code = StringField('Code')
 
     description = StringField('Description', validators=[
@@ -20,7 +26,11 @@ class NewDiscountForm(Form):
 
     submit = SubmitField('Submit')
 
-    def initData(self, discount):
+    def init(self, discount):
+        '''
+        Initialize the form data with an existing discount
+        '''
+
         self.code.data        = discount.discount_code
         self.description.data = discount.description
         self.start_at.data    = discount.start_at
@@ -29,6 +39,11 @@ class NewDiscountForm(Form):
 
 
 class NewShippingDiscountForm(NewDiscountForm):
+    '''
+    Inherited from NewDiscountForm
+    For creating a new shipping discount
+    '''
+
     atLeastAmount = FloatField('Amount Above', validators=[
         validators.InputRequired(),
         validators.NumberRange(min=0)
@@ -36,28 +51,46 @@ class NewShippingDiscountForm(NewDiscountForm):
 
     def __init__(self, *arg, **kwargs):
         self.type = 'shipping'
-        super(NewShippingDiscountForm, self).__init__(*arg, **kwargs)
+        super().__init__(*arg, **kwargs)
 
-    def initData(self, discount):
-        super().initData(discount)
+    def init(self, discount):
+        '''
+        Initialize the shipping form data with an existing discount
+        '''
+
+        super().init(discount)
         self.atLeastAmount.data = discount.atLeastAmount
 
 
 
 class NewProductDiscountForm(NewDiscountForm):
+    '''
+    Inherited from NewDiscountForm
+    For creating a new product discount
+    '''
+
     discountPercentage = IntegerRangeField('Discount Rate')
 
     def __init__(self, *arg, **kwargs):
         self.type = 'product'
-        super(NewProductDiscountForm, self).__init__(*arg, **kwargs)
+        super().__init__(*arg, **kwargs)
 
-    def initData(self, discount):
-        super().initData(discount)
+    def init(self, discount):
+        '''
+        Initialize the product form data with an existing discount
+        '''
+
+        super().init(discount)
         self.discountPercentage.data = discount.discountPercentage
 
 
 
 class NewOrderDiscountForm(NewDiscountForm):
+    '''
+    Inherited from NewDiscountForm
+    For creating a new order discount
+    '''
+
     atLeastAmount = FloatField('Amount Above', validators=[
         validators.InputRequired(),
         validators.NumberRange(min=0)
@@ -67,9 +100,13 @@ class NewOrderDiscountForm(NewDiscountForm):
 
     def __init__(self, *arg, **kwargs):
         self.type = 'ording'
-        super(NewOrderDiscountForm, self).__init__(*arg, **kwargs)
+        super().__init__(*arg, **kwargs)
 
-    def initData(self, discount):
-        super().initData(discount)
+    def init(self, discount):
+        '''
+        Initialize the order form data with an existing discount
+        '''
+
+        super().init(discount)
         self.atLeastAmount.data      = discount.atLeastAmount
         self.discountPercentage.data = discount.discountPercentage

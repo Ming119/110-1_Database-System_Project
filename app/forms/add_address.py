@@ -2,7 +2,13 @@ from flask_wtf import Form
 from wtforms import StringField, SelectField, SubmitField, validators
 from country_list import countries_for_language
 
+'''
+'''
+
 class AddAddressForm(Form):
+    '''
+    '''
+
     country = SelectField('Country')
 
     city = StringField('City', validators=[
@@ -24,6 +30,6 @@ class AddAddressForm(Form):
     submit = SubmitField('Submit')
 
     def __init__(self, *args, **kwargs):
-        super(AddAddressForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.country.choices = countries_for_language('en')
         self.country.default = 'TW'

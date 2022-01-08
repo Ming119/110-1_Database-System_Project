@@ -1,7 +1,13 @@
 from flask_wtf import Form
 from wtforms import IntegerField, StringField, RadioField, SubmitField, validators
 
+'''
+'''
+
 class CheckoutForm(Form):
+    '''
+    '''
+
     addresses = RadioField('Address')
 
     paymentType = RadioField('Payment',
@@ -17,11 +23,14 @@ class CheckoutForm(Form):
     submit = SubmitField('Checkout')
 
     def __init__(self, addresses, *args, **kwargs):
-        super(CheckoutForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.addresses.choices = list((address.address_id, address.address) for address in addresses)
 
     def init(self):
+        '''
+        '''
+
         self.paymentType.default = "Cash"
         self.addresses.default = self.addresses.choices[0][0]
-        self.process()
+        self.process()  #pylint: disable=no-member

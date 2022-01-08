@@ -97,7 +97,7 @@ def register():
                             password   = registerForm.password.data,
                             first_name = registerForm.first_name.data,
                             last_name  = registerForm.last_name.data,
-                            DOB        = registerForm.DOB.data
+                            DOB        = registerForm.dob.data
                         )
 
         send_mail(recipients = [customer.email],

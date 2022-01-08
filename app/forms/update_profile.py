@@ -1,7 +1,13 @@
 from flask_wtf import Form
-from wtforms import StringField, TextAreaField, SubmitField, validators
+from wtforms import StringField, SubmitField, validators
+
+'''
+'''
 
 class UpdateProfileForm(Form):
+    '''
+    '''
+
     username = StringField('Username', validators=[
         validators.DataRequired(),
     ])
