@@ -34,5 +34,9 @@ def send_mail(recipients, subject, template, sender=None, mailtype='html', **kwa
     return thr
 
 def send_async_mail(app, msg):
+    '''
+    Function to send an async email
+    '''
+
     with app.app_context():
         mail.send(msg)

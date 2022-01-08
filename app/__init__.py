@@ -32,8 +32,8 @@ def create_app(test_config=None):
         init_app(app)
 
     from app.routes import (
-        indexRoute, userRoute, productRoute, discountRoute, orderRoute, report_route      # pylint: disable=import-outside-toplevel
-    )
+        indexRoute, userRoute, productRoute, discountRoute, orderRoute, report_route
+    )    # pylint: disable=import-outside-toplevel
     # Register Route Blueprint
     app.register_blueprint(indexRoute.bp)
     app.register_blueprint(userRoute.bp)
