@@ -21,7 +21,6 @@ def index():
         products_list = list()
         for word in words:
             products_list.extend(Product.getAllJoinedProductContains(word, True))
-            products_list.extend(Product.getAllJoinedProductContains(word, True))
         products = set(products_list)
 
     else: products = Product.getAllJoinedProduct(True)
@@ -247,11 +246,12 @@ def shoppingCart(user_id):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
+    flag = 1
     orderDiscount = None
     redeemCodeForm = RedeemCodeForm()
     if request.method == 'POST' and redeemCodeForm.validate_on_submit():
+        flag = 0
         orderDiscount = OrderDiscount.getByCode(redeemCodeForm.code.data)
-        print(orderDiscount)
         if orderDiscount is None:
             flash(f'Promo Code not found', 'warning')
 
@@ -269,6 +269,58 @@ def shoppingCart(user_id):
     shippingDiscount = ShippingDiscount.getActive()
     addresses = CustomerAddress.getAllByID(user_id)
 
+    checkoutForm = CheckoutForm(addresses)
+    if request.method == 'POST' and flag and checkoutForm.validate_on_submit():
+        if shippingDiscount is not None and amount >shippingDiscount.atLeastAmount:
+            shippingFee = 0
+        else:
+            shippingFee = round(amount*0.05, 2)
+
+        amount += shippingFee
+        if orderDiscount:
+            amount *= (1- orderDiscount.discountPercentage/100)
+
+        if checkoutForm.paymentType.data == 'Credit':
+            if checkoutForm.CreditCardNumber.data == '' or \
+                checkoutForm.Expiration.data == '' or \
+                checkoutForm.CVV.data == '':
+                flash(f'You must provide your credit card information', 'warning')
+                return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+            if Order.create(
+                    customer_id = user_id,
+                    address_id = checkoutForm.addresses.data,
+                    order_discount = orderDiscount,
+                    items = items,
+                    amount = amount,
+                    shippingFee = shippingFee,
+                    payment_type = 'Credit',
+                    account_no = checkoutForm.CreditCardNumber.data
+                ):
+                flash(f'Order created successfully!', 'success')
+                return redirect(url_for('index.index'))
+            flash(f'Order created failed!', 'warning')
+            return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+        elif checkoutForm.paymentType.data == 'Cash':
+            if Order.create(
+                    customer_id = user_id,
+                    address_id = checkoutForm.addresses.data,
+                    order_discount = orderDiscount,
+                    items = items,
+                    amount = amount,
+                    shippingFee = shippingFee
+                ):
+                flash(f'Order created successfully!', 'success')
+                return redirect(url_for('index.index'))
+            flash(f'Order created failed!', 'warning')
+            return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+        else:
+            flash(f'Order created failed!', 'warning')
+            return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+    checkoutForm.init()
     return render_template('shoppingCart.html',
                             items            = items,
                             quantity         = quantity,
@@ -276,6 +328,7 @@ def shoppingCart(user_id):
                             user_id          = user_id,
                             addresses        = addresses,
                             redeemCodeForm   = redeemCodeForm,
+                            checkoutForm     = checkoutForm,
                             shippingDiscount = shippingDiscount,
                             orderDiscount    = orderDiscount
                         )
