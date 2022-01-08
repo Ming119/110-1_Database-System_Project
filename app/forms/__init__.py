@@ -3,7 +3,7 @@ form/__init__.py
 '''
 
 from app.forms.add_address import AddAddressForm
-from app.forms.add_to_cart import AddToCardForm
+from app.forms.add_to_cart import AddToCartForm
 from app.forms.checkout import CheckoutForm
 from app.forms.forgot_password import ForgotPasswordForm
 from app.forms.login import LoginForm

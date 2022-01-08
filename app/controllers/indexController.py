@@ -3,7 +3,7 @@ from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
-from app.emailHelper import send_mail
+from app.email_helper import send_mail
 
 
 

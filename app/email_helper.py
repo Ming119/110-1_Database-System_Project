@@ -1,9 +1,18 @@
-from app.util import mail
+'''
+app/email_helper.py
+'''
+
+from threading import Thread
 from flask import current_app, render_template
 from flask_mail import Message
-from threading import Thread
+from app.util import mail
+
 
 def send_mail(recipients, subject, template, sender=None, mailtype='html', **kwargs):
+    '''
+    Function to send an email
+    '''
+
     app = current_app._get_current_object()
 
     # if not sender:
