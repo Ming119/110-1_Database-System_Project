@@ -25,7 +25,10 @@ class User(db.Model, UserMixin):
 
     last_login  = db.Column(db.DateTime, nullable=True)
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    modified_at = db.Column(db.DateTime, nullable=False,
+                            default=datetime.now,
+                            onupdate=datetime.now
+                        )
 
     __mapper_args__ = {
         'polymorphic_identity':'user',

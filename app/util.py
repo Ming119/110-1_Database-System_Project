@@ -102,5 +102,9 @@ def init_db_command():
 
     click.echo('Initialized the database.')
 
-def init_app(currentApp):
-    currentApp.cli.add_command(init_db_command)
+def init_app(ca):
+    '''
+    Add init-db to command
+    '''
+
+    ca.cli.add_command(init_db_command)

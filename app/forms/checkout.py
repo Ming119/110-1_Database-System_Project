@@ -41,4 +41,4 @@ class CheckoutForm(Form):
         self.paymentType.default = "Cash"
         if self.addresses.choices:
             self.addresses.default = self.addresses.choices[0][0]
-        self.process()
+        self.process()  # pylint: disable=no-member
