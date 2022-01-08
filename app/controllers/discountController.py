@@ -32,7 +32,7 @@ def index():
                      'order': Discount.count('order'),
                     }
 
-    return render_template('manageDiscount.html',
+    return render_template('discount/manageDiscount.html',
                             searchForm    = searchForm,
                             discounts     = discounts,
                             discountCount = discountCount
@@ -66,7 +66,7 @@ def filterIndex(type):
                      'order': Discount.count('order'),
                     }
 
-    return render_template('manageDiscount.html',
+    return render_template('discount/manageDiscount.html',
                             searchForm    = searchForm,
                             discounts     = discounts,
                             discountCount = discountCount,
@@ -136,20 +136,7 @@ def create(type):
 
         return redirect(url_for('discount.index'))
 
-    return render_template('newDiscount.html', newDiscountForm=newDiscountForm)
-
-
-
-@login_required
-def details(discount_code):
-    # access control
-    if current_user.role != 'staff':
-        flash(f'You are not allowed to access.', 'danger')
-        return redirect(url_for('index.index'))
-
-    discount = Discount.getByID(discount_code)
-
-    return render_template('discountDetails.html', discount=discount)
+    return render_template('discount/newDiscount.html', newDiscountForm=newDiscountForm)
 
 
 
@@ -206,7 +193,7 @@ def update(discount_code):
 
     updateDiscountForm.initData(discount)
 
-    return render_template('updateDiscount.html', updateDiscountForm=updateDiscountForm)
+    return render_template('discount/updateDiscount.html', updateDiscountForm=updateDiscountForm)
 
 
 

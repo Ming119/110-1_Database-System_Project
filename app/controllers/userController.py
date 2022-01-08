@@ -34,7 +34,7 @@ def index():
                     'customer': User.count('customer'),
                 }
 
-    return render_template("manageUser.html", users=users, userCount=userCount, searchForm=searchForm)
+    return render_template("user/manageUser.html", users=users, userCount=userCount, searchForm=searchForm)
 
 
 
@@ -66,7 +66,7 @@ def filterIndex(role):
                     'customer': User.count('customer'),
                 }
 
-    return render_template("manageUser.html",
+    return render_template("user/manageUser.html",
                             searchForm=searchForm,
                             users=users,
                             userCount=userCount,
@@ -136,7 +136,7 @@ def create(role):
 
         return redirect(url_for('user.index'))
 
-    return render_template("newUser.html", newUserForm=newUserForm)
+    return render_template("user/newUser.html", newUserForm=newUserForm)
 
 
 
@@ -151,7 +151,7 @@ def profile(user_id):
         return redirect(url_for('index.index'))
 
     user = User.getByID(user_id)
-    return render_template("userProfile.html", user=user)
+    return render_template("user/userProfile.html", user=user)
 
 
 
@@ -186,7 +186,7 @@ def update(user_id):
     updateProfileForm.first_name.data = user.first_name
     updateProfileForm.last_name.data = user.last_name
 
-    return render_template("updateProfile.html",
+    return render_template("user/updateProfile.html",
                 user              = user,
                 updateProfileForm = updateProfileForm
             );
@@ -278,4 +278,4 @@ def addAddress(user_id):
 
     addAddressForm.process()
 
-    return render_template('addAddress.html', addAddressForm=addAddressForm)
+    return render_template('user/addAddress.html', addAddressForm=addAddressForm)
