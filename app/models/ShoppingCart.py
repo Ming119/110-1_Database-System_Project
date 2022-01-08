@@ -39,6 +39,13 @@ class CartItem(db.Model):
 
         except: return False
 
+    def delete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+            return True
+        except: return False
+
     @staticmethod
     def create(cart_id, product_id, quantity, amount):
         if (quantity < 1):

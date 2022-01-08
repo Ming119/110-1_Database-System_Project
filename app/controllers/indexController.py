@@ -291,7 +291,12 @@ def shoppingCart(user_id):
                     account_no = checkoutForm.CreditCardNumber.data
                 ):
                 flash(f'Order created successfully!', 'success')
+                for item in items:
+                    p = Product.getByID(item.product_id)
+                    p.sell(item.quantity)
+                    item.delete()
                 return redirect(url_for('index.index'))
+
             flash(f'Order created failed!', 'warning')
             return redirect(url_for('index.shoppingCart', user_id=user_id))
 
@@ -305,7 +310,12 @@ def shoppingCart(user_id):
                     shippingFee = shippingFee
                 ):
                 flash(f'Order created successfully!', 'success')
+                for item in items:
+                    p = Product.getByID(item.product_id)
+                    p.sell(item.quantity)
+                    item.delete()
                 return redirect(url_for('index.index'))
+
             flash(f'Order created failed!', 'warning')
             return redirect(url_for('index.shoppingCart', user_id=user_id))
 
