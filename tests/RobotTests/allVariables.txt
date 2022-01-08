@@ -4,4 +4,5 @@ Resource    Variables/forgotPassword.txt
 Resource    Variables/index.txt
 Resource    Variables/login.txt
 Resource    Variables/manageProduct.txt
+Resource    Variables/manageUser.txt
 Resource    Variables/register.txt

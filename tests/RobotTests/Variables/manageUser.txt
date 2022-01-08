@@ -1,0 +1,28 @@
+*** Settings ***
+Resource    common.txt
+
+*** Variables ***
+${breadcrumb} =    //ol[contains(@class, 'breadcrumb')]
+${breadcrumbHome} =    ${breadcrumb}//li[contains(@class, 'breadcrumb-item') and normalize-space()='Home']
+${breadcrumbManageUser} =    ${breadcrumb}//li[contains(@class, 'breadcrumb-item active') and normalize-space()='Manage User']
+
+${roleList} =    //*[@id='role-list']
+${allRole} =    ${roleList}//a[normalize-space()='All Role']
+${adminRole} =    ${roleList}//a[normalize-space()='Admin']
+${staffRole} =    ${roleList}//a[normalize-space()='Staff']
+${customerRole} =    ${roleList}//a[normalize-space()='Customer']
+${allRoleBadge} =    ${allRole}//span[contains(@class, 'badge')]
+${adminRoleBadge} =    ${adminRole}//span[contains(@class, 'badge')]
+${staffRoleBadge} =    ${staffRole}//span[contains(@class, 'badge')]
+${customerRoleBadge} =    ${customerRole}//span[contains(@class, 'badge')]
+
+${searchForm} =    //form[normalize-space()='Search']
+
+${newCustomerButton} =    //*[contains(@class, 'btn') and normalize-space()='New Customer']
+${newStaffButton} =    //*[contains(@class, 'btn') and normalize-space()='New Staff']
+
+${createNewCustomerTitle} =    ${cardHeader}//*[normalize-space()='Create a new customer']
+${createNewStaffTitle} =    ${cardHeader}//*[normalize-space()='Create a new staff']
+${table} =    //table[contains(@id, 'data')]    # Fixme: change id
+
+${createButton} =    ${cardBody}//form//*[@id='submit']

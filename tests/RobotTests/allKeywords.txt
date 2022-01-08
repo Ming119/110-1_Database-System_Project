@@ -5,4 +5,5 @@ Resource    Keywords/forgotPassword.txt
 Resource    Keywords/index.txt
 Resource    Keywords/login.txt
 Resource    Keywords/manageProduct.txt
+Resource    Keywords/manageUser.txt
 Resource    Keywords/register.txt

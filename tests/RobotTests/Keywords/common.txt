@@ -59,7 +59,7 @@ Go To Manage Discount Page
 
 Go To Manage User Page
     Common::Click Navbar Button    ManageUser
-    Common::Wait Until Navbar Contains    Home    ManagerUser    UserProfile    Logout
+    Common::Wait Until Navbar Contains    Home    ManageUser    UserProfile    Logout
 
 Logout
     Common::Click Navbar Button    Logout

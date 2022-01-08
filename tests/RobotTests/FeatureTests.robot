@@ -50,10 +50,31 @@ Forgot Password Page
     Verify Forgot Password
     [Teardown]    Go To Home Page
 
+# TODO: Doing
+Manage User Page
+    [Tags]    manageUser
+    [Setup]    Run Keywords    Go To Login Page
+    ...                 AND    Login As   username=admin    password=admin
+    ...                 AND    Go To Manage user Page
+    Verify Manage User Page Is Visible
+    # Verify New Customer Button    # TODO:
+    # Verify New Staff Button       # TODO:
+    [Teardown]    Logout
+
+# TODO: Doing
 Manage Products Page
-  [Tags]    UIR-05    manage_product
-  [Setup]    Run Keywords    Go To Login Page
-  ...                 AND    Login As   username=staff    password=staff
-  ...                 AND    Go To Manage Products Page
-  Verify Manage Product Page Is Visible
-  [Teardown]    Go To Home Page
+    [Tags]    UIR-05    manage_product
+    [Setup]    Run Keywords    Go To Login Page
+    ...                 AND    Login As   username=staff    password=staff
+    ...                 AND    Go To Manage Products Page
+    Verify Manage Product Page Is Visible
+    [Teardown]    Logout
+
+# TODO: Doing
+Manage Discounts Page
+    [Tags]    UIR-05    manage_product
+    [Setup]    Run Keywords    Go To Login Page
+    ...                 AND    Login As   username=staff    password=staff
+    ...                 AND    Go To Manage Discount Page
+    Verify Manage Discount Page Is Visible
+    [Teardown]    Logout

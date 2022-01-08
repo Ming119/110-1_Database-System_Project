@@ -1,0 +1,68 @@
+*** Settings ***
+Library    Selenium2Library
+Resource    ../allKeywords.txt
+Resource    ../allVariables.txt
+
+*** keywords ***
+Verify Manage User Page Is Visible
+    Wait Until Element Is Visible    ${breadcrumbHome}    ${normalPeriodOfTime}    'Breadcrumb Home Should Be Visible'
+    Wait Until Element Is Visible    ${breadcrumbManageUser}    ${normalPeriodOfTime}    'Breadcrumb Manage User Should Be Visible'
+    Wait Until Element Is Visible    ${allRole}    ${normalPeriodOfTime}    'All Role Should Be Visible'
+    Wait Until Element Is Visible    ${adminRole}    ${normalPeriodOfTime}    'Admin Role Should Be Visible'
+    Wait Until Element Is Visible    ${staffRole}    ${normalPeriodOfTime}    'Staff Role Should Be Visible'
+    Wait Until Element Is Visible    ${customerRole}    ${normalPeriodOfTime}    'Customer Role Should Be Visible'
+    Wait Until Element Is Visible    ${allRoleBadge}    ${normalPeriodOfTime}    'All Role Badge Should Be Visible'
+    Wait Until Element Is Visible    ${adminRoleBadge}    ${normalPeriodOfTime}    'Admin Role Badge Should Be Visible'
+    Wait Until Element Is Visible    ${staffRoleBadge}    ${normalPeriodOfTime}    'Staff Role Badge Should Be Visible'
+    Wait Until Element Is Visible    ${customerRoleBadge}    ${normalPeriodOfTime}    'Customer Role Badge Should Be Visible'
+    Wait Until Element Is Visible    ${searchForm}    ${normalPeriodOfTime}    'Search Form Should Be Visible'
+    Wait Until Element Is Visible    ${newCustomerButton}    ${normalPeriodOfTime}    'New Customer Button Should Be Visible'
+    Wait Until Element Is Visible    ${newStaffButton}    ${normalPeriodOfTime}    'New Staff Button Should Be Visible'
+    Wait Until Element Is Visible    ${table}    ${normalPeriodOfTime}    'Table Should Be Visible'
+    # TODO:
+
+Click "New Customer" Button
+    Click Element   ${newCustomerButton}
+    New Customer Form Should Be Visible
+
+Click "New Staff" Button
+    Click Element   ${newStaffButton}
+    New Staff Form Should Be Visible
+
+New Customer Form Should Be Visible
+    Wait Until Element Is Visible   ${createNewCustomerTitle}    ${normalPeriodOfTime}    'Create New Customer Title Should Be Visible'
+    Wait Until Element Is Visible   ${emailField}   ${normalPeriodOfTime}   'Email Field Should Be Visible'
+    Wait Until Element Is Visible   ${usernameField}    ${normalPeriodOfTime}    'Username Field Should Be Visible'
+    Wait Until Element Is Visible   ${passwordField}    ${normalPeriodOfTime}    'Password Field Should Be Visible'
+    Wait Until Element Is Visible   ${confirmPasswordField}    ${normalPeriodOfTime}   'Confirm Password Field Should Be Visible'
+    Wait Until Element Is Visible   ${firstNameField}    ${normalPeriodOfTime}   'First Name Field Should Be Visible'
+    Wait Until Element Is Visible   ${lastNameField}    ${normalPeriodOfTime}    'Last Name Field Should Be Visible'
+    Wait Until Element Is Visible   ${DOBDatePicker}    ${normalPeriodOfTime}    'DOB Field Should Be Visible'
+
+New Staff Form Should Be Visible
+    Wait Until Element Is Visible   ${createNewStaffTitle}    ${normalPeriodOfTime}    'Create New Staff Title Should Be Visible'
+    Wait Until Element Is Visible   ${emailField}   ${normalPeriodOfTime}   'Email Field Should Be Visible'
+    Wait Until Element Is Visible   ${usernameField}    ${normalPeriodOfTime}    'Username Field Should Be Visible'
+    Wait Until Element Is Visible   ${passwordField}    ${normalPeriodOfTime}    'Password Field Should Be Visible'
+    Wait Until Element Is Visible   ${confirmPasswordField}    ${normalPeriodOfTime}    'Confirm Password Field Should Be Visible'
+    Wait Until Element Is Visible   ${firstNameField}    ${normalPeriodOfTime}    'First Name Field Should Be Visible'
+    Wait Until Element Is Visible   ${lastNameField}    ${normalPeriodOfTime}    'Last Name Field Should Be Visible'
+
+Verify New Customer Button
+    Click "New Customer" Button
+    Create  # TODO:
+
+Verify New Staff Button
+    Click "New Staff" Button
+    Create  # TODO:
+
+Create
+    [Arguments]    ${email}    ${username}    ${password}    ${confirmPassword}    ${firstName}    ${lastName}    ${DOB}=${None}
+    Input Text    ${emailField}    ${username}
+    Input Text    ${usernameField}    ${username}
+    Input Text    ${passwordField}    ${password}
+    Input Text    ${confirmPasswordField}    ${confirmPassword}
+    Input Text    ${firstNameField}    ${firstName}
+    Input Text    ${lastNameField}    ${lastName}
+    Run Keyword If    '''${BOD}'''!='''${None}'''    Input Text    ${DOBDatePicker}    ${DOB}   # FIXME
+    Click Element    ${createButton}
