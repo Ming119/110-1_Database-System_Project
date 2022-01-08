@@ -114,7 +114,7 @@ def process(order_id):
         send_mail(recipients = [user.email],
                   subject    = '[Moonbird] Your order have been delivered.',
                   template   = 'mail/orderDelivered',
-                  user       = user
+                  user       = user,
                   token      = user.create_confirm_token(expires_in=604800) # 7days
                  )
 
