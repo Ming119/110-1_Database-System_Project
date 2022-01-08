@@ -2,7 +2,7 @@ from app.models import *
 from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-
+from app.email_helper import send_mail
 
 
 @login_required
@@ -101,11 +101,21 @@ def details(order_id):
 
 
 @login_required
-def update(order_id):
+def process(order_id):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
     order = Order.getByID(order_id)
+    order.Order.process()
 
-    return render_template('order/manageOrder.html')    #FIXME
+    if order.Order.status == 'delivered':
+        user = User.getByID(order.Order.customer_id)
+        send_mail(recipients = [user.email],
+                  subject    = '[Moonbird] Your order have been delivered.',
+                  template   = 'mail/orderDelivered',
+                  user       = user
+                  token      = user.create_confirm_token(expires_in=604800) # 7days
+                 )
+
+    return redirect(url_for('order.index', user_id=current_user.user_id))
