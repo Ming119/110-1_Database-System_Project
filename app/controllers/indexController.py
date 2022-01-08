@@ -3,7 +3,7 @@ from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
-from app.emailHelper import send_mail
+from app.email_helper import send_mail
 
 
 
@@ -97,7 +97,7 @@ def register():
                             password   = registerForm.password.data,
                             first_name = registerForm.first_name.data,
                             last_name  = registerForm.last_name.data,
-                            DOB        = registerForm.DOB.data
+                            DOB        = registerForm.dob.data
                         )
 
         send_mail(recipients = [customer.email],
