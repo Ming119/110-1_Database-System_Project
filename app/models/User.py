@@ -224,8 +224,7 @@ class Admin(User):
 
     def activateUserByID(self, user_id):
         try:
-            user = User.getByIDWithInactive(user_id)
-            if (user.role == 'admin'): return False
+            user = User.getByID(user_id)
             user.is_active = True
             db.session.commit()
             return True
@@ -234,7 +233,7 @@ class Admin(User):
 
     def deactivateUserByID(self, user_id):
         try:
-            user = User.getByID(user_id)
+            user = User.getByID(user_id, True)
             if (user.role == 'admin'): return False
             user.is_active = False
             db.session.commit()

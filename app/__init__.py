@@ -1,8 +1,15 @@
-import os
+'''
+app/__init__.py
+'''
 
+import os
 from flask import Flask
 
 def create_app(test_config=None):
+    '''
+    Entry function to the entire application
+    '''
+
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
@@ -21,13 +28,13 @@ def create_app(test_config=None):
 
     # Register the database with the Application
     with app.app_context():
-        from app.util import init_app
+        from app.util import init_app   # pylint: disable=import-outside-toplevel
         init_app(app)
 
-    # Register Route Blueprint
     from app.routes import (
-        indexRoute, userRoute, productRoute, discountRoute, orderRoute
+        indexRoute, userRoute, productRoute, discountRoute, orderRoute  # pylint: disable=import-outside-toplevel
     )
+    # Register Route Blueprint
     app.register_blueprint(indexRoute.bp)
     app.register_blueprint(userRoute.bp)
     app.register_blueprint(productRoute.bp)

@@ -3,7 +3,7 @@ from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
-from app.emailHelper import send_mail
+from app.email_helper import send_mail
 
 
 
@@ -97,7 +97,7 @@ def register():
                             password   = registerForm.password.data,
                             first_name = registerForm.first_name.data,
                             last_name  = registerForm.last_name.data,
-                            DOB        = registerForm.DOB.data
+                            DOB        = registerForm.dob.data
                         )
 
         send_mail(recipients = [customer.email],
@@ -157,13 +157,20 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
 
         if user and user.check_password(form.password.data):
-            user.last_login = datetime.now()
-            user.update()
-            login_user(user, form.remember_me.data)
-            flash(f'Login successful!', 'success')
+            if user.is_active:
+                user.last_login = datetime.now()
+                user.update()
+                login_user(user, form.remember_me.data)
+                flash(f'Login successful!', 'success')
+
+            else:
+                flash(f'Your account is inactive.', 'warning')
+
             return redirect(url_for('index.index'))
 
-        flash(f'Wrong username or password', 'warning')
+        else:
+            flash(f'Wrong username or password', 'warning')
+            return redirect(url_for('index.login'))
 
     return render_template('login.html', form=form)
 
