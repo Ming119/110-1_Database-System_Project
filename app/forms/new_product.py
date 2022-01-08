@@ -1,12 +1,19 @@
+'''
+new_product.py
+'''
+
 from flask import flash
 from flask_wtf import Form
-from wtforms import StringField, IntegerField, FloatField, SelectField, SubmitField, validators, ValidationError
+from wtforms import (
+    StringField, IntegerField, FloatField, SelectField,
+    SubmitField, validators, ValidationError
+)
 
-'''
-'''
+
 
 class NewProductForm(Form):
     '''
+    Class of New Product Form
     '''
 
     productName = StringField('Name', validators=[
@@ -35,11 +42,13 @@ class NewProductForm(Form):
 
     productSubmit = SubmitField('Submit')
 
-    def __init__(self, categories, discounts, product=None, *arg, **kwargs):
+    def __init__(self, categories, discounts, *arg, product=None, **kwargs):
         super().__init__(*arg, **kwargs)
         self.category.choices = [(category.category_id, category.name) for category in categories]
         self.discount.choices = [(None, None)]
-        self.discount.choices.extend([(discount.discount_code, discount.discount_code) for discount in discounts])
+        self.discount.choices.extend(
+            [(discount.discount_code, discount.discount_code) for discount in discounts]
+        )
         if product is not None:
             self.init(product)
 

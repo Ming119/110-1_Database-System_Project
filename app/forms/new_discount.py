@@ -1,9 +1,12 @@
+'''
+new_discount.py
+'''
+
 from flask_wtf import Form
 from wtforms import StringField, FloatField, SubmitField, validators
 from wtforms.fields.html5 import DateField, IntegerRangeField
 
-'''
-'''
+
 
 class NewDiscountForm(Form):
     '''

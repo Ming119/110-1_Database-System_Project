@@ -1,12 +1,16 @@
+'''
+add_address.py
+'''
+
 from flask_wtf import Form
 from wtforms import StringField, SelectField, SubmitField, validators
 from country_list import countries_for_language
 
-'''
-'''
+
 
 class AddAddressForm(Form):
     '''
+    Class of Add Address Form
     '''
 
     country = SelectField('Country')

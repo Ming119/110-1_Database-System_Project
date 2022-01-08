@@ -1,13 +1,17 @@
+'''
+register.py
+'''
+
 from datetime import date
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, SubmitField, validators, ValidationError
 from wtforms.fields.html5 import EmailField, DateField
 
-'''
-'''
+
 
 class RegisterForm(Form):
     '''
+    Class of Register Form
     '''
 
     email = EmailField('Email', validators=[
@@ -58,5 +62,5 @@ class RegisterForm(Form):
         The input date of birth should before the current day
         '''
 
-        if (field.data > date.today()):
+        if field.data > date.today():
             raise ValidationError('Date must before today.')

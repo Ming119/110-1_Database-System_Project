@@ -1,9 +1,12 @@
+'''
+new_user.py
+'''
+
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, SubmitField, validators, ValidationError
 from wtforms.fields.html5 import EmailField, DateField
 
-'''
-'''
+
 
 class NewUserForm(Form):
     '''
@@ -39,7 +42,7 @@ class NewUserForm(Form):
 
     submit = SubmitField('Create')
 
-    def validate_password(self, field):
+    def validate_password(self, field): # pylint: disable=no-self-use
         '''
         Validate password
         The input password should contains number and alphabet
