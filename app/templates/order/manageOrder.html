@@ -58,7 +58,14 @@
                     <td>{{ order.CustomerAddress.address }}</td>
 
                     <td>
+                        {% if current_user.role == 'staff' %}
+                        <div class="btn-group">
+                            <a class="btn btn-info" href="{{ url_for('order.details', order_id=order.Order.order_id) }}">Details</a>
+                            <a class="btn btn-warning" href="{{ url_for('order.process', order_id=order.Order.order_id) }}">Process</a>
+                        </div>
+                        {% else %}
                         <a class="btn btn-info" href="{{ url_for('order.details', order_id=order.Order.order_id) }}">Details</a>
+                        {% endif %}
                     </td>
                 </tbody>
                 {% endfor %}
