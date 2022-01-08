@@ -1,3 +1,7 @@
+'''
+index_route.py
+'''
+
 from app.controllers.indexController import *
 from flask import Blueprint
 
