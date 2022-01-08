@@ -10,17 +10,14 @@ def index(user_id):
     if current_user.role != 'staff' and current_user.user_id != user_id:
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
-      
+
     searchForm = SearchForm()
     if request.method == 'POST' and searchForm.validate_on_submit():
         words = searchForm.search.data.split(' ')
 
         orders_list = list()
         for word in words:
-            # orders_list.extend(Order.query.filter(Order.discount_code.contains(word)).all())
-            pass
-            # FIXME: the search algo is different from other subsystem
-
+            orders_list.extend(Order.getAllContains(word))
         orders = set(orders_list)
 
     elif current_user.role == 'staff':
@@ -61,10 +58,7 @@ def filterIndex(user_id, status):
 
         orders_list = list()
         for word in words:
-            # orders_list.extend(Order.query.filter(Order.discount_code.contains(word) and Discount.status==status).all())
-            pass
-            # FIXME: the search algo is different from other subsystem
-
+            orders_list.extend(Order.getAllContains(word))
         orders = set(orders_list)
 
     elif current_user.role == 'staff':
@@ -118,5 +112,5 @@ def update(order_id):
         return redirect(url_for('index.index'))
 
     order = Order.getByID(order_id)
-    
+
     return render_template('order/manageOrder.html')    #FIXME

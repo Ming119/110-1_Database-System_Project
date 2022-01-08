@@ -21,7 +21,6 @@ def index():
         products_list = list()
         for word in words:
             products_list.extend(Product.getAllJoinedProductContains(word, True))
-            products_list.extend(Product.getAllJoinedProductContains(word, True))
         products = set(products_list)
 
     else: products = Product.getAllJoinedProduct(True)

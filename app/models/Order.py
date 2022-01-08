@@ -32,30 +32,44 @@ class Order(db.Model):
         except: return False
 
     @staticmethod
-    def getAll():
+    def joinUserAndAddress():
         return Order.query.join(Customer, Order.customer_id==Customer.user_id).add_columns(
             Order.order_id, Order.customer_id, Order.address_id, Order.order_discount, Order.orderItems,
             Order.amount, Order.shippingFee, Order.shipDate, Order.status,
             Order.payment_type, Order.provider, Order.account_no, Order.create_at,
-            Customer.username
+            Customer.user_id, Customer.email, Customer.username, Customer.first_name, Customer.last_name
         ).join(CustomerAddress, Order.address_id==CustomerAddress.address_id).add_columns(
             CustomerAddress.address_id, CustomerAddress.country, CustomerAddress.city,
             CustomerAddress.address, CustomerAddress.postal_code, CustomerAddress.telephone
-        ).all()
+        )
+
+    @staticmethod
+    def getAll():
+        return Order.joinUserAndAddress().all()
+
+    @staticmethod
+    def getAllContains(word):
+        return Order.joinUserAndAddress().filter(
+            db.or_(Customer.email.contains(word), Customer.username.contains(word),
+                    Customer.first_name.contains(word), Customer.last_name.contains(word),
+                    CustomerAddress.country.contains(word), CustomerAddress.city.contains(word),
+                    CustomerAddress.address.contains(word), CustomerAddress.postal_code.contains(word),
+                    CustomerAddress.telephone.contains(word),
+            )).all()
 
     @staticmethod
     def getByStatus(status):
-        return Order.query.filter_by(status=status).all()
+        return Order.joinUserAndAddress().filter(Order.status==status).all()
 
     @staticmethod
     def getByID(order_id):
-        return Order.query.filter_by(order_id=order_id).first()
+        return Order.joinUserAndAddress().filter_by(Order.order_id==order_id).first()
 
     @staticmethod
     def getByCustomerID(customer_id, status=None):
         if status:
-            return Order.query.filter_by(customer_id=customer_id, status=status).all()
-        return Order.query.filter_by(customer_id=customer_id).all()
+            return Order.joinUserAndAddress().filter(Order.customer_id==customer_id, Order.status==status).all()
+        return Order.joinUserAndAddress().filter(Order.customer_id==customer_id).all()
 
     @staticmethod
     def count(status=None, customer_id=None):
