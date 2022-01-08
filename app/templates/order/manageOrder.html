@@ -11,16 +11,16 @@
         </nav>
 
         <div id="role-list" class="list-group">
-            <a href="{{ url_for('order.index', user_id=current_user.user_id) }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter==-1 %} active {% endif %}">All
+            <a href="{{ url_for('order.index', user_id=current_user.user_id) }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if not filter %} active {% endif %}">All
                 <span class="badge bg-secondary rounded-pill">{{ orderCount['all'] }}</span>
             </a>
-            <a href="{{ url_for('order.filterIndex', user_id=current_user.user_id, status=0) }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter==0 %} active {% endif %}">Processing
+            <a href="{{ url_for('order.filterIndex', user_id=current_user.user_id, status='processing') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter=='processing' %} active {% endif %}">Processing
                 <span class="badge bg-secondary rounded-pill">{{ orderCount['processing'] }}</span>
             </a>
-            <a href="{{ url_for('order.filterIndex', user_id=current_user.user_id, status=1) }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter==1 %} active {% endif %}">Delivering
+            <a href="{{ url_for('order.filterIndex', user_id=current_user.user_id, status='delivering') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter=='delivering' %} active {% endif %}">Delivering
                 <span class="badge bg-secondary rounded-pill">{{ orderCount['delivering'] }}</span>
             </a>
-            <a href="{{ url_for('order.filterIndex', user_id=current_user.user_id, status=2) }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter==2 %} active {% endif %}">Delivered
+            <a href="{{ url_for('order.filterIndex', user_id=current_user.user_id, status='delivered') }}" class="list-group-item list-group-item-action d-flex justify-content-between {% if filter=='delivered' %} active {% endif %}">Delivered
                 <span class="badge bg-secondary rounded-pill">{{ orderCount['delivered'] }}</span>
             </a>
         </div>
@@ -51,10 +51,9 @@
                 </thead>
                 {% for order in orders %}
                 <tbody>
-
                     <td>{{ order.Order.order_id }}</td>
                     <td>{{ order.Customer.username }}</td>
-                    <td>${{ order.Order.amount }} + ${{ order.Order.shippingFee }}</td>
+                    <td>${{ order.Order.amount }} (${{ order.Order.shippingFee }} Shipping Fee)</td>
                     <td>{{ order.Order.status }}</td>
                     <td>{{ order.CustomerAddress.address }}</td>
 

@@ -17,7 +17,7 @@ class Order(db.Model):
     amount      = db.Column(db.Float(),  nullable=False, default=0)
     shippingFee = db.Column(db.Integer,  nullable=False, default=0)
     shipDate    = db.Column(db.DateTime, nullable=True)
-    status      = db.Column(db.Integer,  nullable=False, default=0)
+    status      = db.Column(db.String(16),  nullable=False, default='processing')
 
     payment_type = db.Column(db.String(8),  nullable=True)
     provider     = db.Column(db.String(64), nullable=True)
@@ -27,7 +27,10 @@ class Order(db.Model):
 
     def process(self):
         try:
-            self.status += 1
+            if self.status == 'processing':
+                self.status = 'delivering'
+            elif self.status == 'delivering':
+                self.status = 'delivered'
             db.session.commit()
             return True
         except: return False
