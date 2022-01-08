@@ -2,6 +2,7 @@ from app.util import db
 from datetime import datetime
 from app.models.User import Customer
 from app.models.CustomerAddress import CustomerAddress
+from app.models.Product import Product
 
 
 class Order(db.Model):
@@ -33,15 +34,19 @@ class Order(db.Model):
 
     @staticmethod
     def joinUserAndAddress():
-        return Order.query.join(Customer, Order.customer_id==Customer.user_id).add_columns(
-            Order.order_id, Order.customer_id, Order.address_id, Order.order_discount, Order.orderItems,
-            Order.amount, Order.shippingFee, Order.shipDate, Order.status,
-            Order.payment_type, Order.provider, Order.account_no, Order.create_at,
-            Customer.user_id, Customer.email, Customer.username, Customer.first_name, Customer.last_name
-        ).join(CustomerAddress, Order.address_id==CustomerAddress.address_id).add_columns(
-            CustomerAddress.address_id, CustomerAddress.country, CustomerAddress.city,
-            CustomerAddress.address, CustomerAddress.postal_code, CustomerAddress.telephone
-        )
+        return db.session.query(Order, Customer, CustomerAddress).filter(
+                    Order.customer_id==Customer.user_id, Order.address_id==CustomerAddress.address_id
+                )
+
+    @staticmethod
+    def joinProduct():
+        return db.session.query(Order, OrderItem, Product).filter(
+                    Order.order_id==OrderItem.order_id, OrderItem.product_id==Product.product_id
+                )
+
+    @staticmethod
+    def getOrderProduct(order_id):
+        return Order.joinProduct().filter(Order.order_id==order_id).all()
 
     @staticmethod
     def getAll():
@@ -63,7 +68,7 @@ class Order(db.Model):
 
     @staticmethod
     def getByID(order_id):
-        return Order.joinUserAndAddress().filter_by(Order.order_id==order_id).first()
+        return Order.joinUserAndAddress().filter(Order.order_id==order_id).first()
 
     @staticmethod
     def getByCustomerID(customer_id, status=None):

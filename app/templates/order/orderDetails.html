@@ -11,19 +11,19 @@
     </tr>
     <tr>
         <th>Order ID</th>
-        <td>{{ order.id }}</td>
+        <td>{{ order.Order.order_id }}</td>
     </tr>
     <tr>
         <th>Creation Date</th>
-        <td>{{ order.createdAt }}</td>
+        <td>{{ order.Order.create_at }}</td>
     </tr>
     <tr>
         <th>Total price</th>
-        <td>{{ order.total }}</td>
+        <td>${{ order.Order.amount }} (${{ order.Order.shippingFee }} Shipping Fee)</td>
     </tr>
     <tr>
         <th>Status</th>
-        <td>{{ order.status }}</td>
+        <td>{{ order.Order.status }}</td>
     </tr>
     <tr>
         <td colspan="2">
@@ -36,18 +36,18 @@
                 <thead>
                 <tr>
                     <th>Product</th>
-                    <th>Quantity</th>
                     <th>Unit Price</th>
+                    <th>Quantity</th>
                     <th>Total</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for i in order.items %}
+                {% for i in items %}
                 <tr>
-                    <td>{{ i.product.title }}</td>
-                    <td>{{ i.quantity }}</td>
-                    <td>{{ i.unitPrice }}</td>
-                    <td>{{ i.total }}</td>
+                    <td>{{ i.Product.name }}</td>
+                    <td>{{ i.Product.price }}</td>
+                    <td>{{ i.OrderItem.quantity }}</td>
+                    <td>{{ i.OrderItem.amount }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>

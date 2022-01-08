@@ -48,7 +48,7 @@ def index(user_id):
 
 @login_required
 def filterIndex(user_id, status):
-    if current_user.role != 'staff':
+    if current_user.role != 'staff' and current_user.user_id != user_id:
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
@@ -91,17 +91,13 @@ def filterIndex(user_id, status):
 @login_required
 def details(order_id):
     order = Order.getByID(order_id)
-    if current_user.role != 'staff' and current_user.user_id != order.customer_id:
+    if current_user.role != 'staff' and current_user.user_id != order.Customer.user_id:
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    orders = Order.getAll()
-    form = NewProductForm(orders)
+    items = Order.getOrderProduct(order_id)
 
-    form.initProductData(order)
-
-    return render_template('order/orderDetail.html', form=form, orders=orders)
-    #return render_template('order/manageOrder.html', order=order) #order/orderDeteail.html
+    return render_template('order/orderDetails.html', order=order, items=items)
 
 
 

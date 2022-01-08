@@ -39,6 +39,13 @@ class CartItem(db.Model):
 
         except: return False
 
+    def remove(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+            return True
+        except: return False
+
     @staticmethod
     def create(cart_id, product_id, quantity, amount):
         if (quantity < 1):
@@ -56,11 +63,15 @@ class CartItem(db.Model):
         except: return False
 
     @staticmethod
+    def getByID(cart_id, product_id):
+        return CartItem.query.filter_by(cart_id=cart_id, product_id=product_id).first()
+
+    @staticmethod
     def getAllJoinedItems(user_id):
         return CartItem.query.join(
                     Product, CartItem.product_id==Product.product_id
                 ).add_columns(
-                    CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price, Product.product_id
+                    CartItem.cart_id, CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price, Product.product_id
                 ).filter(CartItem.cart_id==user_id).join(
                     ProductDiscount, Product.discount_code==ProductDiscount.discount_code, isouter=True
                 ).add_columns(
