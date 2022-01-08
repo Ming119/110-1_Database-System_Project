@@ -101,7 +101,7 @@ def register():
                         )
 
         send_mail(recipients = [customer.email],
-                  subject    = 'Welcome to ...',
+                  subject    = '[Moonbird] Welcome to Moonbird!',
                   template   = 'mail/confirmRegistration',
                   user       = customer,
                   token      = customer.create_confirm_token(),
@@ -130,7 +130,7 @@ def confirmRegistration(token):
         customer.update(is_active=True)
 
         send_mail(recipients = [customer.email],
-                  subject    = 'Welcome to ...',
+                  subject    = '[Moonbird] Your account has been confirmed!',
                   template   = 'mail/registrationConfirmed',
                   user       = customer
                  )
@@ -196,7 +196,7 @@ def forgotPassword():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.is_active == True:
             send_mail(recipients = [user.email],
-                      subject    = 'Reset your password',
+                      subject    = '[Moonbird] Reset your password',
                       template   = 'mail/resetPassword',
                       user       = user,
                       token      = user.create_confirm_token()
@@ -228,7 +228,7 @@ def resetPassword(token):
         user.password = form.password.data
 
         send_mail(recipients = [user.email],
-                  subject    = 'Password Updated Successfully',
+                  subject    = '[Moonbird] Password Updated Successfully',
                   template   = 'mail/passwordUpdated',
                   user       = user
                  )
@@ -269,6 +269,7 @@ def shoppingCart(user_id):
     shippingDiscount = ShippingDiscount.getActive()
     addresses = CustomerAddress.getAllByID(user_id)
 
+    user = User.getByID(user_id)
     checkoutForm = CheckoutForm(addresses)
     if request.method == 'POST' and flag and checkoutForm.validate_on_submit():
         if shippingDiscount is not None and amount >shippingDiscount.atLeastAmount:
@@ -298,11 +299,19 @@ def shoppingCart(user_id):
                     account_no = checkoutForm.CreditCardNumber.data
                 ):
                 flash(f'Order created successfully!', 'success')
+
+                send_mail(recipients = [user.email],
+                          subject    = '[Moonbird] Your Order have been accepted and now being processed!',
+                          template   = 'mail/checkout',
+                          user       = user
+                         )
+
                 for item in items:
                     p = Product.getByID(item.product_id)
                     p.sell(item.quantity)
                     i = CartItem.getByID(item.cart_id, item.product_id)
                     i.remove()
+
                 return redirect(url_for('index.index'))
 
             flash(f'Order created failed!', 'warning')
@@ -318,11 +327,19 @@ def shoppingCart(user_id):
                     shippingFee = shippingFee
                 ):
                 flash(f'Order created successfully!', 'success')
+
+                send_mail(recipients = [user.email],
+                          subject    = '[Moonbird] Your Order have been accepted and now being processed!',
+                          template   = 'mail/checkout',
+                          user       = user
+                         )
+
                 for item in items:
                     p = Product.getByID(item.product_id)
                     p.sell(item.quantity)
                     i = CartItem.getByID(item.cart_id, item.product_id)
                     i.remove()
+
                 return redirect(url_for('index.index'))
 
             flash(f'Order created failed!', 'warning')
