@@ -23,5 +23,6 @@ class CheckoutForm(Form):
 
     def init(self):
         self.paymentType.default = "Cash"
-        self.addresses.default = self.addresses.choices[0][0]
+        if self.addresses.choices:
+            self.addresses.default = self.addresses.choices[0][0]
         self.process()
