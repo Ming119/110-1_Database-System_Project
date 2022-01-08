@@ -39,5 +39,6 @@ class CheckoutForm(Form):
         '''
 
         self.paymentType.default = "Cash"
-        self.addresses.default = self.addresses.choices[0][0]
-        self.process()  #pylint: disable=no-member
+        if self.addresses.choices:
+            self.addresses.default = self.addresses.choices[0][0]
+        self.process()

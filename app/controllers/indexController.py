@@ -157,13 +157,20 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
 
         if user and user.check_password(form.password.data):
-            user.last_login = datetime.now()
-            user.update()
-            login_user(user, form.remember_me.data)
-            flash(f'Login successful!', 'success')
+            if user.is_active:
+                user.last_login = datetime.now()
+                user.update()
+                login_user(user, form.remember_me.data)
+                flash(f'Login successful!', 'success')
+
+            else:
+                flash(f'Your account is inactive.', 'warning')
+
             return redirect(url_for('index.index'))
 
-        flash(f'Wrong username or password', 'warning')
+        else:
+            flash(f'Wrong username or password', 'warning')
+            return redirect(url_for('index.login'))
 
     return render_template('login.html', form=form)
 
