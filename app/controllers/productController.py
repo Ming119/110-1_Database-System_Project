@@ -176,7 +176,7 @@ def details(product_id):
 
         category = ProductCategory.getByID(product.category_id)
         discount = ProductDiscount.getByCode(product.discount_code)
-        form = AddToCardForm()
+        form = AddToCartForm()
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():

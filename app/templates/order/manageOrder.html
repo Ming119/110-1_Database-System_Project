@@ -52,14 +52,14 @@
                 {% for order in orders %}
                 <tbody>
 
-                    <td>{{ order.order_id }}</td>
-                    <td>{{ order.username }}</td>
-                    <td>${{ order.amount }} + ${{ order.shippingFee }}</td>
-                    <td>{{ order.status }}</td>
-                    <td>{{ order.address }}</td>
+                    <td>{{ order.Order.order_id }}</td>
+                    <td>{{ order.Customer.username }}</td>
+                    <td>${{ order.Order.amount }} + ${{ order.Order.shippingFee }}</td>
+                    <td>{{ order.Order.status }}</td>
+                    <td>{{ order.CustomerAddress.address }}</td>
 
                     <td>
-                        <a class="btn btn-info" href="{{ url_for('order.details', order_id=order.order_id) }}">Details</a>
+                        <a class="btn btn-info" href="{{ url_for('order.details', order_id=order.Order.order_id) }}">Details</a>
                     </td>
                 </tbody>
                 {% endfor %}
