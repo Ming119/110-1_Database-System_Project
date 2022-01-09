@@ -115,7 +115,22 @@ def process(order_id):
                   subject    = '[Moonbird] Your order have been delivered.',
                   template   = 'mail/orderDelivered',
                   user       = user,
-                  token      = user.create_confirm_token(expires_in=604800) # 7days
+                  token      = user.create_order_token(order_id)
                  )
 
     return redirect(url_for('order.index', user_id=current_user.user_id))
+
+
+def comment(token):
+    customer = Customer()
+    data = customer.validate_confirm_token(token)
+
+    if data is None:
+        flash(f'You link is invalid or expired, please try again.', 'danger')
+        return redirect(url_for('index.index'))
+
+    customer = Customer.getByID(data.get('user_id'))
+    order = Order.getByID(data.get('order_id'))
+
+
+    return render_template('order/comment.html', user_id=customer.user_id, order=order)

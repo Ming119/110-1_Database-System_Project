@@ -1,0 +1,4 @@
+<h1>Hello {{ user.username }},</h1>
+<h2>Your order have been delivered. </h2>
+Click the following link to comment on the products.
+{{ url_for('order.comment', token=token, _external=True)
