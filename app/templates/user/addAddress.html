@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for errors in addAddressForm.errors.values() %}
+{% for error in errors %}
+<div class='pt-3'>
+    <div class='alert alert-warning d-flex align-items-center alert-dismissible fade show' role='alert'>
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="warning:">
+            <use xlink:href="#icon-warning" />
+        </svg>
+        <div class="flash">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endfor %}
+
+<form method="POST" class="form" role="form">
+    {{ addAddressForm.hidden_tag() }}
+
+    <div class="form-floating my-3">
+        {{ addAddressForm.country(class="form-control") }}
+        {{ addAddressForm.country.label() }}
+    </div>
+
+    <div class="form-floating my-3">
+        {{ addAddressForm.city(class="form-control") }}
+        {{ addAddressForm.city.label() }}
+    </div>
+
+    <div class="form-floating my-3">
+        {{ addAddressForm.address(class="form-control") }}
+        {{ addAddressForm.address.label() }}
+    </div>
+
+    <div class="form-floating my-3">
+        {{ addAddressForm.postal_code(class="form-control") }}
+        {{ addAddressForm.postal_code.label() }}
+    </div>
+
+    <div class="form-floating my-3">
+        {{ addAddressForm.telephone(class="form-control") }}
+        {{ addAddressForm.telephone.label() }}
+    </div>
+
+    {{ addAddressForm.submit(class='btn btn-primary px-5') }}
+</form>
+
+{% endblock %}

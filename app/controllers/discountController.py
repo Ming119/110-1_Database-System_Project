@@ -27,12 +27,12 @@ def index():
     else: discounts = Discount.getAll()
 
     discountCount = {'all': Discount.count(),
-                     'product': Discount.countByType('product'),
-                     'shipping': Discount.countByType('shipping'),
-                     'order': Discount.countByType('order'),
+                     'product': Discount.count('product'),
+                     'shipping': Discount.count('shipping'),
+                     'order': Discount.count('order'),
                     }
 
-    return render_template('manageDiscount.html',
+    return render_template('discount/manageDiscount.html',
                             searchForm    = searchForm,
                             discounts     = discounts,
                             discountCount = discountCount
@@ -61,12 +61,12 @@ def filterIndex(type):
     else: discounts = Discount.getByType(type)
 
     discountCount = {'all': Discount.count(),
-                     'product': Discount.countByType('product'),
-                     'shipping': Discount.countByType('shipping'),
-                     'order': Discount.countByType('order'),
+                     'product': Discount.count('product'),
+                     'shipping': Discount.count('shipping'),
+                     'order': Discount.count('order'),
                     }
 
-    return render_template('manageDiscount.html',
+    return render_template('discount/manageDiscount.html',
                             searchForm    = searchForm,
                             discounts     = discounts,
                             discountCount = discountCount,
@@ -136,20 +136,7 @@ def create(type):
 
         return redirect(url_for('discount.index'))
 
-    return render_template('newDiscount.html', newDiscountForm=newDiscountForm)
-
-
-
-@login_required
-def details(discount_code):
-    # access control
-    if current_user.role != 'staff':
-        flash(f'You are not allowed to access.', 'danger')
-        return redirect(url_for('index.index'))
-
-    discount = Discount.getByID(discount_code)
-
-    return render_template('discountDetails.html', discount=discount)
+    return render_template('discount/newDiscount.html', newDiscountForm=newDiscountForm)
 
 
 
@@ -204,9 +191,9 @@ def update(discount_code):
             else:
                 flash(f'Error updating the discount', 'warning')
 
-    updateDiscountForm.initData(discount)
+    updateDiscountForm.init(discount)
 
-    return render_template('updateDiscount.html', updateDiscountForm=updateDiscountForm)
+    return render_template('discount/updateDiscount.html', updateDiscountForm=updateDiscountForm)
 
 
 

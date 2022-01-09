@@ -40,20 +40,18 @@ class ProductCategory(db.Model):
             return False
 
     @staticmethod
-    def getAll():
+    def getAll(is_active=None):
+        if is_active:
+            return ProductCategory.query.filter_by(is_active=is_active).all()
+
         return ProductCategory.query.all()
 
     @staticmethod
-    def getAllWithoutInactive():
-        return ProductCategory.query.filter_by(is_active=True).all()
+    def getByID(category_id, is_active=None):
+        if is_active:
+            return ProductCategory.query.filter_by(category_id=category_id, is_active=is_active).first()
 
-    @staticmethod
-    def getByID(category_id):
         return ProductCategory.query.filter_by(category_id=category_id).first()
-
-    @staticmethod
-    def getByIDWithoutInactive(category_id):
-        return ProductCategory.query.filter_by(category_id=category_id, is_active=True).first()
 
     @staticmethod
     def getByName(name):

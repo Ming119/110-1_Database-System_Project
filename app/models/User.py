@@ -25,7 +25,10 @@ class User(db.Model, UserMixin):
 
     last_login  = db.Column(db.DateTime, nullable=True)
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    modified_at = db.Column(db.DateTime, nullable=False,
+                            default=datetime.now,
+                            onupdate=datetime.now
+                        )
 
     __mapper_args__ = {
         'polymorphic_identity':'user',
@@ -65,20 +68,18 @@ class User(db.Model, UserMixin):
         except: return False
 
     @staticmethod
-    def getAll():
+    def getAll(is_active=None):
+        if is_active:
+            return User.query.filter_by(is_active=True).all()
+
         return User.query.all()
 
     @staticmethod
-    def getAllWithoutInactive():
-        return User.query.filter_by(is_active=True).all()
+    def getByID(user_id, is_active=None):
+        if is_active:
+            return User.query.filter_by(user_id=user_id, is_active=is_active).first()
 
-    @staticmethod
-    def getByID(user_id):
         return User.query.filter_by(user_id=user_id).first()
-
-    @staticmethod
-    def getByIDWithInactive(user_id):
-        return User.query.filter(User.user_id==user_id).first()
 
     @staticmethod
     def getByEmail(email):
@@ -91,6 +92,13 @@ class User(db.Model, UserMixin):
     @staticmethod
     def getByRole(role):
         return User.query.filter(User.role==role).all()
+
+    @staticmethod
+    def count(type=None):
+        if type:
+            return User.query.filter_by(role=type).count()
+
+        return User.query.count()
 
     def __repr__(self):
         return '<User {}, {}, {}, {}, {}, {}, {}, {}, {}, {}>'.format(
@@ -181,7 +189,7 @@ class Staff(User):
                         username   = username,
                         password   = password,
                         first_name = first_name,
-                        last_name  = last_name,
+                        last_name  = last_name
                     )
             db.session.add(staff)
             db.session.commit()
@@ -209,7 +217,7 @@ class Admin(User):
                         username   = username,
                         password   = password,
                         first_name = first_name,
-                        last_name  = last_name,
+                        last_name  = last_name
                         )
             db.session.add(admin)
             db.session.commit()
@@ -219,8 +227,7 @@ class Admin(User):
 
     def activateUserByID(self, user_id):
         try:
-            user = User.getByIDWithInactive(user_id)
-            if (user.role == 'admin'): return False
+            user = User.getByID(user_id)
             user.is_active = True
             db.session.commit()
             return True
@@ -229,7 +236,7 @@ class Admin(User):
 
     def deactivateUserByID(self, user_id):
         try:
-            user = User.getByID(user_id)
+            user = User.getByID(user_id, True)
             if (user.role == 'admin'): return False
             user.is_active = False
             db.session.commit()

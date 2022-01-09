@@ -28,7 +28,13 @@ def index():
 
     else: users = User.getAll()
 
-    return render_template("manageUser.html", users=users, searchForm=searchForm)
+    userCount = {'all': User.count(),
+                    'admin': User.count('admin'),
+                    'staff': User.count('staff'),
+                    'customer': User.count('customer'),
+                }
+
+    return render_template("user/manageUser.html", users=users, userCount=userCount, searchForm=searchForm)
 
 
 
@@ -54,7 +60,18 @@ def filterIndex(role):
 
     else: users = User.getByRole(role)
 
-    return render_template("manageUser.html", users=users, searchForm=searchForm)
+    userCount = {'all': User.count(),
+                    'admin': User.count('admin'),
+                    'staff': User.count('staff'),
+                    'customer': User.count('customer'),
+                }
+
+    return render_template("user/manageUser.html",
+                            searchForm=searchForm,
+                            users=users,
+                            userCount=userCount,
+                            filter=role
+                        )
 
 
 
@@ -119,7 +136,7 @@ def create(role):
 
         return redirect(url_for('user.index'))
 
-    return render_template("newUser.html", newUserForm=newUserForm)
+    return render_template("user/newUser.html", newUserForm=newUserForm)
 
 
 
@@ -134,7 +151,7 @@ def profile(user_id):
         return redirect(url_for('index.index'))
 
     user = User.getByID(user_id)
-    return render_template("userProfile.html", user=user)
+    return render_template("user/userProfile.html", user=user)
 
 
 
@@ -149,6 +166,7 @@ def update(user_id):
         return redirect(url_for('index.index'))
 
     updateProfileForm = UpdateProfileForm();
+    user = User.getByID(user_id)
 
     if request.method == 'POST' and updateProfileForm.validate_on_submit():
         if (user.update(
@@ -163,13 +181,11 @@ def update(user_id):
 
         return redirect(url_for('user.profile', user_id=user_id))
 
-    user = User.getByID(user_id)
-
     updateProfileForm.username.data = user.username
     updateProfileForm.first_name.data = user.first_name
     updateProfileForm.last_name.data = user.last_name
 
-    return render_template("updateProfile.html",
+    return render_template("user/updateProfile.html",
                 user              = user,
                 updateProfileForm = updateProfileForm
             );
@@ -193,6 +209,8 @@ def changePassword(user_id):
         return redirect(url_for('user.profile', user_id=user.user_id))
 
     return render_template("resetPassword.html", form=form)
+
+
 
 # activate an user
 # GET method to activate the user
@@ -231,3 +249,32 @@ def deactivate(user_id):
         flash(f'Deactivate profile failed.', 'warning')
 
     return redirect(url_for('user.index'))
+
+
+
+
+@login_required
+def addAddress(user_id):
+    if current_user.role != 'admin' and current_user.user_id != user_id:
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    addAddressForm = AddAddressForm()
+
+    if request.method == 'POST' and addAddressForm.validate_on_submit():
+        if CustomerAddress.create(user_id,
+                                addAddressForm.country.data,
+                                addAddressForm.city.data,
+                                addAddressForm.address.data,
+                                addAddressForm.postal_code.data,
+                                addAddressForm.telephone.data
+                            ):
+            flash(f'Add address successfully.', 'success')
+        else:
+            flash(f'Add address failed.', 'warning')
+
+        return redirect(url_for('index.index'))
+
+    addAddressForm.process()
+
+    return render_template('user/addAddress.html', addAddressForm=addAddressForm)

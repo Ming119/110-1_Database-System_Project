@@ -3,7 +3,7 @@ from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
-from app.emailHelper import send_mail
+from app.email_helper import send_mail
 
 
 
@@ -11,7 +11,7 @@ from app.emailHelper import send_mail
 # GET method to render index page
 # POST method for search function
 def index():
-    categories = ProductCategory.getAllWithoutInactive()
+    categories = ProductCategory.getAll(True)
     searchForm = SearchForm()
 
     # Search
@@ -20,7 +20,6 @@ def index():
 
         products_list = list()
         for word in words:
-            products_list.extend(Product.getAllJoinedProductContains(word, True))
             products_list.extend(Product.getAllJoinedProductContains(word, True))
         products = set(products_list)
 
@@ -39,7 +38,7 @@ def index():
 
 
 def filterIndex(category_id):
-    categories = ProductCategory.getAllWithoutInactive()
+    categories = ProductCategory.getAll(True)
     searchForm = SearchForm()
 
     # Search
@@ -98,11 +97,11 @@ def register():
                             password   = registerForm.password.data,
                             first_name = registerForm.first_name.data,
                             last_name  = registerForm.last_name.data,
-                            DOB        = registerForm.DOB.data
+                            DOB        = registerForm.dob.data
                         )
 
         send_mail(recipients = [customer.email],
-                  subject    = 'Welcome to ...',
+                  subject    = '[Moonbird] Welcome to Moonbird!',
                   template   = 'mail/confirmRegistration',
                   user       = customer,
                   token      = customer.create_confirm_token(),
@@ -131,7 +130,7 @@ def confirmRegistration(token):
         customer.update(is_active=True)
 
         send_mail(recipients = [customer.email],
-                  subject    = 'Welcome to ...',
+                  subject    = '[Moonbird] Your account has been confirmed!',
                   template   = 'mail/registrationConfirmed',
                   user       = customer
                  )
@@ -158,13 +157,20 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
 
         if user and user.check_password(form.password.data):
-            user.last_login = datetime.now()
-            user.update()
-            login_user(user, form.remember_me.data)
-            flash(f'Login successful!', 'success')
+            if user.is_active:
+                user.last_login = datetime.now()
+                user.update()
+                login_user(user, form.remember_me.data)
+                flash(f'Login successful!', 'success')
+
+            else:
+                flash(f'Your account is inactive.', 'warning')
+
             return redirect(url_for('index.index'))
 
-        flash(f'Wrong username or password', 'warning')
+        else:
+            flash(f'Wrong username or password', 'warning')
+            return redirect(url_for('index.login'))
 
     return render_template('login.html', form=form)
 
@@ -190,7 +196,7 @@ def forgotPassword():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.is_active == True:
             send_mail(recipients = [user.email],
-                      subject    = 'Reset your password',
+                      subject    = '[Moonbird] Reset your password',
                       template   = 'mail/resetPassword',
                       user       = user,
                       token      = user.create_confirm_token()
@@ -222,7 +228,7 @@ def resetPassword(token):
         user.password = form.password.data
 
         send_mail(recipients = [user.email],
-                  subject    = 'Password Updated Successfully',
+                  subject    = '[Moonbird] Password Updated Successfully',
                   template   = 'mail/passwordUpdated',
                   user       = user
                  )
@@ -240,11 +246,15 @@ def shoppingCart(user_id):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    # items = CartItem.query.join(
-    #             Product, CartItem.product_id==Product.product_id
-    #         ).add_columns(
-    #             CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price
-    #         ).filter(CartItem.cart_id==user_id).all()
+    flag = 1
+    orderDiscount = None
+    redeemCodeForm = RedeemCodeForm()
+    if request.method == 'POST' and redeemCodeForm.validate_on_submit():
+        flag = 0
+        orderDiscount = OrderDiscount.getByCode(redeemCodeForm.code.data)
+        if orderDiscount is None:
+            flash(f'Promo Code not found', 'warning')
+
     items = CartItem.getAllJoinedItems(user_id)
 
     quantity = 0
@@ -257,10 +267,97 @@ def shoppingCart(user_id):
             amount += item.amount
 
     shippingDiscount = ShippingDiscount.getActive()
+    addresses = CustomerAddress.getAllByID(user_id)
 
+    user = User.getByID(user_id)
+    checkoutForm = CheckoutForm(addresses)
+    if request.method == 'POST' and flag and checkoutForm.validate_on_submit():
+        if shippingDiscount is not None and amount >shippingDiscount.atLeastAmount:
+            shippingFee = 0
+        else:
+            shippingFee = round(amount*0.05, 2)
+
+        amount += shippingFee
+        if orderDiscount:
+            amount *= (1- orderDiscount.discountPercentage/100)
+
+        if checkoutForm.paymentType.data == 'Credit':
+            if checkoutForm.CreditCardNumber.data == '' or \
+                checkoutForm.Expiration.data == '' or \
+                checkoutForm.CVV.data == '':
+                flash(f'You must provide your credit card information', 'warning')
+                return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+            if Order.create(
+                    customer_id = user_id,
+                    address_id = checkoutForm.addresses.data,
+                    order_discount = orderDiscount,
+                    items = items,
+                    amount = amount,
+                    shippingFee = shippingFee,
+                    payment_type = 'Credit',
+                    account_no = checkoutForm.CreditCardNumber.data
+                ):
+                flash(f'Order created successfully!', 'success')
+
+                send_mail(recipients = [user.email],
+                          subject    = '[Moonbird] Your Order have been accepted and now being processed!',
+                          template   = 'mail/checkout',
+                          user       = user
+                         )
+
+                for item in items:
+                    p = Product.getByID(item.product_id)
+                    p.sell(item.quantity)
+                    i = CartItem.getByID(item.cart_id, item.product_id)
+                    i.remove()
+
+                return redirect(url_for('index.index'))
+
+            flash(f'Order created failed!', 'warning')
+            return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+        elif checkoutForm.paymentType.data == 'Cash':
+            if Order.create(
+                    customer_id = user_id,
+                    address_id = checkoutForm.addresses.data,
+                    order_discount = orderDiscount,
+                    items = items,
+                    amount = amount,
+                    shippingFee = shippingFee
+                ):
+                flash(f'Order created successfully!', 'success')
+
+                send_mail(recipients = [user.email],
+                          subject    = '[Moonbird] Your Order have been accepted and now being processed!',
+                          template   = 'mail/checkout',
+                          user       = user
+                         )
+
+                for item in items:
+                    p = Product.getByID(item.product_id)
+                    p.sell(item.quantity)
+                    i = CartItem.getByID(item.cart_id, item.product_id)
+                    i.remove()
+
+                return redirect(url_for('index.index'))
+
+            flash(f'Order created failed!', 'warning')
+            return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+        else:
+            flash(f'Order created failed!', 'warning')
+            return redirect(url_for('index.shoppingCart', user_id=user_id))
+
+    checkoutForm.init()
     return render_template('shoppingCart.html',
                             items            = items,
                             quantity         = quantity,
                             amount           = amount,
-                            shippingDiscount = shippingDiscount
+                            user_id          = user_id,
+                            addresses        = addresses,
+                            redeemCodeForm   = redeemCodeForm,
+                            checkoutForm     = checkoutForm,
+                            shippingDiscount = shippingDiscount,
+                            orderDiscount    = orderDiscount
                         )
