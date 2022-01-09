@@ -19,7 +19,7 @@
                 <img src="{{ url_for('static', filename='images/moonbird.png') }}" alt="" width ="100" height="40" class="d-inline-block align-text-top">
             </a>
             {% if current_user.is_authenticated %}
-            <div class="">
+            <div>
                 <ul class="navbar-nav">
                     {% if current_user.role == 'admin' %}
                     <!-- Admin Nav bar -->
@@ -28,10 +28,12 @@
                     <!-- Staff Nav bar -->
                     <li class="nav-item"><a id="ManageProduct" href='{{ url_for('product.index') }}' class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a></li>
                     <li class="nav-item"><a id="ManagePromotions" href='{{ url_for('discount.index') }}' class="nav-link"><i class="fas fa-ticket-alt me-2"></i>Manage Discounts</a></li>
-                    <li class="nav-item"><a id="ManageOrders" href='#' class="nav-link"><i class="fas fa-file-alt me-2"></i>Manage Orders</a></li>
+                    <li class="nav-item"><a id="ManageOrders" href='{{ url_for('order.index', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-file-alt me-2"></i>Manage Orders</a></li>
+                    <li class="nav-item"><a id="Report" href='{{ url_for('report.index') }}' class="nav-link"><i class="fas fa-file-alt me-2"></i>Report</a></li>
                     {% else %}
                     <!-- customer Nav bar -->
                     <li class="nav-item"><a id="ShoppingCart" href='{{ url_for('index.shoppingCart', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Shopping Cart</a></li>
+                    <li class="nav-item"><a id="Orders" href='{{ url_for('order.index', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-shopping-cart me-1"></i>Orders</a></li> <!-- FIXME: change icon -->
                     {% endif %}
                     <li class="nav-item"><a id="UserProfile" href='{{ url_for('user.profile', user_id=current_user.user_id) }}' class="nav-link"><i class="fas fa-user me-1"></i>{{ current_user.username }}</a></li>
                     <li class="nav-item"><a id="Logout" href='{{ url_for('index.logout') }}' class="nav-link"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>

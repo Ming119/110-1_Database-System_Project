@@ -31,6 +31,13 @@ class Product(db.Model):
         self.quantity    = quantity or self.quantity
         db.session.commit()
 
+    def sell(self, quantity):
+        try:
+            self.quantity -= quantity
+            db.session.commit()
+            return True
+        except: return False
+
     @staticmethod
     def create(category_id, name, price, quantity, image_url, description=None):
         prodcuct = Product.query.filter_by(name=name).first()
@@ -54,98 +61,89 @@ class Product(db.Model):
             return False
 
     @staticmethod
-    def getAll():
+    def getAll(is_active=None):
+        if is_active:
+            return Product.query.filter_by(is_active=is_active).all()
+
         return Product.query.all()
 
     @staticmethod
-    def getAllWithoutInactive():
-        return Product.query.filter_by(is_active=True).all()
-
-    @staticmethod
     def getAllJoinedProduct(is_active=None):
-        if is_active is None:
+        if is_active:
             return db.session.query(
                 Product, ProductCategory, ProductDiscount
-            ).join(ProductCategory).join(ProductDiscount, isouter=True).all()
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==is_active).all()
 
         return db.session.query(
             Product, ProductCategory, ProductDiscount
-        ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==is_active).all()
+        ).join(ProductCategory).join(ProductDiscount, isouter=True).all()
 
     @staticmethod
     def getAllJoinedProductByCategoryID(category_id, is_active=None):
-        if is_active is None:
+        if is_active:
             return db.session.query(
                 Product, ProductCategory, ProductDiscount
             ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
-                Product.category_id==category_id
+                Product.category_id==category_id, Product.is_active==is_active
             ).all()
 
         return db.session.query(
             Product, ProductCategory, ProductDiscount
         ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
-            Product.category_id==category_id, Product.is_active==is_active
+            Product.category_id==category_id
         ).all()
 
     @staticmethod
     def getAllJoinedProductContains(word, is_active=None):
-        if is_active is None:
+        if is_active:
             return db.session.query(
                 Product, ProductCategory, ProductDiscount
             ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
-                Product.name.contains(word)
+                db.or_(Product.name.contains(word), Product.description.contains(word)),
+                Product.is_active==is_active
             ).all()
 
         return db.session.query(
             Product, ProductCategory, ProductDiscount
         ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
-            Product.name.contains(word), Product.is_active==is_active
+            db.or_(Product.name.contains(word), Product.description.contains(word))
         ).all()
 
     @staticmethod
     def getAllJoinedProductByCategoryIDContains(category_id, word, is_active=None):
-        if is_active is None:
+        if is_active:
             return db.session.query(
                 Product, ProductCategory, ProductDiscount
             ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
-                Product.category_id==category_id, Product.name.contains(word)
+                Product.category_id==category_id, Product.name.contains(word), Product.is_active==is_active
             ).all()
 
         return db.session.query(
             Product, ProductCategory, ProductDiscount
         ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
-            Product.category_id==category_id, Product.name.contains(word), Product.is_active==is_active
+            Product.category_id==category_id, Product.name.contains(word)
         ).all()
 
     @staticmethod
     def count(is_active=None):
-        if is_active is None:
-            return Product.query.count()
+        if is_active:
+            return Product.query.filter_by(is_active=is_active).count()
 
-        return Product.query.filter_by(is_active=is_active).count()
+        return Product.query.count()
 
     @staticmethod
     def countProductByCategory(category_id, is_active=None):
-        if is_active is None:
-            return Product.query.filter_by(category_id=category_id).count()
+        if is_active:
+            return Product.query.filter_by(category_id=category_id, is_active=is_active).count()
 
-        return Product.query.filter_by(category_id=category_id, is_active=is_active).count()
-
-    @staticmethod
-    def getByCategoryID(category_id):
-        return Product.query.filter_by(category_id=category_id).all()
+        return Product.query.filter_by(category_id=category_id).count()
 
     @staticmethod
-    def getByCategoryIDWithoutInactive(category_id):
-        return Product.query.filter_by(category_id=category_id, is_active=True).all()
+    def getByID(product_id, is_active=None):
+        if is_active:
+            return Product.query.filter_by(product_id=product_id, is_active=is_active).first()
 
-    @staticmethod
-    def getByID(product_id):
         return Product.query.filter_by(product_id=product_id).first()
-
-    @staticmethod
-    def getByIDWithoutInactive(product_id):
-        return Product.query.filter_by(product_id=product_id, is_active=True).first()
 
     @staticmethod
     def getByName(name):

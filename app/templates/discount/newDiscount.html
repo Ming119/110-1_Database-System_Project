@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav class="my-5" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('index.index') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('discount.index') }}">Manage Discount</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><b>Create Discount</b></li>
+    </ol>
+</nav>
+{% for errors in newDiscountForm.errors.values() %}
+{% for error in errors %}
+<div class='pt-3'>
+    <div class='alert alert-warning d-flex align-items-center alert-dismissible fade show' role='alert'>
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="warning:">
+            <use xlink:href="#icon-warning" />
+        </svg>
+        <div class="flash">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endfor %}
+
+<div class="card text-dark bg-light mx-auto mt-5" style="width: 36rem;">
+    <div class="card-header">
+        <h2>Create a new {{ newDiscountForm.type }} discount</h2>
+    </div>
+
+    <div class="card-body text-center">
+        <form action="" method="post" class="form" role="form">
+            {{ newDiscountForm.hidden_tag() }}
+
+            <div class="form-floating my-3">
+                {{ newDiscountForm.code(class="form-control", placeholder='Code', required=True) }}
+                {{ newDiscountForm.code.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ newDiscountForm.description(class="form-control", placeholder='Description') }}
+                {{ newDiscountForm.description.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ newDiscountForm.start_at(class="form-control", placeholder='Start At') }}
+                {{ newDiscountForm.start_at.label() }}
+            </div>
+
+            <div class="form-floating my-3">
+                {{ newDiscountForm.end_at(class="form-control", placeholder='End At') }}
+                {{ newDiscountForm.end_at.label() }}
+            </div>
+
+            {% if newDiscountForm.type != 'product'%}
+            <div class="form-floating my-3">
+                {{ newDiscountForm.atLeastAmount(class="form-control") }}
+                {{ newDiscountForm.atLeastAmount.label() }}
+            </div>
+            {% endif %}
+
+            {% if newDiscountForm.type != 'shipping'%}
+            <div class="form-floating my-3">
+                {{ newDiscountForm.discountPercentage(min=0, max=100, oninput="outputUpdate(value)") }}
+                {{ newDiscountForm.discountPercentage.label() }}
+                <output for="age" id="selected-rate">{{ newDiscountForm.discountPercentage.data }}</output>
+            </div>
+            {% endif %}
+
+
+            {{ newDiscountForm.submit(class='btn btn-primary px-5') }}
+        </form>
+    </div>
+
+    <div class="card-footer text-mute text-center">
+        <p class='my-2'>&copy; 2021 CSIE, NTUT</p>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/newDiscount.js') }}"></script>
+{% endblock %}

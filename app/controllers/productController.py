@@ -37,7 +37,6 @@ def index():
         products_list = list()
         for word in words:
             products_list.extend(Product.getAllJoinedProductContains(word))
-            products_list.extend(Product.getAllJoinedProductContains(word))
 
         products = set(products_list)
 
@@ -46,7 +45,7 @@ def index():
     categoryCount = {category.category_id: Product.countProductByCategory(category.category_id) for category in categories}
     categoryCount[0] = Product.count()
 
-    return render_template('manageProduct.html',
+    return render_template('product/manageProduct.html',
                             searchForm      = searchForm,
                             newCategoryForm = newCategoryForm,
                             newProductForm  = newProductForm,
@@ -95,7 +94,7 @@ def filterIndex(category_id):
     categoryCount = {category.category_id: Product.countProductByCategory(category.category_id) for category in categories}
     categoryCount[0] = Product.count()
 
-    return render_template('manageProduct.html',
+    return render_template('product/manageProduct.html',
                             searchForm      = searchForm,
                             newCategoryForm = newCategoryForm,
                             newProductForm  = newProductForm,
@@ -168,7 +167,7 @@ def details(product_id):
             return edit(product, form)
 
         form.initProductData(product)
-        return render_template('productDetails.html', form=form, product=product)
+        return render_template('product/productDetails.html', form=form, product=product)
 
     else:
         if not product.is_active:
@@ -177,13 +176,13 @@ def details(product_id):
 
         category = ProductCategory.getByID(product.category_id)
         discount = ProductDiscount.getByCode(product.discount_code)
-        form = AddToCardForm()
+        form = AddToCartForm()
 
         # Add To Card
         if request.method == 'POST' and form.validate_on_submit():
             return addToCart(form, product, discount)
 
-        return render_template('productDetails.html', form=form, product=product, category=category, discount=discount)
+        return render_template('product/productDetails.html', form=form, product=product, category=category, discount=discount)
 
 
 

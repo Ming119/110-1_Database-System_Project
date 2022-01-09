@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Order Details </h2>
+<table class="table">
+    <tbody>
+    <tr>
+        <td colspan="2">
+            <h4 style="text-align: center;">Summary</h4>
+        </td>
+    </tr>
+    <tr>
+        <th>Order ID</th>
+        <td>{{ order.Order.order_id }}</td>
+    </tr>
+    <tr>
+        <th>Creation Date</th>
+        <td>{{ order.Order.create_at }}</td>
+    </tr>
+    <tr>
+        <th>Total price</th>
+        <td>${{ order.Order.amount }} (${{ order.Order.shippingFee }} Shipping Fee)</td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td>{{ order.Order.status }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h4 style="text-align: center;">Item details</h4>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in items %}
+                <tr>
+                    <td>{{ i.Product.name }}</td>
+                    <td>{{ i.Product.price }}</td>
+                    <td>{{ i.OrderItem.quantity }}</td>
+                    <td>{{ i.OrderItem.amount }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+{% endblock %}
