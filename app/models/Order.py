@@ -51,9 +51,9 @@ class Order(db.Model):
             ).join(
                 Product, OrderItem.product_id == Product.product_id
             ).add_columns(
-                Product.name, Product.price
+                Product.product_id, Product.name, Product.price
             ).join(
-                Comment, Order.customer_id == Comment.user_id, isouter=True
+                Comment, OrderItem.product_id == Comment.product_id, isouter=True
             ).add_columns(
                 Comment.rating, Comment.comment
             )
