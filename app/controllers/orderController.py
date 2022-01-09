@@ -94,9 +94,31 @@ def details(order_id):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    items = Order.getOrderProduct(order_id)
 
-    return render_template('order/orderDetails.html', order=order, items=items)
+    commentForm = CommentForm()
+    if request.method == 'POST' and commentForm.validate_on_submit():
+        if Comment.create(
+            product_id = commentForm.product_id.data,
+            user_id    = order.Customer.user_id,
+            comment    = commentForm.comment.data,
+            rating     = commentForm.score.data
+        ):
+            flash('Comment created successfully!', 'success')
+        else:
+            flash('Comment creation failed!', 'warning')
+
+    items = Order.getOrderProduct(order_id)
+    address = CustomerAddress.getByID(order.Order.address_id)
+    customer = Customer.getByID(order.Customer.user_id)
+    print(items)
+
+    return render_template('order/orderDetails.html',
+                            customer=customer,
+                            address=address,
+                            order=order,
+                            items=items,
+                            commentForm=commentForm
+                        )
 
 
 
@@ -121,7 +143,7 @@ def process(order_id):
     return redirect(url_for('order.index', user_id=current_user.user_id))
 
 
-def comment(token):
+def ex_comment(token):
     customer = Customer()
     data = customer.validate_confirm_token(token)
 
@@ -130,7 +152,10 @@ def comment(token):
         return redirect(url_for('index.index'))
 
     customer = Customer.getByID(data.get('user_id'))
-    order = Order.getByID(data.get('order_id'))
+    customer.last_login = datetime.now()
+    customer.update()
+    login_user(customer)
 
+    order_id = data.get('order_id')
 
-    return render_template('order/comment.html', user_id=customer.user_id, order=order)
+    return redirect(url_for('order.details', order_id=order_id))

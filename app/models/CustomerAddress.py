@@ -32,6 +32,10 @@ class CustomerAddress(db.Model):
     def getAllByID(user_id):
         return CustomerAddress.query.filter_by(user_id=user_id).all()
 
+    @staticmethod
+    def getByID(address_id):
+        return CustomerAddress.query.filter_by(address_id=address_id).first()
+
     def __repr__(self):
         return '<CustomerAddress {}, {}, {}, {}, {}, {}>'.format(
                     # self.address_id,
