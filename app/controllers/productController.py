@@ -193,7 +193,7 @@ def edit(product, form):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if form.productName.data != product.name and Product.getByProductName(form.productName.data) is not None:
+    if form.productName.data != product.name and Product.getByName(form.productName.data) is not None:
         flash(f'Product already exists.', 'warning')
 
     else:
