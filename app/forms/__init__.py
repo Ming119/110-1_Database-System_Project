@@ -5,6 +5,7 @@ form/__init__.py
 from app.forms.add_address import AddAddressForm
 from app.forms.add_to_cart import AddToCartForm
 from app.forms.checkout import CheckoutForm
+from app.forms.comment import CommentForm
 from app.forms.forgot_password import ForgotPasswordForm
 from app.forms.login import LoginForm
 from app.forms.new_category import NewCategoryForm

@@ -166,7 +166,7 @@ def details(product_id):
         if request.method == 'POST' and form.validate_on_submit():
             return edit(product, form)
 
-        form.initProductData(product)
+        form.init(product)
         return render_template('product/productDetails.html', form=form, product=product)
 
     else:
@@ -193,14 +193,19 @@ def edit(product, form):
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    if form.productName.data != product.name and Product.getByProductName(form.productName.data) is not None:
+    if form.productName.data != product.name and Product.getByName(form.productName.data) is not None:
         flash(f'Product already exists.', 'warning')
 
     else:
+        if form.discount.data == 'None':
+            dc = None
+        else:
+            dc = form.discount.data
+
         product.update(name         = form.productName.data,
                        description  = form.productDescription.data,
                        category_id  = form.category.data,
-                       discount_code = form.discount.data,
+                       discount_code = dc,
                        price        = form.price.data,
                        quantity     = form.quantity.data
                       )

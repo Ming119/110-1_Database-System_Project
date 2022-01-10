@@ -3,6 +3,7 @@ from datetime import datetime
 from app.models.User import Customer
 from app.models.CustomerAddress import CustomerAddress
 from app.models.Product import Product
+from app.models.Comment import Comment
 
 
 class Order(db.Model):
@@ -43,9 +44,29 @@ class Order(db.Model):
 
     @staticmethod
     def joinProduct():
-        return db.session.query(Order, OrderItem, Product).filter(
-                    Order.order_id==OrderItem.order_id, OrderItem.product_id==Product.product_id
-                )
+        return db.session.query(Order).join(
+                OrderItem, Order.order_id == OrderItem.order_id
+            ).add_columns(
+                OrderItem.quantity, OrderItem.amount
+            ).join(
+                Product, OrderItem.product_id == Product.product_id
+            ).add_columns(
+                Product.product_id, Product.name, Product.price
+            ).join(
+                Comment, OrderItem.product_id == Comment.product_id, isouter=True
+            ).add_columns(
+                Comment.rating, Comment.comment
+            )
+
+        return db.session.query(Order, OrderItem, Product, Comment).filter(
+                    Order.order_id       == OrderItem.order_id,
+                    OrderItem.product_id == Product.product_id,
+                    OrderItem.product_id == Comment.product_id,
+                    Comment.user_id      == Order.customer_id
+                    )
+                # ).join(Comment, Comment.user_id == Order.customer_id, isouter=True).filter(
+                #
+                # )
 
     @staticmethod
     def getOrderProduct(order_id):
