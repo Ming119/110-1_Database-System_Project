@@ -2,7 +2,7 @@ from app.models import *
 from app.forms import *
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-
+from app.email_helper import send_mail
 
 
 @login_required
@@ -27,28 +27,27 @@ def index(user_id):
 
     if current_user.role == 'staff':
         orderCount = {'all': Order.count(),
-                        'processing': Order.count(status=0),
-                        'delivering': Order.count(status=1),
-                        'delivered': Order.count(status=2),
+                        'processing': Order.count(status='processing'),
+                        'delivering': Order.count(status='delivering'),
+                        'delivered': Order.count(status='delivered'),
                     }
     else:
         orderCount = {'all': Order.count(user_id),
-                        'processing': Order.count(status=0, customer_id=user_id),
-                        'delivering': Order.count(status=1, customer_id=user_id),
-                        'delivered': Order.count(status=2, customer_id=user_id),
+                        'processing': Order.count(status='processing', customer_id=user_id),
+                        'delivering': Order.count(status='delivering', customer_id=user_id),
+                        'delivered': Order.count(status='delivered', customer_id=user_id),
                     }
 
     return render_template('order/manageOrder.html',
                             searchForm = searchForm,
                             orders     = orders,
                             orderCount = orderCount,
-                            filter     = -1
                         )
 
 
 @login_required
 def filterIndex(user_id, status):
-    if current_user.role != 'staff':
+    if current_user.role != 'staff' and current_user.user_id != user_id:
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
@@ -68,15 +67,15 @@ def filterIndex(user_id, status):
 
     if current_user.role == 'staff':
         orderCount = {'all': Order.count(),
-                        'processing': Order.count(0),
-                        'delivering': Order.count(1),
-                        'delivered': Order.count(2),
+                        'processing': Order.count('processing'),
+                        'delivering': Order.count('delivering'),
+                        'delivered': Order.count('delivered'),
                     }
     else:
         orderCount = {'all': Order.count(user_id),
-                        'processing': Order.count(0, user_id),
-                        'delivering': Order.count(1, user_id),
-                        'delivered': Order.count(2, user_id),
+                        'processing': Order.count('processing', user_id),
+                        'delivering': Order.count('delivering', user_id),
+                        'delivered': Order.count('delivered', user_id),
                     }
 
     return render_template('order/manageOrder.html',
@@ -91,26 +90,72 @@ def filterIndex(user_id, status):
 @login_required
 def details(order_id):
     order = Order.getByID(order_id)
-    if current_user.role != 'staff' and current_user.user_id != order.customer_id:
+    if current_user.role != 'staff' and current_user.user_id != order.Customer.user_id:
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
-    orders = Order.getAll()
-    form = NewProductForm(orders)
 
-    form.initProductData(order)
+    commentForm = CommentForm()
+    if request.method == 'POST' and commentForm.validate_on_submit():
+        if Comment.create(
+            product_id = commentForm.product_id.data,
+            user_id    = order.Customer.user_id,
+            comment    = commentForm.comment.data,
+            rating     = commentForm.score.data
+        ):
+            flash('Comment created successfully!', 'success')
+        else:
+            flash('Comment creation failed!', 'warning')
 
-    return render_template('order/orderDetail.html', form=form, orders=orders)
-    #return render_template('order/manageOrder.html', order=order) #order/orderDeteail.html
+    items = Order.getOrderProduct(order_id)
+    address = CustomerAddress.getByID(order.Order.address_id)
+    customer = Customer.getByID(order.Customer.user_id)
+    print(items)
+
+    return render_template('order/orderDetails.html',
+                            customer=customer,
+                            address=address,
+                            order=order,
+                            items=items,
+                            commentForm=commentForm
+                        )
 
 
 
 @login_required
-def update(order_id):
+def process(order_id):
     if current_user.role != 'staff':
         flash(f'You are not allowed to access.', 'danger')
         return redirect(url_for('index.index'))
 
     order = Order.getByID(order_id)
+    order.Order.process()
 
-    return render_template('order/manageOrder.html')    #FIXME
+    if order.Order.status == 'delivered':
+        user = User.getByID(order.Order.customer_id)
+        send_mail(recipients = [user.email],
+                  subject    = '[Moonbird] Your order have been delivered.',
+                  template   = 'mail/orderDelivered',
+                  user       = user,
+                  token      = user.create_order_token(order_id)
+                 )
+
+    return redirect(url_for('order.index', user_id=current_user.user_id))
+
+
+def ex_comment(token):
+    customer = Customer()
+    data = customer.validate_confirm_token(token)
+
+    if data is None:
+        flash(f'You link is invalid or expired, please try again.', 'danger')
+        return redirect(url_for('index.index'))
+
+    customer = Customer.getByID(data.get('user_id'))
+    customer.last_login = datetime.now()
+    customer.update()
+    login_user(customer)
+
+    order_id = data.get('order_id')
+
+    return redirect(url_for('order.details', order_id=order_id))

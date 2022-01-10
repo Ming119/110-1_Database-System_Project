@@ -25,7 +25,10 @@ class User(db.Model, UserMixin):
 
     last_login  = db.Column(db.DateTime, nullable=True)
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    modified_at = db.Column(db.DateTime, nullable=False,
+                            default=datetime.now,
+                            onupdate=datetime.now
+                        )
 
     __mapper_args__ = {
         'polymorphic_identity':'user',
@@ -132,6 +135,10 @@ class Customer(User):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in)
         return s.dumps({'user_id': self.user_id})
 
+    def create_order_token(self, order_id, expires_in=604800):
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expires_in=expires_in)
+        return s.dumps({'user_id': self.user_id, 'order_id': order_id})
+
     def validate_confirm_token(self, token):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
         try:
@@ -141,9 +148,9 @@ class Customer(User):
 
         return data
 
-    def update(self, username=None, first_name=None, last_name=None, DOB=None):
+    def update(self, username=None, first_name=None, last_name=None, is_active=None, DOB=None):
         try:
-            super().update(username, first_name, last_name)
+            super().update(username, first_name, last_name, is_active)
             self.DOB = DOB or self.DOB
             db.session.commit()
             return True
@@ -186,7 +193,7 @@ class Staff(User):
                         username   = username,
                         password   = password,
                         first_name = first_name,
-                        last_name  = last_name,
+                        last_name  = last_name
                     )
             db.session.add(staff)
             db.session.commit()
@@ -214,7 +221,7 @@ class Admin(User):
                         username   = username,
                         password   = password,
                         first_name = first_name,
-                        last_name  = last_name,
+                        last_name  = last_name
                         )
             db.session.add(admin)
             db.session.commit()
@@ -224,8 +231,7 @@ class Admin(User):
 
     def activateUserByID(self, user_id):
         try:
-            user = User.getByIDWithInactive(user_id)
-            if (user.role == 'admin'): return False
+            user = User.getByID(user_id)
             user.is_active = True
             db.session.commit()
             return True
@@ -234,7 +240,7 @@ class Admin(User):
 
     def deactivateUserByID(self, user_id):
         try:
-            user = User.getByID(user_id)
+            user = User.getByID(user_id, True)
             if (user.role == 'admin'): return False
             user.is_active = False
             db.session.commit()

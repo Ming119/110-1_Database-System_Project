@@ -1,3 +1,7 @@
+'''
+discount_route.py
+'''
+
 from app.controllers.discountController import *
 from flask import Blueprint
 

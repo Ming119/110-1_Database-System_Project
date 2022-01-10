@@ -2,6 +2,8 @@ from app.util import db
 from datetime import datetime
 from app.models.User import Customer
 from app.models.CustomerAddress import CustomerAddress
+from app.models.Product import Product
+from app.models.Comment import Comment
 
 
 class Order(db.Model):
@@ -16,7 +18,7 @@ class Order(db.Model):
     amount      = db.Column(db.Float(),  nullable=False, default=0)
     shippingFee = db.Column(db.Integer,  nullable=False, default=0)
     shipDate    = db.Column(db.DateTime, nullable=True)
-    status      = db.Column(db.Integer,  nullable=False, default=0)
+    status      = db.Column(db.String(16),  nullable=False, default='processing')
 
     payment_type = db.Column(db.String(8),  nullable=True)
     provider     = db.Column(db.String(64), nullable=True)
@@ -26,22 +28,49 @@ class Order(db.Model):
 
     def process(self):
         try:
-            self.status += 1
+            if self.status == 'processing':
+                self.status = 'delivering'
+            elif self.status == 'delivering':
+                self.status = 'delivered'
             db.session.commit()
             return True
         except: return False
 
     @staticmethod
     def joinUserAndAddress():
-        return Order.query.join(Customer, Order.customer_id==Customer.user_id).add_columns(
-            Order.order_id, Order.customer_id, Order.address_id, Order.order_discount, Order.orderItems,
-            Order.amount, Order.shippingFee, Order.shipDate, Order.status,
-            Order.payment_type, Order.provider, Order.account_no, Order.create_at,
-            Customer.user_id, Customer.email, Customer.username, Customer.first_name, Customer.last_name
-        ).join(CustomerAddress, Order.address_id==CustomerAddress.address_id).add_columns(
-            CustomerAddress.address_id, CustomerAddress.country, CustomerAddress.city,
-            CustomerAddress.address, CustomerAddress.postal_code, CustomerAddress.telephone
-        )
+        return db.session.query(Order, Customer, CustomerAddress).filter(
+                    Order.customer_id==Customer.user_id, Order.address_id==CustomerAddress.address_id
+                )
+
+    @staticmethod
+    def joinProduct():
+        return db.session.query(Order).join(
+                OrderItem, Order.order_id == OrderItem.order_id
+            ).add_columns(
+                OrderItem.quantity, OrderItem.amount
+            ).join(
+                Product, OrderItem.product_id == Product.product_id
+            ).add_columns(
+                Product.product_id, Product.name, Product.price
+            ).join(
+                Comment, OrderItem.product_id == Comment.product_id, isouter=True
+            ).add_columns(
+                Comment.rating, Comment.comment
+            )
+
+        return db.session.query(Order, OrderItem, Product, Comment).filter(
+                    Order.order_id       == OrderItem.order_id,
+                    OrderItem.product_id == Product.product_id,
+                    OrderItem.product_id == Comment.product_id,
+                    Comment.user_id      == Order.customer_id
+                    )
+                # ).join(Comment, Comment.user_id == Order.customer_id, isouter=True).filter(
+                #
+                # )
+
+    @staticmethod
+    def getOrderProduct(order_id):
+        return Order.joinProduct().filter(Order.order_id==order_id).all()
 
     @staticmethod
     def getAll():
@@ -63,7 +92,7 @@ class Order(db.Model):
 
     @staticmethod
     def getByID(order_id):
-        return Order.joinUserAndAddress().filter_by(Order.order_id==order_id).first()
+        return Order.joinUserAndAddress().filter(Order.order_id==order_id).first()
 
     @staticmethod
     def getByCustomerID(customer_id, status=None):

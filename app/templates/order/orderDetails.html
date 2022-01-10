@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Order Details </h2>
+<table class="table">
+    <tbody>
+        <tr>
+            <td colspan="2">
+                <h4 style="text-align: center;">Summary</h4>
+            </td>
+        </tr>
+        <tr>
+            <th>Order ID</th>
+            <td>{{ order.Order.order_id }}</td>
+        </tr>
+        <tr>
+            <th>Username</th>
+            <td>{{ customer.username }}</td>
+        </tr>
+        <tr>
+            <th>First Name</th>
+            <td>{{ customer.first_name }}</td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td>{{ customer.last_name }}</td>
+        </tr>
+        <tr>
+            <th>Shipping Address</th>
+            <td>{{ address.address }}<span class="text-muted mx-3">{{ address.city }}, {{ address.country }}</td>
+        </tr>
+        <tr>
+            <th>Creation Date</th>
+            <td>{{ order.Order.create_at }}</td>
+        </tr>
+        <tr>
+            <th>Total price</th>
+            <td>${{ order.Order.amount }} (${{ order.Order.shippingFee }} Shipping Fee)</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>{{ order.Order.status }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <h4 style="text-align: center;">Item details</h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            {% if current_user.role == 'customer' and order.Order.status == 'delivered' %}
+                            <th>Rating</th>
+                            <th>Comment</th>
+                            <th></th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in items %}
+                        <tr>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.price }}</td>
+                            <td>{{ i.quantity }}</td>
+                            <td>{{ i.amount }}</td>
+                            {% if current_user.role == 'customer' and order.Order.status == 'delivered' %}
+                            {% if i.rating %}
+                                <td>{{ i.rating }}</td>
+                                <td>{{ i.comment }}</td>
+                            {% else %}
+                            <form method="POST">
+                                {{ commentForm.hidden_tag() }}
+                                {{ commentForm.product_id(type="hidden", value=i.product_id) }}
+                                {{ commentForm.product_id.label() }}
+                                <td>
+                                    <div class="form-floating my-3">
+                                        {{ commentForm.score(class="form-control") }}
+                                        {{ commentForm.score.label() }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-floating my-3">
+                                        {{ commentForm.comment(class="form-control") }}
+                                        {{ commentForm.comment.label() }}
+                                    </div>
+                                </td>
+                                <td>{{ commentForm.submit(class='btn btn-primary px-5') }}</td>
+                            </form>
+                            {% endif %}
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}

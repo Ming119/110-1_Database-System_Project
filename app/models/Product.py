@@ -31,6 +31,13 @@ class Product(db.Model):
         self.quantity    = quantity or self.quantity
         db.session.commit()
 
+    def sell(self, quantity):
+        try:
+            self.quantity -= quantity
+            db.session.commit()
+            return True
+        except: return False
+
     @staticmethod
     def create(category_id, name, price, quantity, image_url, description=None):
         prodcuct = Product.query.filter_by(name=name).first()
