@@ -102,7 +102,9 @@ class ShippingDiscount(Discount):
 
     @staticmethod
     def getActive():
-        return ShippingDiscount.query.filter(Discount.start_at<datetime.now(), Discount.end_at>datetime.now()).order_by(ShippingDiscount.atLeastAmount).first()
+        return ShippingDiscount.query.filter(
+                    Discount.start_at<datetime.now(), Discount.end_at>datetime.now()
+                ).order_by(ShippingDiscount.atLeastAmount).first()
 
 
 
@@ -156,7 +158,8 @@ class OrderDiscount(Discount):
     discountPercentage = db.Column(db.Integer, nullable=False)
     atLeastAmount      = db.Column(db.Float(), nullable=False)
 
-    def update(self, code=None, description=None, start_at=None, end_at=None, discountPercentage=None, atLeastAmount=None):
+    def update(self, code=None, description=None, start_at=None, end_at=None,
+                discountPercentage=None, atLeastAmount=None):
         if super().update(code, description, start_at, end_at):
             try:
                 self.discountPercentage = discountPercentage or self.discountPercentage
@@ -168,7 +171,8 @@ class OrderDiscount(Discount):
         return False
 
     @staticmethod
-    def create(discount_code, start_at, end_at, discountPercentage, atLeastAmount, description=None, type='order'):
+    def create(discount_code, start_at, end_at, discountPercentage, atLeastAmount,
+                description=None, type='order'):
         try:
             db.session.add(OrderDiscount(
                 discount_code      = discount_code,
@@ -186,4 +190,8 @@ class OrderDiscount(Discount):
 
     @staticmethod
     def getByCode(code):
-        return OrderDiscount.query.filter(OrderDiscount.discount_code==code, Discount.start_at<datetime.now(), Discount.end_at>datetime.now()).first()
+        return OrderDiscount.query.filter(
+                    OrderDiscount.discount_code==code,
+                    Discount.start_at<datetime.now(),
+                    Discount.end_at>datetime.now()
+                ).first()

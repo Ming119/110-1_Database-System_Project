@@ -49,8 +49,9 @@ class ProductCategory(db.Model):
     @staticmethod
     def getByID(category_id, is_active=None):
         if is_active:
-            return ProductCategory.query.filter_by(category_id=category_id, is_active=is_active).first()
-
+            return ProductCategory.query.filter_by(
+                    category_id=category_id, is_active=is_active
+                    ).first()
         return ProductCategory.query.filter_by(category_id=category_id).first()
 
     @staticmethod
@@ -59,8 +60,7 @@ class ProductCategory(db.Model):
 
     @staticmethod
     def withholdByID(category_id):
-        productCategory = ProductCategory.getByIDWithoutInactive(category_id)
-
+        productCategory = ProductCategory.getByID(category_id, is_active=True)
         for product in productCategory.product_id:
             if product.is_active:
                 return False

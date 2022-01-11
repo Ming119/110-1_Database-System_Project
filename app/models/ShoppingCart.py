@@ -71,7 +71,8 @@ class CartItem(db.Model):
         return CartItem.query.join(
                     Product, CartItem.product_id==Product.product_id
                 ).add_columns(
-                    CartItem.cart_id, CartItem.quantity, CartItem.amount, Product.name, Product.description, Product.price, Product.product_id
+                    CartItem.cart_id, CartItem.quantity, CartItem.amount,
+                    Product.name, Product.description, Product.price, Product.product_id
                 ).filter(CartItem.cart_id==user_id).join(
                     ProductDiscount, Product.discount_code==ProductDiscount.discount_code, isouter=True
                 ).add_columns(

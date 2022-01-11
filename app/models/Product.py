@@ -22,7 +22,8 @@ class Product(db.Model):
     create_at   = db.Column(db.DateTime, nullable=False, default=datetime.now)
     modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
-    def update(self, category_id, discount_code=None, name=None, description=None, price=None, quantity=None):
+    def update(self, category_id, discount_code=None, name=None,
+                description=None, price=None, quantity=None):
         self.category_id = category_id or self.category_id
         self.discount_code = discount_code or self.discount_code
         self.name        = name or self.name
@@ -72,7 +73,9 @@ class Product(db.Model):
         if is_active:
             return db.session.query(
                 Product, ProductCategory, ProductDiscount
-            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(Product.is_active==is_active).all()
+            ).join(ProductCategory).join(ProductDiscount, isouter=True).filter(
+                Product.is_active==is_active
+            ).all()
 
         return db.session.query(
             Product, ProductCategory, ProductDiscount
