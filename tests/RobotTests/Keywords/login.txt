@@ -21,7 +21,7 @@ Verify "Forgot Password" Button
 
 Verify Login As Customer
     Login Page::Wait Until Login Form Is Visible
-    Login As    username=customer    password=customer
+    Login As    username=customer    password=customer1
     Flash::Wait Until Flash Message With Category Is Visible    message=Login successful!    category=success
     # Common::Wait Until Navbar Contains    Home    Products    Shopping Cart    ${customer}[username]    Logout #TODO    Navbar check
     [Teardown]    Run Keywords    Logout
