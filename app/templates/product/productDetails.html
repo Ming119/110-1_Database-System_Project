@@ -71,7 +71,9 @@
             </div>
         </div>
         {% if discount and discount.is_active() %}
-        <div class="price d-flex flex-row align-items-center"><del>${{ product.price }}</del><span class="text-success ms-3">${{ product.price * (1-discount.discountPercentage/100) }}</span></div>
+        {% set np = product.price * (1-discount.discountPercentage/100) %}
+        <div class="price d-flex flex-row align-items-center"><del>${{ product.price }}</del>
+            <span class="text-success ms-3">${{ '%.2f' % np|float }}</span></div>
         {% else %}
         <div class="price d-flex flex-row align-items-center">${{ product.price }}</div>
         {% endif %}

@@ -97,7 +97,8 @@ class Order(db.Model):
     @staticmethod
     def getByCustomerID(customer_id, status=None):
         if status:
-            return Order.joinUserAndAddress().filter(Order.customer_id==customer_id, Order.status==status).all()
+            return Order.joinUserAndAddress().filter(
+                    Order.customer_id==customer_id, Order.status==status).all()
         return Order.joinUserAndAddress().filter(Order.customer_id==customer_id).all()
 
     @staticmethod
@@ -111,7 +112,8 @@ class Order(db.Model):
         return Order.query.count()
 
     @staticmethod
-    def create(customer_id, address_id, order_discount, items, amount, shippingFee, payment_type='Cash', provider=None, account_no=None):
+    def create(customer_id, address_id, order_discount, items, amount,
+            shippingFee, payment_type='Cash', provider=None, account_no=None):
         try:
             order = Order(
                         customer_id    = customer_id,
