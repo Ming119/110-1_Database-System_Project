@@ -245,6 +245,24 @@ def addToCart(form, product, discount):
 
 
 
+@login_required
+def removeFromCart(item_id):
+    if current_user.role != 'customer':
+        flash(f'You are not allowed to access.', 'danger')
+        return redirect(url_for('index.index'))
+
+    item = CartItem.getByID(current_user.user_id, item_id)
+
+    if (item.remove()):
+        flash(f'Item was successfully removed', 'success')
+
+    else:
+        flash(f'Removeing item from cart failed.', 'warning')
+
+    return redirect(url_for('index.shoppingCart', user_id=current_user.user_id))
+
+
+
 # delete category funciton
 # :param: category_id
 #   delete category based on category_id

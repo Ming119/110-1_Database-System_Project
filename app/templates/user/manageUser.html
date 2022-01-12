@@ -37,13 +37,13 @@
                 </form>
             </div>
             <div class="col-4">
-                <div class="btn-group float-end" role="group" aria-label="Basic mixed styles example">
+                <div class="float-end" role="group" aria-label="Basic mixed styles example">
                     <a href="{{ url_for('user.create', role='customer') }}" type="button" class="btn btn-success">New Customer</a>
                     <a href="{{ url_for('user.create', role='staff') }}" type="button" class="btn btn-success">New Staff</a>
                 </div>
             </div>
-            <table id="userInfoList" class="table table-hover">
-                <thead>
+            <table id="userInfoList" class="table table-hover align-middle text-center">
+                <thead class="">
                     <tr>
                         <th>User ID</th>
                         <th>Email</th>
@@ -70,7 +70,7 @@
                         </td>
                         <td>{{ user.last_login }}</td>
                         <td>
-                            <div class="btn-group-vertical ">
+                            <div class="btn-group-vertical btn-toolbar">
                                 <a class="btn btn-info btn-block" type="button" href="{{ url_for('user.profile', user_id=user.user_id) }}">View</a>
                                 {% if user.is_active %}
                                 <a class="btn btn-danger btn-block" type="button" href="{{ url_for('user.deactivate', user_id=user.user_id) }}">Deactivate</a>
