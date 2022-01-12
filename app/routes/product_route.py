@@ -14,3 +14,4 @@ bp.route('/withholdCategory/<int:category_id>', methods=['GET'])(withholdCategor
 bp.route('/publishCategory/<int:category_id>', methods=['GET'])(publishCategory)  # Delete category
 bp.route('/withholdProduct/<int:product_id>', methods=['GET'])(withholdProduct)   # Delete product
 bp.route('/publishProduct/<int:product_id>', methods=['GET'])(publishProduct)    # Delete product
+bp.route('/cart/remvoe/<int:item_id>', methods=['GET'])(removeFromCart)       # Remove item from cart

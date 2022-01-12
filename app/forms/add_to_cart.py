@@ -16,4 +16,4 @@ class AddToCartForm(Form):
         validators.NumberRange(min=1)
     ])
 
-    addToCard = SubmitField('Add To Card')
+    addToCart = SubmitField('Add To Cart')
