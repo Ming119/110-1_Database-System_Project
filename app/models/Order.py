@@ -112,6 +112,10 @@ class Order(db.Model):
         return Order.query.count()
 
     @staticmethod
+    def getAllByDate(fromDate, toDate):
+        return Order.joinUserAndAddress().filter(Order.create_at>=fromDate, Order.create_at<=toDate).all()
+
+    @staticmethod
     def create(customer_id, address_id, order_discount, items, amount,
             shippingFee, payment_type='Cash', provider=None, account_no=None):
         try:

@@ -1,5 +1,65 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="text-center my-3">Work-in-Progress (WIP)</div>
+<div class="mt-5">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index.index') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><b>FMS</b></li>
+        </ol>
+    </nav>
+</div>
+
+<div>
+    <form action="" method="post" class="form" role="form">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-5 form-floating my-3">
+                {{ form.fromDate(class="form-control", placeholder='From') }}
+                {{ form.fromDate.label() }}
+            </div>
+            <div class="col-5 form-floating my-3">
+                {{ form.toDate(class="form-control", placeholder='To') }}
+                {{ form.toDate.label() }}
+            </div>
+            <div class="col-2 align-middle">
+                {{ form.submit(class='btn btn-primary px-5') }}
+            </div>
+        </div>
+    </form>
+
+    {% if data %}
+    <div class="row  text-center py-1">
+        <div class="col-6 border py-1">
+            <h3>Total orders: {{ c }}</h3>
+        </div>
+        <div class="col-6 border py-1">
+            <h3>Sum amount: {{ "%.2f" % s | float }}</h3>
+        </div>
+    </div>
+    {% endif %}
+
+    <table id="orderDetailsList" class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Username</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Shipping Address</th>
+            </tr>
+        </thead>
+        {% if data %}
+        {% for order in data %}
+        <tbody>
+            <td>{{ order.Order.order_id }}</td>
+            <td>{{ order.Customer.username }}</td>
+            <td>${{ order.Order.amount }} (${{ order.Order.shippingFee }} Shipping Fee)</td>
+            <td>{{ order.Order.status }}</td>
+            <td>{{ order.CustomerAddress.address }}</td>
+        </tbody>
+        {% endfor %}
+        {% endif %}
+    </table>
+</div>
 {% endblock %}

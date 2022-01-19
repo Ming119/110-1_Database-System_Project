@@ -3,4 +3,4 @@ from flask import Blueprint
 
 bp = Blueprint('report', __name__, url_prefix='/report')
 
-bp.route('/', methods=['GET'])(index)
+bp.route('/', methods=['GET', 'POST'])(index)
