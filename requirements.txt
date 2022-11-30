@@ -25,11 +25,9 @@ Jinja2==3.0.1
 MarkupSafe==2.0.1
 packaging==21.0
 pluggy==1.0.0
-py==1.10.0
 pycparser==2.20
 PyMySQL==1.0.2
 pyparsing==2.4.7
-pytest==6.2.5
 robotframework==4.1.1
 robotframework-pythonlibcore==3.0.0
 robotframework-selenium2library==3.0.0
